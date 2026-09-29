@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardápio AAB</title>
+<meta name="description" content="Cardápio da lanchonete da AAB, em Botucatu – SP.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M12 18Q50 6 88 18V56Q88 80 50 97Q12 80 12 56Z' fill='%23111' stroke='%23fff' stroke-width='6'/%3E%3Cpath fill='%23fff' d='M50 26l7 20h21l-17 12 6 20-17-12-17 12 6-20-17-12h21z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ Tokens ============ */
+  :root {
+    --paper: #f4efe4;
+    --card: #fffdf7;
+    --ink: #151515;
+    --muted: #434343;
+    --rule: #15151526;
+    --yellow: #f2c200;
+    --green: #3ddc84;
+    --night: #0b0b0b;
+    --slab: "Arvo", Georgia, serif;
+    --sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 112.5%; }            /* 18px — base confortável */
+  html.big { font-size: 131.25%; }       /* 21px — "Letra maior" */
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  button { font: inherit; cursor: pointer; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+  /* ============ Capa ============ */
+  .cover {
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    background: radial-gradient(ellipse 70% 60% at 50% 38%, #2b2b2b 0%, var(--night) 70%);
+    padding-bottom: 40px;
+  }
+  /* fachos de refletor */
+  .cover::before {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(118deg, transparent 38%, #ffffff0b 47%, transparent 56%),
+      linear-gradient(242deg, transparent 38%, #ffffff0b 47%, transparent 56%);
+  }
+  .topbar {
+    position: relative; z-index: 2;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    max-width: 1100px; margin: 0 auto; padding: 14px 16px;
+  }
+  .status {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: .85rem; font-weight: 700;
+    border: 1px solid #ffffff38; border-radius: 999px;
+    padding: 6px 14px;
+    text-align: left;
+  }
+  .status i { width: 10px; height: 10px; border-radius: 50%; background: #888; flex: none; }
+  .status.open i { background: var(--green); box-shadow: 0 0 0 0 #3ddc8488; animation: pulse 2s infinite; }
+  .status.closed i { background: #ff5a4f; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 10px #3ddc8400; } 100% { box-shadow: 0 0 0 0 #3ddc8400; } }
+
+  .font-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 44px; padding: 6px 14px;
+    background: #fff; color: var(--ink);
+    border: 0; border-radius: 999px;
+    font-weight: 700; font-size: .85rem;
+    white-space: nowrap;
+    transition: transform .15s cubic-bezier(.2,.8,.2,1);
+  }
+  .font-btn b { font-family: var(--slab); font-size: 1.1rem; line-height: 1; }
+  .font-btn:active { transform: scale(.96); }
+
+  #crest {
+    position: relative;
+    width: 100%; max-width: 680px;
+    height: clamp(360px, 100vw, 560px);
+    margin: 0 auto;
+    cursor: grab;
+    touch-action: pan-y;
+  }
+  @media (min-width: 900px) { #crest { height: min(64vh, 620px); } }
+  #crest:active { cursor: grabbing; }
+  #crest canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #crest .fallback { position: absolute; inset: 8% 0; width: 100%; height: 84%; transition: opacity .4s; }
+  #crest.ready .fallback { opacity: 0; }
+  #crest .glow {
+    position: absolute; left: 50%; bottom: 4%;
+    width: 50%; height: 30px; transform: translateX(-50%);
+    background: radial-gradient(closest-side, #ffffff26, transparent);
+    filter: blur(4px);
+  }
+
+  .cover h1 {
+    position: relative;
+    font-family: var(--slab); font-weight: 700;
+    font-size: clamp(2.6rem, 12vw, 5.2rem);
+    letter-spacing: .14em;
+    line-height: 1;
+    margin: 4px 0 10px;
+    padding-left: .14em;
+  }
+  .cover .sub { position: relative; font-size: 1.05rem; color: #d6d6d6; }
+  .since {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: 18px; padding: 8px 18px;
+    border-top: 1px solid #ffffff55; border-bottom: 1px solid #ffffff55;
+    font-family: var(--slab); font-size: .95rem; letter-spacing: .08em; text-transform: uppercase;
+  }
+
+  /* ============ Faixa de horário ============ */
+  .today {
+    background: var(--ink); color: #fff;
+    border-top: 1px solid #ffffff22;
+  }
+  .today .in {
+    max-width: 1100px; margin: 0 auto; padding: 12px 16px;
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 18px;
+    font-size: .95rem;
+    text-align: center;
+  }
+  .today .status { width: 100%; justify-content: center; border: 0; padding: 0; font-size: 1.05rem; }
+  @media (min-width: 720px) { .today .status { width: auto; } }
+  .today button { background: none; border: 0; color: var(--yellow); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; padding: 4px; }
+
+  /* ============ Categorias ============ */
+  nav {
+    position: sticky; top: 0; z-index: 30;
+    background: var(--paper);
+    border-bottom: 2px solid var(--ink);
+    box-shadow: 0 6px 16px -12px #00000055;
+  }
+  nav .in {
+    display: flex; gap: 6px;
+    max-width: 1100px; margin: 0 auto; padding: 8px 12px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  @media (min-width: 900px) { nav .in { justify-content: center; } }
+  nav button {
+    flex: none;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    min-width: 76px; padding: 8px 10px;
+    background: none; border: 0;
+    border-radius: 12px;
+    font-weight: 700; font-size: .85rem;
+    color: var(--muted);
+    transition: background .2s, color .2s;
+  }
+  nav svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  nav button:hover { background: #15151510; color: var(--ink); }
+  nav button.on { background: var(--ink); color: #fff; }
+
+  /* ============ Cartão do cardápio ============ */
+  .menu {
+    max-width: 1040px;
+    margin: 28px auto 56px;
+    padding: 0 16px;
+  }
+  .sheet {
+    background: var(--card);
+    border: 2px solid var(--ink);
+    outline: 1px solid var(--ink);
+    outline-offset: -10px;
+    padding: 40px 22px 32px;
+    box-shadow: 0 30px 60px -40px #00000066;
+  }
+  @media (min-width: 720px) { .sheet { padding: 56px 56px 40px; } }
+
+  /* Combo em destaque */
+  .ticket-zone { perspective: 1000px; margin-bottom: 8px; }
+  .ticket {
+    --rx: 0deg; --ry: 0deg;
+    display: grid; grid-template-columns: 1fr;
+    max-width: 760px; margin: 0 auto;
+    background: var(--night); color: #fff;
+    border-radius: 10px;
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform .4s cubic-bezier(.2,.8,.2,1);
+    box-shadow: 0 18px 30px -18px #000000aa;
+  }
+  @media (min-width: 640px) { .ticket { grid-template-columns: 1fr 200px; } }
+  .ticket > div { padding: 24px 26px; }
+  .ticket .label { font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--yellow); }
+  .ticket h2 { font-family: var(--slab); font-size: clamp(1.5rem, 5vw, 2.1rem); line-height: 1.15; margin: 8px 0 6px; }
+  .ticket p { color: #d0d0d0; }
+  .ticket .stub {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    border-top: 2px dashed #ffffff44;
+  }
+  @media (min-width: 640px) { .ticket .stub { border-top: 0; border-left: 2px dashed #ffffff44; } }
+  .ticket .stub small { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: #bdbdbd; }
+  .ticket .stub strong { font-family: var(--slab); font-size: 2.4rem; line-height: 1.1; white-space: nowrap; }
+
+  /* Seções */
+  .sec { padding-top: 56px; scroll-margin-top: 96px; }
+  .sec-head { text-align: center; margin-bottom: 18px; }
+  .sec-head .orn { font-size: .9rem; letter-spacing: .6em; padding-left: .6em; }
+  .sec-head h2 {
+    display: flex; align-items: center; gap: 16px;
+    font-family: var(--slab); font-weight: 700;
+    font-size: clamp(1.9rem, 6vw, 2.6rem);
+    text-transform: uppercase; letter-spacing: .06em;
+    line-height: 1.1;
+    margin: 4px 0 4px;
+  }
+  .sec-head h2::before, .sec-head h2::after { content: ""; flex: 1; height: 2px; background: var(--ink); }
+  .sec-head p { color: var(--muted); font-size: 1rem; }
+
+  .items { list-style: none; display: grid; grid-template-columns: 1fr; column-gap: 48px; }
+  @media (min-width: 820px) { .items { grid-template-columns: 1fr 1fr; } }
+  .item { padding: 16px 0 14px; border-bottom: 1px dashed var(--rule); }
+  .item .line { display: flex; align-items: baseline; gap: 10px; }
+  .item h3 { font-size: 1.22rem; font-weight: 700; line-height: 1.25; }
+  .item .lead { flex: 1; min-width: 16px; border-bottom: 2px dotted #15151555; transform: translateY(-5px); }
+  .item .price { font-family: var(--slab); font-size: 1.22rem; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .item p { color: var(--muted); margin-top: 3px; max-width: 46ch; }
+  .hot {
+    display: inline-block;
+    margin-bottom: 6px;
+    padding: 3px 9px 2px;
+    background: var(--yellow); color: var(--ink);
+    font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    border-radius: 3px;
+    transform: rotate(-2deg);
+    box-shadow: 1px 2px 0 #15151522;
+  }
+  .note18 { margin-top: 14px; font-size: .9rem; color: var(--muted); text-align: center; }
+
+  /* Agenda */
+  .agenda-list { display: grid; grid-template-columns: 1fr; border-top: 2px solid var(--ink); }
+  @media (min-width: 720px) { .agenda-list { grid-template-columns: 1fr 1fr; column-gap: 32px; } }
+  .event { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; padding: 20px 0; border-bottom: 1px dashed var(--rule); }
+  .date { width: 92px; text-align: center; border: 2px solid var(--ink); border-radius: 6px; padding: 6px 0 5px; }
+  .date b { display: block; font-family: var(--slab); font-size: 2.1rem; line-height: 1; }
+  .date span { font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .event h3 { font-family: var(--slab); font-size: 1.3rem; line-height: 1.2; }
+  .event p { color: var(--muted); }
+  .empty { padding: 24px 0; text-align: center; color: var(--muted); }
+
+  /* ============ Rodapé ============ */
+  footer { background: var(--night); color: #f1f1f1; padding: 56px 16px 32px; }
+  .foot { max-width: 1040px; margin: 0 auto; display: grid; gap: 36px; }
+  @media (min-width: 860px) { .foot { grid-template-columns: 1.1fr 1fr 1fr; } }
+  .brand { display: flex; gap: 16px; align-items: center; }
+  .brand svg { width: 64px; flex: none; }
+  .brand strong { display: block; font-family: var(--slab); font-size: 2rem; letter-spacing: .1em; line-height: 1; }
+  .brand span { color: #c8c8c8; }
+  footer h4 { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: #a8a8a8; margin-bottom: 8px; }
+  footer p + p { margin-top: 6px; }
+  .insta { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--yellow); padding-bottom: 2px; }
+  .insta svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; }
+  .hours { width: 100%; border-collapse: collapse; }
+  .hours td { padding: 5px 0; border-bottom: 1px solid #ffffff1a; }
+  .hours td:last-child { text-align: right; }
+  .hours tr.now td { color: var(--yellow); font-weight: 700; }
+  .fine { max-width: 1040px; margin: 36px auto 0; padding-top: 18px; border-top: 1px solid #ffffff22; font-size: .88rem; color: #bdbdbd; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; }
+  .egg { background: none; border: 0; color: #777; font-size: 1.3rem; line-height: 1; padding: 6px; transition: color .2s, transform .2s; }
+  .egg:hover { color: var(--yellow); transform: rotate(20deg); }
+  .egg-hint { font-size: .8rem; color: #8a8a8a; }
+
+  /* ============ Easter egg: Pênaltis da Veterana ============ */
+  #jogo { background: #111; color: #fff; padding: 48px 16px 64px; text-align: center; }
+  #jogo h2 { font-family: var(--slab); font-size: clamp(1.8rem, 6vw, 2.6rem); }
+  #jogo .lede { color: #cfcfcf; margin: 6px auto 20px; max-width: 36ch; }
+  .pitch-wrap { position: relative; max-width: 560px; margin: 0 auto; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px -20px #000; }
+  .pitch { display: block; width: 100%; height: auto; }
+  #keeper, #ball { transform-box: fill-box; transform-origin: center; transition: transform .55s cubic-bezier(.2,.8,.2,1); }
+  .sway { animation: sway 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center bottom; }
+  @keyframes sway { 50% { transform: translateX(6px); } }
+  .game-msg {
+    position: absolute; left: 50%; top: 38%;
+    transform: translate(-50%, -50%) scale(.6);
+    font-family: var(--slab); font-weight: 700;
+    font-size: clamp(2rem, 9vw, 3.4rem);
+    text-shadow: 0 4px 0 #000;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .35s cubic-bezier(.2,.8,.2,1);
+    white-space: nowrap;
+  }
+  .game-msg.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .score { display: flex; justify-content: center; gap: 10px; margin: 18px 0; }
+  .score span { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #666; }
+  .score span.g { background: var(--green); border-color: var(--green); }
+  .score span.m { background: #ff5a4f; border-color: #ff5a4f; }
+  .kicks { display: flex; justify-content: center; gap: 8px; max-width: 560px; margin: 0 auto; }
+  .kicks button { flex: 1; min-width: 0 !important; padding: 8px 6px !important; }
+  .kicks button, .again {
+    min-width: 110px; min-height: 56px; padding: 8px 16px;
+    background: #fff; color: #111; border: 0; border-radius: 12px;
+    font-weight: 700; font-size: 1rem;
+    transition: transform .15s cubic-bezier(.2,.8,.2,1), background .2s;
+  }
+  .kicks button:hover { background: var(--yellow); }
+  .kicks button:active, .again:active { transform: scale(.95); }
+  .kicks button:disabled { opacity: .45; cursor: default; }
+  .result { font-size: 1.15rem; margin-top: 16px; min-height: 1.6em; }
+  .again { margin-top: 12px; background: var(--yellow); }
+
+  /* ============ Movimento ============ */
+  @media (prefers-reduced-motion: reduce) {
+    .status.open i, .sway { animation: none; }
+    #keeper, #ball { transition-duration: .01s; }
+  }
+
+  @media print {
+    .topbar, #crest, nav, .today, #jogo, .fine .egg, .egg-hint { display: none !important; }
+    .cover { background: none; color: var(--ink); padding: 0; }
+    .cover .sub { color: var(--ink); }
+    .sheet { box-shadow: none; }
+    .sec { break-inside: avoid; }
+  }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+
+<!-- ============ Capa ============ -->
+<header class="cover">
+  <div class="topbar">
+    <span></span>
+    <button class="font-btn" id="fontBtn" aria-pressed="false"><b>A+</b><span>Letra maior</span></button>
+  </div>
+
+  <div id="crest" role="img" aria-label="Escudo da AAB em 3D">
+    <!-- Escudo plano: aparece enquanto o 3D carrega (ou se o aparelho não suportar 3D) -->
+    <svg class="fallback" viewBox="0 0 200 240" aria-hidden="true">
+      <defs><path id="arco" d="M36,66 Q100,30 164,66" /></defs>
+      <text font-family="Arvo, Georgia, serif" font-weight="700" font-size="44" fill="#fff" text-anchor="middle" letter-spacing="4">
+        <textPath href="#arco" startOffset="50%">AAB</textPath>
+      </text>
+      <path d="M44,90 Q100,74 156,90 L156,148 Q156,196 100,226 Q44,196 44,148 Z" fill="#fff" />
+      <path d="M53,98 Q100,85 147,98 L147,148 Q147,188 100,214 Q53,188 53,148 Z" fill="#0b0b0b" />
+      <polygon fill="#fff" points="100,110 109.8,138.5 140,139 116,157 124.7,186 100,169 75.3,186 84,157 60,139 90.2,138.5" />
+    </svg>
+    <div class="glow"></div>
+  </div>
+
+  <h1>CARDÁPIO</h1>
+  <p class="sub">Lanchonete AAB · Botucatu – SP</p>
+  <p class="since"><span>★</span><span id="since">Desde 1918</span><span>★</span></p>
+</header>
+
+<div class="today">
+  <div class="in">
+    <p class="status" id="status" aria-live="polite"><i></i><span>Carregando horário…</span></p>
+    <span id="todayHours">Horário da lanchonete</span>
+    <button type="button" data-go="horarios">Ver todos os horários</button>
+  </div>
+</div>
+
+<!-- ============ Categorias ============ -->
+<nav aria-label="Categorias do cardápio">
+  <div class="in">
+    <button type="button" data-go="lanches"><svg viewBox="0 0 24 24"><path d="M4 11a8 6 0 0 1 16 0z"/><path d="M3 14.5h18"/><path d="M4.5 17.5h15a0 0 0 0 1 0 0v.5a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2z"/></svg>Lanches</button>
+    <button type="button" data-go="porcoes"><svg viewBox="0 0 24 24"><path d="M5.5 10h13l-2 11h-9z"/><path d="M8 10V4.5M11 10V3M14 10V4M17 10V6"/></svg>Porções</button>
+    <button type="button" data-go="pasteis"><svg viewBox="0 0 24 24"><path d="M3 16a9 9 0 0 1 18 0z"/><path d="M5 16l1 2.5M9 16l.7 2.5M15 16l-.7 2.5M19 16l-1 2.5"/></svg>Pastéis</button>
+    <button type="button" data-go="almoco"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg>Almoço</button>
+    <button type="button" data-go="bebidas"><svg viewBox="0 0 24 24"><path d="M6 8h12l-1.6 13H7.6z"/><path d="M10 8l1.2-5H15"/></svg>Bebidas</button>
+    <button type="button" data-go="doces"><svg viewBox="0 0 24 24"><path d="M8 12l4 9 4-9"/><path d="M6.5 12a5.5 5.5 0 0 1 11 0z"/></svg>Doces</button>
+    <button type="button" data-go="agenda"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Agenda</button>
+  </div>
+</nav>
+
+<!-- ============ Cardápio ============ -->
+<main class="menu">
+  <div class="sheet">
+
+    <div class="ticket-zone">
+      <article class="ticket" id="ticket">
+        <div>
+          <p class="label">★ Combo do Atleta</p>
+          <h2>X-Salada + batata frita + refrigerante lata</h2>
+          <p>Pra recarregar depois do jogo, do treino ou da piscina.</p>
+        </div>
+        <div class="stub">
+          <small>Combo</small>
+          <strong>R$ 34,90</strong>
+        </div>
+      </article>
+    </div>
+
+    <section class="sec" id="lanches">
+      <header class="sec-head"><p class="orn">★★★</p><h2>Lanches</h2><p>Feitos na hora, na chapa</p></header>
+      <ul class="items">
+        <li class="item"><div class="line"><h3>X-Burguer</h3><i class="lead"></i><span class="price">R$ 18,00</span></div><p>Pão, hambúrguer artesanal e queijo.</p></li>
+        <li class="item"><div class="line"><h3>X-Salada</h3><i class="lead"></i><span class="price">R$ 21,00</span></div><p>Hambúrguer, queijo, alface, tomate e maionese da casa.</p></li>
+        <li class="item"><span class="hot">★ Mais pedido</span><div class="line"><h3>X-Bacon</h3><i class="lead"></i><span class="price">R$ 25,00</span></div><p>Hambúrguer, queijo, bacon crocante e salada.</p></li>
+        <li class="item"><div class="line"><h3>X-Tudo</h3><i class="lead"></i><span class="price">R$ 30,00</span></div><p>Hambúrguer, ovo, bacon, presunto, queijo, salada e milho.</p></li>
+        <li class="item"><div class="line"><h3>Bauru</h3><i class="lead"></i><span class="price">R$ 17,00</span></div><p>Presunto, queijo derretido e tomate no pão francês.</p></li>
+        <li class="item"><div class="line"><h3>Misto Quente</h3><i class="lead"></i><span class="price">R$ 10,00</span></div><p>Pão de forma, presunto e queijo na chapa.</p></li>
+      </ul>
+    </section>
+
+    <section class="sec" id="porcoes">
+      <header class="sec-head"><p class="orn">★★★</p><h2>Porções</h2><p>Para dividir · servem 2 a 3 pessoas</p></header>
+      <ul class="items">
+        <li class="item"><div class="line"><h3>Batata Frita</h3><i class="lead"></i><span class="price">R$ 28,00</span></div><p>Crocante. Com cheddar e bacon, <span style="font-family:var(--slab)">+ R$ 8,00</span>.</p></li>
+        <li class="item"><span class="hot">★ Mais pedido</span><div class="line"><h3>Frango a Passarinho</h3><i class="lead"></i><span class="price">R$ 42,00</span></div><p>Com alho frito e limão.</p></li>
+        <li class="item"><div class="line"><h3>Calabresa Acebolada</h3><i class="lead"></i><span class="price">R$ 38,00</span></div><p>Acompanha pão.</p></li>
+        <li class="item"><div class="line"><h3>Mandioca Frita</h3><i class="lead"></i><span class="price">R$ 30,00</span></div><p>Sequinha por fora, macia por dentro.</p></li>
+        <li class="item"><div class="line"><h3>Isca de Tilápia</h3><i class="lead"></i><span class="price">R$ 55,00</span></div><p>Empanada, com molho tártaro.</p></li>
+        <li class="item"><div class="line"><h3>Contra-filé Acebolado</h3><i class="lead"></i><span class="price">R$ 65,00</span></div><p>Com fritas e farofa.</p></li>
+      </ul>
+    </section>
+
+    <section class="sec" id="pasteis">
+      <header class="sec-head"><p class="orn">★★★</p><h2>Pastéis</h2><p>Massa fina e recheio caprichado</p></header>
+      <ul class="items">
+        <li class="item"><div class="line"><h3>Carne</h3><i class="lead"></i><span class="price">R$ 12,00</span></div></li>
+        <li class="item"><div class="line"><h3>Queijo</h3><i class="lead"></i><span class="price">R$ 12,00</span></div></li>
+        <li class="item"><div class="line"><h3>Pizza</h3><i class="lead"></i><span class="price">R$ 13,00</span></div><p>Queijo, presunto, tomate e orégano.</p></li>
+        <li class="item"><div class="line"><h3>Frango com Catupiry</h3><i class="lead"></i><span class="price">R$ 14,00</span></div></li>
+      </ul>
+    </section>
+
+    <section class="sec" id="almoco">
+      <header class="sec-head"><p class="orn">★★★</p><h2>Almoço</h2><p>Prato cheio, do jeito de casa</p></header>
+      <ul class="items">
+        <li class="item"><div class="line"><h3>Prato Feito</h3><i class="lead"></i><span class="price">R$ 26,00</span></div><p>Arroz, feijão, salada, fritas e bife ou frango grelhado.</p></li>
+        <li class="item"><div class="line"><h3>Parmegiana</h3><i class="lead"></i><span class="price">R$ 36,00</span></div><p>De frango ou de carne, com arroz e fritas.</p></li>
+        <li class="item"><div class="line"><h3>Omelete</h3><i class="lead"></i><span class="price">R$ 22,00</span></div><p>Com legumes e salada verde.</p></li>
+        <li class="item"><div class="line"><h3>Salada do Atleta</h3><i class="lead"></i><span class="price">R$ 28,00</span></div><p>Folhas, frango grelhado, grão-de-bico e molho de iogurte.</p></li>
+      </ul>
+    </section>
+
+    <section class="sec" id="bebidas">
+      <header class="sec-head"><p class="orn">★★★</p><h2>Bebidas</h2><p>Bem geladas</p></header>
+      <ul class="items">
+        <li class="item"><div class="line"><h3>Água</h3><i class="lead"></i><span class="price">R$ 4,00</span></div><p>Com ou sem gás.</p></li>
+        <li class="item"><div class="line"><h3>Refrigerante Lata</h3><i class="lead"></i><span class="price">R$ 7,00</span></div></li>
+        <li class="item"><div class="line"><h3>Suco Natural</h3><i class="lead"></i><span class="price">R$ 10,00</span></div><p>Laranja, limão ou abacaxi com hortelã.</p></li>
+        <li class="item"><div class="line"><h3>Isotônico</h3><i class="lead"></i><span class="price">R$ 8,00</span></div></li>
+        <li class="item"><div class="line"><h3>Água de Coco</h3><i class="lead"></i><span class="price">R$ 8,00</span></div></li>
+        <li class="item"><div class="line"><h3>Cerveja Long Neck</h3><i class="lead"></i><span class="price">R$ 10,00</span></div><p>Somente para maiores de 18 anos.</p></li>
+      </ul>
+    </section>
+
+    <section class="sec" id="doces">
+      <header class="sec-head"><p class="orn">★★★</p><h2>Doces</h2><p>Para fechar com chave de ouro</p></header>
+      <ul class="items">
+        <li class="item"><div class="line"><h3>Açaí 300 ml</h3><i class="lead"></i><span class="price">R$ 16,00</span></div></li>
+        <li class="item"><span class="hot">★ Mais pedido</span><div class="line"><h3>Açaí 500 ml</h3><i class="lead"></i><span class="price">R$ 22,00</span></div></li>
+        <li class="item"><div class="line"><h3>Picolé</h3><i class="lead"></i><span class="price">R$ 6,00</span></div></li>
+        <li class="item"><div class="line"><h3>Churros</h3><i class="lead"></i><span class="price">R$ 8,00</span></div><p>Doce de leite ou chocolate.</p></li>
+      </ul>
+    </section>
+
+    <section class="sec" id="agenda">
+      <header class="sec-head"><p class="orn">★★★</p><h2>Agenda</h2><p>Próximos eventos do clube</p></header>
+      <div class="agenda-list" id="agendaList"></div>
+    </section>
+
+    <p class="note18">Preços sujeitos a alteração. Venda de bebidas alcoólicas proibida para menores de 18 anos.</p>
+  </div>
+</main>
+
+<!-- ============ Rodapé ============ -->
+<footer>
+  <div class="foot">
+    <div>
+      <div class="brand">
+        <svg viewBox="0 0 100 120" aria-hidden="true"><path d="M8 22Q50 8 92 22V70Q92 98 50 116Q8 98 8 70Z" fill="#fff"/><path d="M15 28Q50 17 85 28V70Q85 92 50 108Q15 92 15 70Z" fill="#0b0b0b"/><path fill="#fff" d="M50 34l6.8 19.6h20.7l-16.7 12.1 6.4 19.7L50 73.3 32.8 85.4l6.4-19.7-16.7-12.1h20.7z"/></svg>
+        <div><strong>AAB</strong><span id="sinceFoot">Botucatu – SP · desde 1918</span></div>
+      </div>
+    </div>
+    <div>
+      <h4>Onde estamos</h4>
+      <p>R. Gen. Júlio Marcondes Salgado, 411<br>Vila Padovan · Botucatu – SP</p>
+      <p><a href="tel:+5514981910038">(14) 98191-0038</a></p>
+      <p style="margin-top:14px"><a class="insta" href="https://www.instagram.com/aabbotucatu/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>@aabbotucatu</a></p>
+    </div>
+    <div id="horarios">
+      <h4>Horário da lanchonete</h4>
+      <table class="hours"><tbody id="hoursTable"></tbody></table>
+    </div>
+  </div>
+  <div class="fine">
+    <span>Venda de bebidas alcoólicas proibida para menores de 18 anos.</span>
+    <span><span class="egg-hint">Psiu… toque 3 vezes na estrela </span><button class="egg" id="egg" aria-label="Segredo da estrela">★</button></span>
+  </div>
+</footer>
+
+<!-- ============ Easter egg ============ -->
+<section id="jogo" hidden>
+  <h2>Pênaltis da Veterana</h2>
+  <p class="lede">5 cobranças contra o goleiro da AAB. Escolha o canto!</p>
+  <div class="pitch-wrap">
+    <svg class="pitch" viewBox="0 0 320 230" role="img" aria-label="Gol com o goleiro da AAB">
+      <defs>
+        <pattern id="net" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0 0L10 10M10 0L0 10" stroke="#fff" stroke-opacity=".28" stroke-width="1"/></pattern>
+        <pattern id="stripes" width="8" height="10" patternUnits="userSpaceOnUse"><rect width="4" height="10" fill="#111"/><rect x="4" width="4" height="10" fill="#fff"/></pattern>
+      </defs>
+      <rect width="320" height="230" fill="#0c0c0c"/>
+      <circle cx="30" cy="12" r="5" fill="#fff" opacity=".8"/><circle cx="46" cy="12" r="5" fill="#fff" opacity=".8"/>
+      <circle cx="274" cy="12" r="5" fill="#fff" opacity=".8"/><circle cx="290" cy="12" r="5" fill="#fff" opacity=".8"/>
+      <rect y="150" width="320" height="80" fill="#236b3a"/>
+      <rect y="170" width="320" height="20" fill="#2a7a44"/><rect y="210" width="320" height="20" fill="#2a7a44"/>
+      <rect x="40" y="30" width="240" height="120" fill="url(#net)"/>
+      <path d="M40 150V30H280V150" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+      <line x1="0" y1="150" x2="320" y2="150" stroke="#fff" stroke-opacity=".7" stroke-width="2"/>
+      <g id="keeper"><g class="sway">
+        <rect x="150" y="128" width="8" height="22" rx="2" fill="#111"/><rect x="162" y="128" width="8" height="22" rx="2" fill="#111"/>
+        <rect x="147" y="118" width="26" height="14" rx="3" fill="#111"/>
+        <rect x="146" y="90" width="28" height="32" rx="5" fill="url(#stripes)" stroke="#111" stroke-width="1.5"/>
+        <rect x="126" y="93" width="22" height="8" rx="4" fill="url(#stripes)" stroke="#111"/><rect x="172" y="93" width="22" height="8" rx="4" fill="url(#stripes)" stroke="#111"/>
+        <circle cx="125" cy="97" r="5.5" fill="#f2c200"/><circle cx="195" cy="97" r="5.5" fill="#f2c200"/>
+        <circle cx="160" cy="80" r="9" fill="#c98f5e"/>
+      </g></g>
+      <g id="ball">
+        <circle cx="160" cy="205" r="10" fill="#fff" stroke="#111" stroke-width="1.5"/>
+        <path d="M160 200l4.3 3.1-1.6 5h-5.4l-1.6-5z" fill="#111"/>
+      </g>
+    </svg>
+    <div class="game-msg" id="gameMsg"></div>
+  </div>
+  <div class="score" id="score" aria-label="Placar"><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="kicks" id="kicks">
+    <button data-side="esq">◀ Esquerda</button>
+    <button data-side="meio">▲ Meio</button>
+    <button data-side="dir">Direita ▶</button>
+  </div>
+  <p class="result" id="result" aria-live="polite"></p>
+  <button class="again" id="again" hidden>Jogar de novo</button>
+</section>
+
+<!-- ============ Configurações fáceis de editar ============ -->
+<script>
+  // Horário da lanchonete: [abre, fecha] — use null para dia fechado.
+  // 0 = domingo, 1 = segunda … 6 = sábado
+  const HORARIO = {
+    0: ['08:00', '22:00'],
+    1: ['08:00', '22:00'],
+    2: ['08:00', '22:00'],
+    3: ['08:00', '22:00'],
+    4: ['08:00', '22:00'],
+    5: ['08:00', '22:00'],
+    6: ['08:00', '22:00'],
+  };
+
+  // Agenda: eventos que já passaram somem sozinhos.
+  const AGENDA = [
+    { data: '2026-10-08', hora: '18h', titulo: 'Show de Prêmios AAB' },
+    { data: '2026-10-17', hora: '21h', titulo: 'Baile do Caribe AAB 2026' },
+  ];
+  // Opcional: link CSV de uma Planilha Google publicada (colunas: data, hora, titulo).
+  // Preenchido, a agenda passa a vir da planilha automaticamente.
+  const AGENDA_PLANILHA = '';
+
+  const FUNDACAO = new Date(1918, 3, 21); // 21 de abril de 1918
+</script>
+
+<!-- ============ Comportamento da página ============ -->
+<script>
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+  const hm = s => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
+  const fmt = s => { const [h, m] = s.split(':'); return +h + 'h' + (m !== '00' ? m : ''); };
+
+  // ---- Idade do clube
+  (() => {
+    const now = new Date();
+    let anos = now.getFullYear() - FUNDACAO.getFullYear();
+    if (now < new Date(now.getFullYear(), FUNDACAO.getMonth(), FUNDACAO.getDate())) anos--;
+    document.getElementById('since').textContent = `Desde 1918 · ${anos} anos`;
+    document.getElementById('sinceFoot').textContent = `Botucatu – SP · desde 1918 · ${anos} anos de história`;
+  })();
+
+  // ---- Aberto agora / horários
+  function updateHours() {
+    const now = new Date(), d = now.getDay(), mins = now.getHours() * 60 + now.getMinutes();
+    const today = HORARIO[d];
+    const box = document.getElementById('status');
+    let text, open = false;
+    if (today && mins >= hm(today[0]) && mins < hm(today[1])) {
+      open = true; text = `Aberto agora · fecha às ${fmt(today[1])}`;
+    } else if (today && mins < hm(today[0])) {
+      text = `Fechado · abre hoje às ${fmt(today[0])}`;
+    } else {
+      text = 'Fechado';
+      for (let i = 1; i <= 7; i++) {
+        const nd = (d + i) % 7, h = HORARIO[nd];
+        if (h) { text = `Fechado · abre ${i === 1 ? 'amanhã' : DIAS[nd].toLowerCase()} às ${fmt(h[0])}`; break; }
+      }
+    }
+    box.className = 'status ' + (open ? 'open' : 'closed');
+    box.querySelector('span').textContent = text;
+    document.getElementById('todayHours').textContent =
+      today ? `Hoje (${DIAS[d].toLowerCase()}): das ${fmt(today[0])} às ${fmt(today[1])}` : `Hoje (${DIAS[d].toLowerCase()}): fechado`;
+    document.getElementById('hoursTable').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(i =>
+      `<tr class="${i === d ? 'now' : ''}"><td>${DIAS[i]}</td><td>${HORARIO[i] ? fmt(HORARIO[i][0]) + ' às ' + fmt(HORARIO[i][1]) : 'Fechado'}</td></tr>`).join('');
+  }
+  updateHours();
+  setInterval(updateHours, 60000);
+
+  // ---- Letra maior (lembra a escolha neste aparelho)
+  const fontBtn = document.getElementById('fontBtn');
+  function setBig(on) {
+    document.documentElement.classList.toggle('big', on);
+    fontBtn.setAttribute('aria-pressed', on);
+    fontBtn.innerHTML = on ? '<b>A−</b><span>Letra normal</span>' : '<b>A+</b><span>Letra maior</span>';
+    try { localStorage.setItem('aab-big', on ? '1' : '0'); } catch (e) {}
+  }
+  try { if (localStorage.getItem('aab-big') === '1') setBig(true); } catch (e) {}
+  fontBtn.addEventListener('click', () => setBig(!document.documentElement.classList.contains('big')));
+
+  // ---- Botões de categoria: rolam até a seção (são botões, não links,
+  //      para nunca sair da página — nem dentro de pré-visualizações)
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-go]');
+    if (!btn) return;
+    const target = document.getElementById(btn.dataset.go);
+    if (target) target.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+  });
+
+  // ---- Categoria ativa no menu (e centraliza o botão na barra)
+  const navBtns = [...document.querySelectorAll('nav [data-go]')];
+  const spy = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    navBtns.forEach(b => {
+      const on = b.dataset.go === e.target.id;
+      b.classList.toggle('on', on);
+      if (on) {
+        const bar = b.parentElement;
+        bar.scrollTo({ left: b.offsetLeft - bar.clientWidth / 2 + b.offsetWidth / 2, behavior: 'smooth' });
+      }
+    });
+  }), { rootMargin: '-35% 0px -60% 0px' });
+  document.querySelectorAll('.sec').forEach(s => spy.observe(s));
+
+  // ---- Combo inclina com o mouse
+  const ticket = document.getElementById('ticket');
+  if (matchMedia('(hover: hover)').matches && !calm) {
+    ticket.addEventListener('pointermove', e => {
+      const r = ticket.getBoundingClientRect();
+      ticket.style.setProperty('--ry', ((e.clientX - r.left) / r.width - .5) * 12 + 'deg');
+      ticket.style.setProperty('--rx', -((e.clientY - r.top) / r.height - .5) * 12 + 'deg');
+    });
+    ticket.addEventListener('pointerleave', () => { ticket.style.setProperty('--rx', '0deg'); ticket.style.setProperty('--ry', '0deg'); });
+  }
+
+  // ---- Agenda automática
+  function renderAgenda(list) {
+    const todayISO = new Date().toLocaleDateString('sv-SE'); // AAAA-MM-DD no fuso local
+    const next = list.filter(ev => ev.data >= todayISO).sort((a, b) => a.data.localeCompare(b.data));
+    const box = document.getElementById('agendaList');
+    if (!next.length) {
+      box.outerHTML = '<p class="empty" id="agendaList">Nenhum evento marcado no momento. Acompanhe as novidades no Instagram <a href="https://www.instagram.com/aabbotucatu/" target="_blank" rel="noopener">@aabbotucatu</a>.</p>';
+      return;
+    }
+    box.innerHTML = next.map(ev => {
+      const [y, m, d] = ev.data.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      const mes = dt.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+      const sem = dt.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '');
+      return `<div class="event"><div class="date"><b>${String(d).padStart(2, '0')}</b><span>${mes} · ${sem}</span></div>
+        <div><h3>${ev.titulo}</h3><p>${ev.hora ? 'A partir das ' + ev.hora : ''}</p></div></div>`;
+    }).join('');
+  }
+  function parseCSV(text) {
+    const rows = [], re = /("([^"]|"")*"|[^,\r\n]*)(,|\r?\n|$)/g;
+    let row = [], m;
+    while ((m = re.exec(text)) && m[0] !== '') {
+      row.push(m[1].replace(/^"|"$/g, '').replace(/""/g, '"').trim());
+      if (m[3] !== ',') { rows.push(row); row = []; }
+    }
+    return rows;
+  }
+  renderAgenda(AGENDA);
+  if (AGENDA_PLANILHA) {
+    fetch(AGENDA_PLANILHA).then(r => r.text()).then(t => {
+      const [, ...rows] = parseCSV(t);
+      renderAgenda(rows.filter(r => r[0]).map(r => ({ data: r[0], hora: r[1], titulo: r[2] })));
+    }).catch(() => {});
+  }
+
+  // ---- Easter egg: 3 toques na estrela abrem o jogo
+  let taps = 0, tapTimer;
+  document.getElementById('egg').addEventListener('click', () => {
+    taps++; clearTimeout(tapTimer); tapTimer = setTimeout(() => taps = 0, 1500);
+    if (taps >= 3) {
+      taps = 0;
+      const jogo = document.getElementById('jogo');
+      jogo.hidden = false;
+      jogo.scrollIntoView({ behavior: calm ? 'auto' : 'smooth' });
+    }
+  });
+
+  // ---- Pênaltis da Veterana
+  (() => {
+    const ball = document.getElementById('ball'), keeper = document.getElementById('keeper');
+    const msg = document.getElementById('gameMsg'), result = document.getElementById('result');
+    const again = document.getElementById('again'), dots = [...document.querySelectorAll('#score span')];
+    const buttons = [...document.querySelectorAll('#kicks button')];
+    const SHOT = { esq: 'translate(-78px,-128px) scale(.55)', meio: 'translate(0px,-138px) scale(.55)', dir: 'translate(78px,-128px) scale(.55)' };
+    const DIVE = { esq: 'translate(-72px,6px) rotate(-75deg)', meio: 'translate(0px,-16px)', dir: 'translate(72px,6px) rotate(75deg)' };
+    let kicks = 0, goals = 0, busy = false;
+
+    function shoot(side) {
+      if (busy || kicks >= 5) return;
+      busy = true; buttons.forEach(b => b.disabled = true);
+      const sides = ['esq', 'meio', 'dir'], keeperSide = sides[Math.floor(Math.random() * 3)];
+      ball.style.transform = SHOT[side];
+      keeper.style.transform = DIVE[keeperSide];
+      const goal = keeperSide !== side;
+      setTimeout(() => {
+        dots[kicks].className = goal ? 'g' : 'm';
+        kicks++; if (goal) goals++;
+        msg.textContent = goal ? 'GOOOL!' : 'DEFENDEU!';
+        msg.classList.add('show');
+      }, 560);
+      setTimeout(() => {
+        msg.classList.remove('show');
+        ball.style.transform = ''; keeper.style.transform = '';
+        busy = false;
+        if (kicks < 5) { buttons.forEach(b => b.disabled = false); return; }
+        result.textContent = goals === 5 ? '5 de 5! Craque da Veterana! ★'
+          : goals >= 3 ? `${goals} gols. Jogou bonito!`
+          : `${goals} ${goals === 1 ? 'gol' : 'gols'}. O goleiro da AAB tá impossível hoje!`;
+        again.hidden = false;
+      }, 1700);
+    }
+    buttons.forEach(b => b.addEventListener('click', () => shoot(b.dataset.side)));
+    addEventListener('keydown', e => {
+      if (document.getElementById('jogo').hidden) return;
+      const k = { ArrowLeft: 'esq', ArrowUp: 'meio', ArrowRight: 'dir' }[e.key];
+      if (k) { e.preventDefault(); shoot(k); }
+    });
+    again.addEventListener('click', () => {
+      kicks = 0; goals = 0; result.textContent = ''; again.hidden = true;
+      dots.forEach(d => d.className = ''); buttons.forEach(b => b.disabled = false);
+    });
+  })();
+</script>
+
+<!-- ============ Escudo 3D (Three.js) ============ -->
+<script type="module">
+  import * as THREE from 'three';
+  import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+  const box = document.getElementById('crest');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  try {
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2.5));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    box.prepend(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+    const key = new THREE.DirectionalLight(0xffffff, 2.4); key.position.set(2.5, 3, 6); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.8); fill.position.set(-4, 1, 4); scene.add(fill);
+    const back = new THREE.DirectionalLight(0xffffff, 2.0); back.position.set(0, 4, -5); scene.add(back);
+
+    // Contorno do escudo, como o da AAB: topo arqueado, laterais retas, ponta embaixo
+    function shield(t, s) {
+      t.moveTo(-1 * s, 1.1 * s);
+      t.quadraticCurveTo(0, 1.4 * s, 1 * s, 1.1 * s);
+      t.lineTo(1 * s, 0.1 * s);
+      t.quadraticCurveTo(1 * s, -0.95 * s, 0, -1.5 * s);
+      t.quadraticCurveTo(-1 * s, -0.95 * s, -1 * s, 0.1 * s);
+      t.closePath();
+      return t;
+    }
+    function star(R, r, cy) {
+      const sh = new THREE.Shape();
+      for (let i = 0; i < 10; i++) {
+        const a = Math.PI / 2 + i * Math.PI / 5, rad = i % 2 ? r : R;
+        const x = Math.cos(a) * rad, y = Math.sin(a) * rad + cy;
+        i ? sh.lineTo(x, y) : sh.moveTo(x, y);
+      }
+      sh.closePath();
+      return sh;
+    }
+
+    const white  = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.05, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.05 });
+    const enamel = new THREE.MeshPhysicalMaterial({ color: 0x080808, metalness: 0.1, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.04 });
+
+    const crest = new THREE.Group();
+
+    // Aro branco (escudo com furo)
+    const rimShape = shield(new THREE.Shape(), 1);
+    rimShape.holes.push(shield(new THREE.Path(), 0.86));
+    crest.add(new THREE.Mesh(new THREE.ExtrudeGeometry(rimShape, {
+      depth: 0.32, bevelEnabled: true, bevelThickness: 0.08, bevelSize: 0.05, bevelSegments: 10, curveSegments: 96
+    }), white));
+
+    // Campo preto rebaixado
+    const field = new THREE.Mesh(new THREE.ExtrudeGeometry(shield(new THREE.Shape(), 0.87), {
+      depth: 0.24, bevelEnabled: false, curveSegments: 96
+    }), enamel);
+    field.position.z = 0.02;
+    crest.add(field);
+
+    // Estrela branca em alto-relevo
+    const starMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(star(0.7, 0.28, 0), {
+      depth: 0.12, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.04, bevelSegments: 8
+    }), white);
+    starMesh.position.set(0, 0.03, 0.26);
+    crest.add(starMesh);
+
+    // Sigla "AAB" em arco, logo acima do escudo.
+    // Letras com serifa quadrada desenhadas à mão (altura 1) — não depende de baixar fonte.
+    const poly = (t, pts, s) => { pts.forEach(([x, y], i) => i ? t.lineTo(x * s, y * s) : t.moveTo(x * s, y * s)); t.closePath(); return t; };
+    const glyphA = s => {
+      const sh = poly(new THREE.Shape(), [[0, 0], [.36, 0], [.36, .09], [.28, .09], [.315, .2], [.645, .2], [.68, .09], [.6, .09],
+        [.6, 0], [.96, 0], [.96, .09], [.89, .09], [.6, 1], [.36, 1], [.07, .09], [0, .09]], s);
+      sh.holes.push(poly(new THREE.Path(), [[.366, .36], [.594, .36], [.48, .72]], s));
+      return sh;
+    };
+    const glyphB = s => {
+      const sh = new THREE.Shape();
+      sh.moveTo(0, 0); sh.lineTo(.55 * s, 0);
+      sh.quadraticCurveTo(.86 * s, 0, .86 * s, .27 * s);
+      sh.quadraticCurveTo(.86 * s, .49 * s, .66 * s, .53 * s);
+      sh.quadraticCurveTo(.81 * s, .58 * s, .81 * s, .76 * s);
+      sh.quadraticCurveTo(.81 * s, 1 * s, .52 * s, 1 * s);
+      sh.lineTo(0, 1 * s); sh.lineTo(0, .91 * s); sh.lineTo(.08 * s, .91 * s);
+      sh.lineTo(.08 * s, .09 * s); sh.lineTo(0, .09 * s); sh.closePath();
+      const up = new THREE.Path();
+      up.moveTo(.30 * s, .58 * s); up.lineTo(.47 * s, .58 * s);
+      up.quadraticCurveTo(.59 * s, .58 * s, .59 * s, .735 * s);
+      up.quadraticCurveTo(.59 * s, .89 * s, .47 * s, .89 * s);
+      up.lineTo(.30 * s, .89 * s); up.closePath();
+      const low = new THREE.Path();
+      low.moveTo(.30 * s, .11 * s); low.lineTo(.51 * s, .11 * s);
+      low.quadraticCurveTo(.64 * s, .11 * s, .64 * s, .28 * s);
+      low.quadraticCurveTo(.64 * s, .45 * s, .51 * s, .45 * s);
+      low.lineTo(.30 * s, .45 * s); low.closePath();
+      sh.holes.push(up, low);
+      return sh;
+    };
+
+    const letters = new THREE.Group();
+    const R = 2.1, y0 = 1.74, step = 0.41, cap = 0.52;
+    [glyphA, glyphA, glyphB].forEach((make, i) => {
+      const g = new THREE.ExtrudeGeometry(make(cap), {
+        depth: 0.2, curveSegments: 24,
+        bevelEnabled: true, bevelThickness: 0.035, bevelSize: 0.022, bevelSegments: 6
+      });
+      g.center();
+      const m = new THREE.Mesh(g, white);
+      const phi = (i - 1) * step;
+      m.position.set(R * Math.sin(phi), y0 - R * (1 - Math.cos(phi)), 0.12);
+      m.rotation.z = -phi;
+      letters.add(m);
+    });
+    crest.add(letters);
+
+    crest.position.set(0, -0.2, -0.2);
+    const pivot = new THREE.Group();
+    pivot.add(crest);
+    scene.add(pivot);
+
+    // Enquadra o escudo grande em qualquer tela
+    function fit() {
+      const w = box.clientWidth, h = box.clientHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      const k = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+      camera.position.z = Math.max(4.0 / k, 3.1 / (k * camera.aspect));
+      camera.updateProjectionMatrix();
+    }
+    new ResizeObserver(fit).observe(box);
+    fit();
+
+    // Só desenha quando a capa está visível (economiza bateria)
+    let visible = true;
+    new IntersectionObserver(([e]) => visible = e.isIntersecting).observe(box);
+
+    // Interação: segue o ponteiro e pode ser arrastado
+    let tx = 0, ty = 0, spin = 0, dragging = false, lastX = 0, velocity = 0;
+    addEventListener('pointermove', e => {
+      tx = (e.clientX / innerWidth - 0.5) * 0.6;
+      ty = (e.clientY / innerHeight - 0.5) * 0.35;
+      if (dragging) { velocity = (e.clientX - lastX) * 0.012; spin += velocity; lastX = e.clientX; }
+    });
+    box.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; box.setPointerCapture(e.pointerId); });
+    addEventListener('pointerup', () => { dragging = false; });
+
+    const clock = new THREE.Clock();
+    let intro = calm ? 1 : 0;
+    renderer.setAnimationLoop(() => {
+      const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
+      if (!visible) return;
+      if (intro < 1) intro = Math.min(1, intro + dt / 1.4);
+      const ease = 1 - Math.pow(1 - intro, 4);
+      if (!dragging) { spin += velocity; velocity *= 0.94; spin *= 0.965; }
+      const idle = calm ? 0 : Math.sin(t * 0.6) * 0.16;
+      pivot.rotation.y += ((tx + idle + spin) + (1 - ease) * -Math.PI - pivot.rotation.y) * 0.08;
+      pivot.rotation.x += (ty - pivot.rotation.x) * 0.08;
+      pivot.position.y = calm ? 0 : Math.sin(t * 1.1) * 0.05;
+      pivot.scale.setScalar(0.75 + 0.25 * ease);
+      renderer.render(scene, camera);
+    });
+    box.classList.add('ready');
+  } catch (err) {
+    console.warn('3D indisponível, usando escudo plano:', err);
+  }
+</script>
+</body>
+</html>

@@ -360,8 +360,11 @@ Adicional de fruta na caipirinha: R$ 5,00.
 ---
 
 ## Cardápio Especial Tenda
-Versão resumida usada na tenda (eventos / "Música na Tenda"). Mesmos preços do cardápio principal,
-com estas particularidades:
+**Quando vale:** toda **sexta-feira a partir das 18h, até sábado às 6h** (informado pelo cliente).
+No resto da semana vale o cardápio completo. O site troca sozinho nesses horários.
+
+Versão resumida. Mesmos preços do cardápio principal, com estas particularidades:
+- ⚠️ **Suco Kapo caixa 200 ml:** R$ 5,00 no cardápio da Tenda × R$ 8,00 no cardápio de Bebidas. Confirmar qual vale.
 
 - **Salgados** R$ 8,00 · **Kibe** R$ 10,00 · **Espetinhos do quiosque** R$ 9,00 · **Fatia de torta** R$ 12,00 · **Fatia de pizza** R$ 10,00
 - **Pizzas somente após o horário de almoço.** Pizza meio a meio mantém a de valor maior.

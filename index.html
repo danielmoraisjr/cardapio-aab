@@ -118,6 +118,11 @@
     padding-left: .14em;
   }
   .cover .sub { position: relative; font-size: 1.05rem; color: #d6d6d6; }
+  .cover .mode-pill {
+    position: relative; display: inline-block; margin-top: 10px; padding: 4px 14px;
+    background: var(--yellow); color: var(--ink); border-radius: 999px;
+    font-weight: 700; font-size: .85rem; letter-spacing: .08em; text-transform: uppercase;
+  }
   .since {
     position: relative;
     display: inline-flex; align-items: center; gap: 10px;
@@ -228,11 +233,38 @@
   @media (min-width: 820px) { .items { grid-template-columns: 1fr 1fr; } }
   .item { padding: 16px 0 14px; border-bottom: 1px dashed var(--rule); }
   .item .line { display: flex; align-items: baseline; gap: 10px; }
-  .item h3 { font-size: 1.22rem; font-weight: 700; line-height: 1.25; }
+  .item h4 { font-size: 1.22rem; font-weight: 700; line-height: 1.25; }
   .item .lead { flex: 1; min-width: 16px; border-bottom: 2px dotted #15151555; transform: translateY(-5px); }
   .item .price { font-family: var(--slab); font-size: 1.22rem; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .item p { color: var(--muted); margin-top: 3px; max-width: 46ch; }
-  .hot {
+  .price.two { display: grid; grid-template-columns: auto auto; column-gap: 8px; align-items: baseline; text-align: right; }
+  @media (max-width: 599px) {
+    .line.duo { flex-wrap: wrap; }
+    .line.duo .lead { display: none; }
+    .line.duo .price.two { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 4px 8px; justify-content: flex-start; margin-top: 4px; }
+    .line.duo .price.two small:not(:first-child) { margin-left: 14px; }
+  }
+  .price.two small { font-family: var(--sans); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+  /* Grupos dentro de cada seção */
+  .grp + .grp { margin-top: 34px; }
+  .grp-title {
+    display: flex; align-items: center; gap: 12px;
+    font-family: var(--slab); font-size: 1.05rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+  }
+  .grp-title::after { content: ""; flex: 1; height: 1px; background: var(--ink); opacity: .35; }
+  .grp-note { color: var(--muted); font-size: .95rem; margin-top: 2px; }
+  .sec-note { text-align: center; color: var(--muted); font-size: .95rem; margin: -6px 0 18px; }
+
+  /* Aviso do cardápio da vez (Tenda) */
+  .mode-note {
+    max-width: 760px; margin: 0 auto 28px; padding: 12px 18px;
+    border: 2px solid var(--ink); text-align: center; font-weight: 700;
+  }
+  .mode-note.tenda { background: var(--yellow); }
+  .mode-note small { display: block; font-weight: 400; color: var(--ink); }
+  .tag {
     display: inline-block;
     margin-bottom: 6px;
     padding: 3px 9px 2px;
@@ -270,6 +302,8 @@
   .hours { width: 100%; border-collapse: collapse; }
   .hours td { padding: 5px 0; border-bottom: 1px solid #ffffff1a; }
   .hours td:last-child { text-align: right; }
+  .hours small { display: block; color: #a8a8a8; font-size: .8rem; }
+  .hours-extra { margin-top: 12px; font-size: .9rem; color: #c8c8c8; }
   .hours tr.now td { color: var(--yellow); font-weight: 700; }
   .fine { max-width: 1040px; margin: 36px auto 0; padding-top: 18px; border-top: 1px solid #ffffff22; font-size: .88rem; color: #bdbdbd; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; }
   .egg { background: none; border: 0; color: #777; font-size: 1.3rem; line-height: 1; padding: 6px; transition: color .2s, transform .2s; }
@@ -360,6 +394,7 @@
 
   <h1>CARDÁPIO</h1>
   <p class="sub">Lanchonete AAB · Botucatu – SP</p>
+  <p class="mode-pill" id="modePill" hidden>★ Especial Tenda</p>
   <p class="since"><span>★</span><span id="since">Desde 1918</span><span>★</span></p>
 </header>
 
@@ -373,107 +408,40 @@
 
 <!-- ============ Categorias ============ -->
 <nav aria-label="Categorias do cardápio">
-  <div class="in">
-    <button type="button" data-go="lanches"><svg viewBox="0 0 24 24"><path d="M4 11a8 6 0 0 1 16 0z"/><path d="M3 14.5h18"/><path d="M4.5 17.5h15a0 0 0 0 1 0 0v.5a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2z"/></svg>Lanches</button>
-    <button type="button" data-go="porcoes"><svg viewBox="0 0 24 24"><path d="M5.5 10h13l-2 11h-9z"/><path d="M8 10V4.5M11 10V3M14 10V4M17 10V6"/></svg>Porções</button>
-    <button type="button" data-go="pasteis"><svg viewBox="0 0 24 24"><path d="M3 16a9 9 0 0 1 18 0z"/><path d="M5 16l1 2.5M9 16l.7 2.5M15 16l-.7 2.5M19 16l-1 2.5"/></svg>Pastéis</button>
-    <button type="button" data-go="almoco"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/></svg>Almoço</button>
-    <button type="button" data-go="bebidas"><svg viewBox="0 0 24 24"><path d="M6 8h12l-1.6 13H7.6z"/><path d="M10 8l1.2-5H15"/></svg>Bebidas</button>
-    <button type="button" data-go="doces"><svg viewBox="0 0 24 24"><path d="M8 12l4 9 4-9"/><path d="M6.5 12a5.5 5.5 0 0 1 11 0z"/></svg>Doces</button>
-    <button type="button" data-go="agenda"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Agenda</button>
-  </div>
+  <div class="in" id="navIn"></div>
 </nav>
 
 <!-- ============ Cardápio ============ -->
 <main class="menu">
   <div class="sheet">
 
+    <p class="mode-note" id="modeNote" hidden></p>
+
     <div class="ticket-zone">
       <article class="ticket" id="ticket">
         <div>
-          <p class="label">★ Combo do Atleta</p>
-          <h2>X-Salada + batata frita + refrigerante lata</h2>
-          <p>Pra recarregar depois do jogo, do treino ou da piscina.</p>
+          <p class="label" id="tkLabel"></p>
+          <h2 id="tkTitle"></h2>
+          <p id="tkText"></p>
         </div>
         <div class="stub">
-          <small>Combo</small>
-          <strong>R$ 34,90</strong>
+          <small id="tkStub"></small>
+          <strong id="tkPrice"></strong>
         </div>
       </article>
     </div>
 
-    <section class="sec" id="lanches">
-      <header class="sec-head"><p class="orn">★★★</p><h2>Lanches</h2><p>Feitos na hora, na chapa</p></header>
-      <ul class="items">
-        <li class="item"><div class="line"><h3>X-Burguer</h3><i class="lead"></i><span class="price">R$ 18,00</span></div><p>Pão, hambúrguer artesanal e queijo.</p></li>
-        <li class="item"><div class="line"><h3>X-Salada</h3><i class="lead"></i><span class="price">R$ 21,00</span></div><p>Hambúrguer, queijo, alface, tomate e maionese da casa.</p></li>
-        <li class="item"><span class="hot">★ Mais pedido</span><div class="line"><h3>X-Bacon</h3><i class="lead"></i><span class="price">R$ 25,00</span></div><p>Hambúrguer, queijo, bacon crocante e salada.</p></li>
-        <li class="item"><div class="line"><h3>X-Tudo</h3><i class="lead"></i><span class="price">R$ 30,00</span></div><p>Hambúrguer, ovo, bacon, presunto, queijo, salada e milho.</p></li>
-        <li class="item"><div class="line"><h3>Bauru</h3><i class="lead"></i><span class="price">R$ 17,00</span></div><p>Presunto, queijo derretido e tomate no pão francês.</p></li>
-        <li class="item"><div class="line"><h3>Misto Quente</h3><i class="lead"></i><span class="price">R$ 10,00</span></div><p>Pão de forma, presunto e queijo na chapa.</p></li>
-      </ul>
-    </section>
-
-    <section class="sec" id="porcoes">
-      <header class="sec-head"><p class="orn">★★★</p><h2>Porções</h2><p>Para dividir · servem 2 a 3 pessoas</p></header>
-      <ul class="items">
-        <li class="item"><div class="line"><h3>Batata Frita</h3><i class="lead"></i><span class="price">R$ 28,00</span></div><p>Crocante. Com cheddar e bacon, <span style="font-family:var(--slab)">+ R$ 8,00</span>.</p></li>
-        <li class="item"><span class="hot">★ Mais pedido</span><div class="line"><h3>Frango a Passarinho</h3><i class="lead"></i><span class="price">R$ 42,00</span></div><p>Com alho frito e limão.</p></li>
-        <li class="item"><div class="line"><h3>Calabresa Acebolada</h3><i class="lead"></i><span class="price">R$ 38,00</span></div><p>Acompanha pão.</p></li>
-        <li class="item"><div class="line"><h3>Mandioca Frita</h3><i class="lead"></i><span class="price">R$ 30,00</span></div><p>Sequinha por fora, macia por dentro.</p></li>
-        <li class="item"><div class="line"><h3>Isca de Tilápia</h3><i class="lead"></i><span class="price">R$ 55,00</span></div><p>Empanada, com molho tártaro.</p></li>
-        <li class="item"><div class="line"><h3>Contra-filé Acebolado</h3><i class="lead"></i><span class="price">R$ 65,00</span></div><p>Com fritas e farofa.</p></li>
-      </ul>
-    </section>
-
-    <section class="sec" id="pasteis">
-      <header class="sec-head"><p class="orn">★★★</p><h2>Pastéis</h2><p>Massa fina e recheio caprichado</p></header>
-      <ul class="items">
-        <li class="item"><div class="line"><h3>Carne</h3><i class="lead"></i><span class="price">R$ 12,00</span></div></li>
-        <li class="item"><div class="line"><h3>Queijo</h3><i class="lead"></i><span class="price">R$ 12,00</span></div></li>
-        <li class="item"><div class="line"><h3>Pizza</h3><i class="lead"></i><span class="price">R$ 13,00</span></div><p>Queijo, presunto, tomate e orégano.</p></li>
-        <li class="item"><div class="line"><h3>Frango com Catupiry</h3><i class="lead"></i><span class="price">R$ 14,00</span></div></li>
-      </ul>
-    </section>
-
-    <section class="sec" id="almoco">
-      <header class="sec-head"><p class="orn">★★★</p><h2>Almoço</h2><p>Prato cheio, do jeito de casa</p></header>
-      <ul class="items">
-        <li class="item"><div class="line"><h3>Prato Feito</h3><i class="lead"></i><span class="price">R$ 26,00</span></div><p>Arroz, feijão, salada, fritas e bife ou frango grelhado.</p></li>
-        <li class="item"><div class="line"><h3>Parmegiana</h3><i class="lead"></i><span class="price">R$ 36,00</span></div><p>De frango ou de carne, com arroz e fritas.</p></li>
-        <li class="item"><div class="line"><h3>Omelete</h3><i class="lead"></i><span class="price">R$ 22,00</span></div><p>Com legumes e salada verde.</p></li>
-        <li class="item"><div class="line"><h3>Salada do Atleta</h3><i class="lead"></i><span class="price">R$ 28,00</span></div><p>Folhas, frango grelhado, grão-de-bico e molho de iogurte.</p></li>
-      </ul>
-    </section>
-
-    <section class="sec" id="bebidas">
-      <header class="sec-head"><p class="orn">★★★</p><h2>Bebidas</h2><p>Bem geladas</p></header>
-      <ul class="items">
-        <li class="item"><div class="line"><h3>Água</h3><i class="lead"></i><span class="price">R$ 4,00</span></div><p>Com ou sem gás.</p></li>
-        <li class="item"><div class="line"><h3>Refrigerante Lata</h3><i class="lead"></i><span class="price">R$ 7,00</span></div></li>
-        <li class="item"><div class="line"><h3>Suco Natural</h3><i class="lead"></i><span class="price">R$ 10,00</span></div><p>Laranja, limão ou abacaxi com hortelã.</p></li>
-        <li class="item"><div class="line"><h3>Isotônico</h3><i class="lead"></i><span class="price">R$ 8,00</span></div></li>
-        <li class="item"><div class="line"><h3>Água de Coco</h3><i class="lead"></i><span class="price">R$ 8,00</span></div></li>
-        <li class="item"><div class="line"><h3>Cerveja Long Neck</h3><i class="lead"></i><span class="price">R$ 10,00</span></div><p>Somente para maiores de 18 anos.</p></li>
-      </ul>
-    </section>
-
-    <section class="sec" id="doces">
-      <header class="sec-head"><p class="orn">★★★</p><h2>Doces</h2><p>Para fechar com chave de ouro</p></header>
-      <ul class="items">
-        <li class="item"><div class="line"><h3>Açaí 300 ml</h3><i class="lead"></i><span class="price">R$ 16,00</span></div></li>
-        <li class="item"><span class="hot">★ Mais pedido</span><div class="line"><h3>Açaí 500 ml</h3><i class="lead"></i><span class="price">R$ 22,00</span></div></li>
-        <li class="item"><div class="line"><h3>Picolé</h3><i class="lead"></i><span class="price">R$ 6,00</span></div></li>
-        <li class="item"><div class="line"><h3>Churros</h3><i class="lead"></i><span class="price">R$ 8,00</span></div><p>Doce de leite ou chocolate.</p></li>
-      </ul>
-    </section>
+    <!-- As seções do cardápio são montadas a partir de CARDAPIO (configurações, mais abaixo) -->
+    <div id="secoes"></div>
 
     <section class="sec" id="agenda">
       <header class="sec-head"><p class="orn">★★★</p><h2>Agenda</h2><p>Próximos eventos do clube</p></header>
       <div class="agenda-list" id="agendaList"></div>
     </section>
 
-    <p class="note18">Preços sujeitos a alteração. Venda de bebidas alcoólicas proibida para menores de 18 anos.</p>
+    <p class="note18">Preços sujeitos a alteração. Embalagem para viagem R$ 1,00.<br>
+      Por gentileza, devolva garrafas, copos e pratos no balcão da lanchonete. Lixo no lixo!<br>
+      Venda de bebidas alcoólicas proibida para menores de 18 anos.</p>
   </div>
 </main>
 
@@ -496,6 +464,9 @@
     <div id="horarios">
       <h4>Horário da lanchonete</h4>
       <table class="hours"><tbody id="hoursTable"></tbody></table>
+      <p class="hours-extra">Almoço: quarta a sexta, 11h às 14h · sábado e domingo, 11h às 15h. Segunda e terça não servimos almoço.</p>
+      <p class="hours-extra">Sexta, a partir das 18h: Cardápio Especial Tenda.</p>
+      <p class="hours-extra">Em dias de evento, os horários do bar e da cozinha podem ser estendidos.</p>
     </div>
   </div>
   <div class="fine">
@@ -549,17 +520,30 @@
 
 <!-- ============ Configurações fáceis de editar ============ -->
 <script>
-  // Horário da lanchonete: [abre, fecha] — use null para dia fechado.
+  // Todos os horários seguem o fuso de Brasília, seja qual for o relógio do aparelho.
+  const FUSO = 'America/Sao_Paulo';
+
+  // Horário do bar: [abre, fecha, cozinha até] — use null para dia fechado.
   // 0 = domingo, 1 = segunda … 6 = sábado
   const HORARIO = {
-    0: ['08:00', '22:00'],
-    1: ['08:00', '22:00'],
-    2: ['08:00', '22:00'],
-    3: ['08:00', '22:00'],
-    4: ['08:00', '22:00'],
-    5: ['08:00', '22:00'],
-    6: ['08:00', '22:00'],
+    0: ['10:00', '20:00', '19:00'],
+    1: ['14:30', '22:00', '21:00'],
+    2: ['10:00', '22:00', '21:00'],
+    3: ['10:00', '22:00', '21:00'],
+    4: ['10:00', '22:00', '21:00'],
+    5: ['10:00', '22:00', '21:00'],
+    6: ['10:00', '21:00', '20:00'],
   };
+  // Almoço executivo (segunda e terça não tem).
+  const ALMOCO = {
+    3: ['11:00', '14:00'], 4: ['11:00', '14:00'], 5: ['11:00', '14:00'],
+    6: ['11:00', '15:00'], 0: ['11:00', '15:00'],
+  };
+
+  // Cardápio Especial Tenda: entra sozinho na sexta às 18h e sai no sábado às 6h.
+  // No resto do tempo vale o cardápio completo.
+  // Para conferir um dos dois a qualquer hora: adicione ?modo=tenda ou ?modo=completo ao endereço.
+  const TENDA = { de: [5, '18:00'], ate: [6, '06:00'] };
 
   // Agenda: eventos que já passaram somem sozinhos.
   const AGENDA = [
@@ -571,6 +555,421 @@
   const AGENDA_PLANILHA = '';
 
   const FUNDACAO = new Date(1918, 3, 21); // 21 de abril de 1918
+
+  /* ===== Cardápios =====
+     Cada item: n = nome, p = preço (número, ou [inteira, média]), d = descrição,
+     tag = selo (ex.: 'Novidade'), rot = rótulos dos dois preços (padrão: Inteira / Média).
+     Fonte: fotos do cardápio impresso (ver dados/cardapio-oficial.md). */
+  const PIZZAS_TENDA = [
+    { n: 'Camarão', p: 90, tag: 'Novidade', d: 'Mussarela, catupiry, camarão, azeitona preta e orégano.' },
+    { n: 'Filé mignon', p: 85, d: 'Mussarela, filé mignon, champignon, catupiry, azeitona preta e orégano.' },
+    { n: 'Atum', p: 65, d: 'Mussarela, atum sólido, catupiry, cebola, azeitona preta e orégano.' },
+    { n: 'Brócolis com catupiry, bacon e mussarela', p: 65, d: 'Mussarela, brócolis, bacon.' },
+    { n: 'Milho com bacon e mussarela', p: 65, d: 'Mussarela, milho, bacon, catupiry.' },
+    { n: 'Carijó', p: 65, d: 'Mussarela, frango desfiado, milho, catupiry, azeitona preta e orégano.' },
+    { n: 'Palmito', p: 65, d: 'Mussarela, palmito, catupiry, tomate, azeitona preta e orégano.' },
+    { n: 'Pepperoni', p: 65, d: 'Mussarela, pepperoni, azeitona preta e orégano.' },
+    { n: 'Carne seca', p: 65, tag: 'Novidade', d: 'Carne seca desfiada, mussarela, catupiry, cebola, azeitona e orégano.' },
+    { n: 'Calabresa', p: 60, d: 'Mussarela, calabresa, cebola, azeitona preta e orégano.' },
+    { n: 'Presunto e queijo', p: 60, d: 'Mussarela, presunto, tomate, azeitona preta e orégano.' },
+    { n: 'Mussarela', p: 60, d: 'Mussarela, tomate, azeitona preta e orégano.' },
+  ];
+
+  const CARDAPIO = {
+    completo: {
+      destaque: { label: '★ Novidade no almoço', titulo: 'Virado à Paulista', texto: 'Arroz, tutu de feijão, copa lombo, banana milanesa, ovo frito e torresmo. Você pediu e ele voltou!', stub: 'Almoço executivo', preco: 45 },
+      secoes: [
+        { id: 'almoco', nome: 'Almoço', icone: 'almoco', sub: 'Quarta a sexta, 11h às 14h · Sábado e domingo, 11h às 15h', nota: 'Segunda e terça não servimos almoço.', grupos: [
+          { titulo: 'Carnes', itens: [
+            { n: 'Virado à Paulista', p: 45, tag: 'Novidade', d: 'Arroz, tutu de feijão, copa lombo, banana milanesa, ovo frito e torresmo.' },
+            { n: 'Contra filé grelhado com batata frita', p: 50, d: 'Arroz, feijão, contra filé grelhado e batata frita.' },
+            { n: 'Filé de frango empanado', p: 35, d: 'Arroz, feijão, frango empanado e batata frita ou legumes.' },
+            { n: 'Filé de frango grelhado', p: 30, d: 'Arroz, feijão, filé de frango grelhado e batata frita ou legumes.' },
+            { n: 'Filé mignon ao molho de champignon', p: 53, d: 'Arroz, filé mignon grelhado ao molho de champignon e batata frita.' },
+            { n: 'Filé de tilápia grelhada', p: 40, d: 'Arroz, feijão, tilápia grelhada e batata frita ou legumes.' },
+            { n: 'Salmão ao molho de maracujá', p: 55, d: 'Arroz com castanhas, salmão grelhado ao molho de maracujá e brócolis na manteiga.' },
+            { n: 'Parmegiana de carne (filé mignon)', p: 48, d: 'Arroz, parmegiana de carne e batata frita.' },
+            { n: 'Parmegiana de frango', p: 38, d: 'Arroz, parmegiana de frango e batata frita.' },
+            { n: 'Parmegiana de tilápia', p: 43, d: 'Arroz, parmegiana de tilápia e batata frita.' },
+            { n: 'Parmegiana de camarão', p: 55, d: 'Arroz, parmegiana de camarão e batata frita.' },
+            { n: 'Strogonoff de carne (filé mignon)', p: 40, d: 'Arroz, strogonoff de carne e batata palha.' },
+            { n: 'Strogonoff de frango', p: 32, d: 'Arroz, strogonoff de frango e batata palha.' },
+          ] },
+          { titulo: 'Massas', itens: [
+            { n: 'Linguini à bolonhesa', p: 35, d: 'Massa linguini, molho sugo e carne moída.' },
+            { n: 'Linguini à carbonara', p: 35, d: 'Massa linguini, molho branco com bacon e gema de ovo.' },
+            { n: 'Linguini ao molho de filé mignon com gorgonzola', p: 53, d: 'Massa linguini com iscas de filé mignon ao molho de gorgonzola.' },
+            { n: 'Linguini ao molho sugo', p: 30 },
+            { n: 'Linguini ao alho e óleo', p: 20 },
+            { n: 'Nhoque ao molho sugo', p: 33 },
+            { n: 'Nhoque à bolonhesa', p: 35 },
+            { n: 'Nhoque aos 4 queijos', p: 35 },
+          ] },
+          { titulo: 'Fitness', itens: [
+            { n: 'Prato Fitness 1', p: 35, d: 'Filé de frango grelhado e salada.' },
+            { n: 'Prato Fitness 2', p: 40, d: 'Filé de tilápia grelhada e salada.' },
+            { n: 'Salada Completa', p: 25, d: 'Mix de folhas, tomate, cebola, pepino japonês, cenoura e mussarela.' },
+          ] },
+          { titulo: 'Omeletes', nota: 'Feitos com 3 ovos! Adicione salada por mais R$ 7,00.', itens: [
+            { n: 'Simples', p: 12 },
+            { n: 'Queijo', p: 17 },
+            { n: 'Presunto e queijo', p: 17 },
+            { n: 'Brócolis com catupiry', p: 17 },
+            { n: 'Brócolis com mussarela', p: 17 },
+          ] },
+          { titulo: 'Kids', nota: 'Não trocamos os ingredientes dos pratos kids.', itens: [
+            { n: 'Filé de frango grelhado', p: 20, d: 'Com batata smiles, arroz e feijão.' },
+            { n: 'Filé mignon grelhado', p: 26, d: 'Com batata smiles, arroz e feijão.' },
+          ] },
+          { titulo: 'Adicionais', itens: [
+            { n: 'Arroz', p: 5 }, { n: 'Feijão', p: 6 }, { n: 'Fritas', p: 9 },
+            { n: 'Legumes', p: 8 }, { n: 'Salada', p: 7 }, { n: 'Ovo frito', p: 5 },
+          ] },
+        ] },
+
+        { id: 'porcoes', nome: 'Porções', icone: 'porcoes', sub: 'Para dividir · inteira ou média', grupos: [
+          { itens: [
+            { n: 'Fritas simples', p: [32, 23], d: 'Acompanha molho de alho.' },
+            { n: 'Fritas com bacon e cheddar', p: [45, 30], d: 'Acompanha molho de alho. Troque o cheddar por mussarela, se preferir.' },
+            { n: 'Fritas só com bacon', p: [40, 28], d: 'Acompanha molho de alho.' },
+            { n: 'Fritas só com cheddar', p: [40, 28], d: 'Acompanha molho de alho.' },
+            { n: 'Fritas só com mussarela', p: [40, 28], d: 'Acompanha molho de alho.' },
+            { n: 'Mandioca frita', p: [28, 20], d: 'Acompanha molho de alho.' },
+            { n: 'Polenta frita', p: [28, 20], d: 'Acompanha molho de alho.' },
+            { n: 'Polenta recheada com queijo', p: 32, d: 'Inteira. Acompanha molho de alho.' },
+            { n: 'Calabresa acebolada', p: [60, 45], d: 'Acompanha pão francês e limão.' },
+            { n: 'Torresmo (pururuca)', p: [60, 40], d: 'Acompanha molho de alho.' },
+            { n: 'Iscas de frango empanado no palito', p: [62, 46], d: 'Acompanha molho de alho e limão.' },
+            { n: 'Contrafilé acebolado', p: [80, 55], d: 'Acompanha pão francês e limão.' },
+            { n: 'Tilápia', p: [80, 55], d: 'Acompanha molho de alho, limão, cebolinha em conserva e pimenta biquinho.' },
+            { n: 'Filé mignon com molho de gorgonzola', p: [85, 65], d: 'Acompanha pão francês.' },
+            { n: 'Tábua de frios', p: 75, d: 'Provolone, gorgonzola, presunto, mussarela, salame, azeitona, ovo de codorna, pimenta biquinho, cebolinha em conserva e limão. Somente após o horário de almoço.' },
+            { n: 'Amendoim', p: 5, d: 'Xícara.' },
+          ] },
+          { titulo: 'Camarão empanado', nota: 'Aprox. 20 unidades. Acompanha molho tártaro, molho de alho e limão.', itens: [
+            { n: 'Camarão empanado com batata frita', p: 75 },
+            { n: 'Camarão empanado com anéis de cebola', p: 75 },
+            { n: 'Anéis de cebola', p: [28, 20], d: 'Acompanha molho de alho.' },
+            { n: 'Mini churros recheado com doce de leite', p: 28, d: 'Aprox. 20 unidades. Canela e açúcar opcional.' },
+          ] },
+          { titulo: 'Porção Mista Especial', nota: 'Não é permitido trocar os ingredientes dessa porção.', itens: [
+            { n: 'Porção Mista Especial', p: 145, d: 'Contra filé acebolado, batata frita, anéis de cebola, mandioca e polenta. Acompanha molho de alho e limão.' },
+          ] },
+        ] },
+
+        { id: 'boteco', nome: 'Boteco', icone: 'boteco', sub: 'Novidade · comidas de boteco', nota: 'Acompanham molho de alho e limão.', grupos: [
+          { itens: [
+            { n: 'Mini kibe', p: 33 },
+            { n: 'Mini coxinha de costela', p: 28 },
+            { n: 'Mini coxinha de frango', p: 28 },
+            { n: 'Mini croquete de carne com gorgonzola e cebola roxa', p: 28 },
+            { n: 'Mini bolinho de cupim com pimenta biquinho', p: 28 },
+            { n: 'Mini bolinho de mandioca com carne seca', p: 28 },
+            { n: 'Mini bolinho de mandioca com costela', p: 28 },
+            { n: 'Mini bolinho de mandioca com linguiça e queijo', p: 28, tag: 'Novo' },
+          ] },
+        ] },
+
+        { id: 'pasteis', nome: 'Pastéis & Salgados', icone: 'pasteis', sub: 'Pastel crocante, sequinho e saboroso', grupos: [
+          { titulo: 'Pastéis', itens: [
+            { n: 'Pastel de carne seca com catupiry e mussarela', p: 15, tag: 'Novidade', d: 'Adicione cebola por mais R$ 1,00.' },
+            { n: 'Pastel', p: 12, d: 'Carne · Queijo · Frango · Palmito · Pizza (presunto, queijo, tomate e orégano) · Calabresa · Presunto e queijo · Brócolis com bacon e cheddar (troque o cheddar por mussarela ou catupiry).' },
+            { n: 'Pastel doce', p: 12, d: 'Chocolate ao leite · Chocolate branco · Misto (ao leite + branco) · Romeu & Julieta · Doce de leite.' },
+            { n: 'Adicionais', p: 2, d: 'Queijo, cheddar, bacon, catupiry ou azeitona. Preço por adicional.' },
+          ] },
+          { titulo: 'Salgados', itens: [
+            { n: 'Salgados assados', p: 8, d: 'Esfiha de carne · Esfiha de carne com catupiry · Enrolado de salsicha · Enrolado de presunto e queijo · Hambúrguer.' },
+            { n: 'Salgados fritos', p: 8, d: 'Coxinha de frango · Coxinha de frango com catupiry · Risoles de queijo · Bolinho de carne · Bolinho de carne com ovo.' },
+            { n: 'Kibe', p: 10 },
+            { n: 'Fatia de pizza', p: 10 },
+            { n: 'Fatia de torta de frango', p: 12 },
+            { n: 'Espetinho do quiosque', p: 9, d: 'Consulte horários.' },
+          ] },
+        ] },
+
+        { id: 'pizzas', nome: 'Pizzas', icone: 'pizzas', sub: 'Pizza inteira', nota: 'Não servimos pizza inteira nem fatia no horário de almoço. Pizza meio a meio mantém a de valor maior.', grupos: [
+          { itens: [
+            { n: 'Mussarela', p: 60, d: 'Mussarela, tomate, azeitona preta e orégano.' },
+            { n: 'Calabresa', p: 60, d: 'Mussarela, calabresa, cebola, azeitona preta e orégano.' },
+            { n: 'Presunto e queijo', p: 60, d: 'Mussarela, presunto, tomate, azeitona preta e orégano.' },
+            { n: 'Pepperoni', p: 65, d: 'Mussarela, pepperoni, azeitona preta e orégano.' },
+            { n: 'Carijó', p: 65, d: 'Mussarela, frango desfiado, milho, catupiry, azeitona preta e orégano.' },
+            { n: 'Palmito', p: 65, d: 'Mussarela, palmito, catupiry, tomate, azeitona preta e orégano.' },
+            { n: 'Atum', p: 65, d: 'Mussarela, atum sólido, catupiry, cebola, azeitona preta e orégano.' },
+            { n: 'Brócolis, bacon, catupiry e mussarela', p: 65, d: 'Mussarela, brócolis, bacon, catupiry, azeitona preta e orégano.' },
+            { n: 'Milho com bacon e mussarela', p: 65, d: 'Mussarela, milho, bacon, catupiry, azeitona preta e orégano.' },
+            { n: 'Carne seca', p: 65, tag: 'Novidade', d: 'Carne seca desfiada, mussarela, catupiry, cebola, azeitona e orégano.' },
+            { n: 'Filé mignon', p: 85, d: 'Mussarela, filé mignon, champignon, catupiry, azeitona preta e orégano.' },
+            { n: 'Camarão', p: 90, d: 'Mussarela, catupiry, camarão, azeitona preta e orégano.' },
+          ] },
+          { titulo: 'Pizza doce brotinho', nota: 'Novidade! Somente inteira, não fazemos meio a meio.', itens: [
+            { n: 'Chocolate ao leite com M&M', p: 35 },
+            { n: 'Banana com chocolate branco e canela', p: 35 },
+            { n: 'Banana com chocolate branco, doce de leite e canela', p: 35 },
+          ] },
+        ] },
+
+        { id: 'bebidas', nome: 'Bebidas', icone: 'bebidas', sub: 'Bebidas para todos os momentos', grupos: [
+          { titulo: 'Refrigerantes', itens: [
+            { n: 'Refrigerante lata 350 ml', p: 7 },
+            { n: 'Coca-Cola 600 ml', p: 10 },
+            { n: 'Coca-Cola 1 L', p: 13 },
+            { n: 'Coca-Cola 2 L', p: 16 },
+            { n: 'Itubaína vidro 355 ml', p: 7 },
+          ] },
+          { titulo: 'Águas', itens: [
+            { n: 'Água com gás 500 ml', p: 6 },
+            { n: 'Água sem gás 500 ml', p: 5 },
+            { n: 'Água tônica lata 350 ml', p: 8 },
+            { n: 'H2OH 500 ml', p: 8 },
+          ] },
+          { titulo: 'Sucos e bebidas prontas', itens: [
+            { n: 'Suco Del Valle lata 290 ml', p: 8 },
+            { n: 'Suco Kapo caixa 200 ml', p: 8 },
+            { n: 'Suco Life 300 ml', p: 8 },
+            { n: 'Suco Life 900 ml', p: 15 },
+            { n: 'Gatorade 500 ml', p: 9 },
+            { n: 'Toddynho caixa 200 ml', p: 6 },
+            { n: 'Água de coco caixa 200 ml', p: 6 },
+            { n: 'Monster 473 ml', p: 14 },
+            { n: 'Red Bull 250 ml', p: 14 },
+            { n: 'Smirnoff Ice', p: 12 },
+          ] },
+          { titulo: 'Suco natural', nota: 'Saúde, sabor e bem-estar.', itens: [
+            { n: 'Suco natural', p: [12, 22], rot: ['Copo 500 ml', 'Jarra 1 L'], d: 'Abacaxi, acerola, frutas vermelhas, kiwi, laranja, limão, maracujá, mamão, melancia, melão ou morango. Polpas: abacaxi com hortelã, caju, goiaba ou manga.' },
+            { n: 'Adicional de fruta', p: [3, 5], rot: ['Copo', 'Jarra'] },
+            { n: 'Adicional de leite', p: [3, 5], rot: ['Copo', 'Jarra'] },
+            { n: 'Vitamina 3 frutas 500 ml', p: 15, d: 'Mamão, maçã e banana.' },
+            { n: 'Suco detox 500 ml', p: 12, d: 'Detox 1: abacaxi, maçã verde e erva-doce · Detox 3: maçã, cenoura, beterraba e gengibre · Detox 5: abacaxi, couve, gengibre e hortelã · Detox 6: morango, beterraba e gengibre.' },
+          ] },
+        ] },
+
+        { id: 'cervejas', nome: 'Cervejas', icone: 'cervejas', sub: 'Geladas para reunir', grupos: [
+          { titulo: 'Novidade', itens: [
+            { n: 'Stella Pure Gold 600 ml', p: 12, tag: 'Novidade' },
+            { n: 'Stella Pure Gold long neck 330 ml', p: 8, tag: 'Novidade' },
+            { n: 'Heineken Ultimate long neck 330 ml', p: 8, tag: 'Novidade' },
+          ] },
+          { titulo: 'Litrão', itens: [
+            { n: 'Amstel', p: 11 },
+            { n: 'Budweiser', p: 11 },
+          ] },
+          { titulo: '600 ml', itens: [
+            { n: 'Heineken', p: 12 },
+            { n: 'A Outra Malzebier', p: 10 },
+            { n: 'Stella', p: 10 },
+            { n: 'Original', p: 10 },
+            { n: 'Spaten', p: 9 },
+            { n: 'Antártica', p: 9 },
+            { n: 'Brahma', p: 9 },
+            { n: 'Skol', p: 9 },
+            { n: 'Serra Malte', p: 9 },
+            { n: 'Petra', p: 7, d: 'Ou 4 Petra por R$ 25,00.' },
+          ] },
+          { titulo: 'Lata 350 ml', itens: [
+            { n: 'Heineken', p: 7 },
+            { n: 'Heineken Zero', p: 7 },
+            { n: 'Brahma', p: 5 },
+            { n: 'Skol', p: 5 },
+            { n: 'Antártica', p: 5 },
+          ] },
+          { titulo: 'Long neck 330 / 355 ml', itens: [
+            { n: 'Corona Zero', p: 8 },
+            { n: 'Corona', p: 8 },
+            { n: 'Stella Pure Gold', p: 8 },
+            { n: 'Michelob Ultra', p: 8 },
+            { n: 'Brahma Malzbier', p: 6 },
+          ] },
+        ] },
+
+        { id: 'drinks', nome: 'Drinks & Doses', icone: 'drinks', sub: 'Somente para maiores de 18 anos', grupos: [
+          { titulo: 'Caipirinha (1 fruta)', nota: 'Adicional de fruta na caipirinha: R$ 5,00.', itens: [
+            { n: 'Velho Barreiro', p: 15 },
+            { n: '51', p: 15 },
+            { n: 'Smirnoff', p: 20 },
+            { n: 'Balalaika', p: 15 },
+            { n: 'Saquê', p: 15 },
+            { n: 'Vinho', p: 18 },
+          ] },
+          { titulo: 'Drinks', itens: [
+            { n: 'Alexander', p: 16, d: 'Conhaque, licor de cacau e creme de leite.' },
+            { n: 'Blue Marguerita', p: 22, d: 'Curaçau blue, tequila prata e cointreau.' },
+            { n: 'Cuba Libre', p: 18, d: 'Rum, Coca-Cola e suco de limão.' },
+            { n: 'Espanhola', p: 15, d: 'Vinho, abacaxi, morango e leite condensado.' },
+            { n: 'Gin Tônica', p: 15 },
+            { n: 'Lagoa Azul', p: 20, d: 'Smirnoff, curaçau blue e tônica.' },
+            { n: 'Maria-Mole', p: 8, d: 'Domecq com vermouth.' },
+            { n: 'Mojito', p: 18, d: 'Gin, tônica, limão e hortelã.' },
+            { n: 'Negroni', p: 20, d: 'Campari, gin, vermute rosso e rodela de laranja.' },
+            { n: 'Nevada', p: 18, d: 'Limão, vodka, leite condensado e gelo.' },
+            { n: 'Spritz', p: 18, d: 'Aperol, tônica, vinho branco e laranja.' },
+            { n: 'Tropicaliente', p: 18, d: 'Aperol, gin, maracujá e abacaxi.' },
+          ] },
+          { titulo: 'Doses', itens: [
+            { n: 'Red Label', p: 22 },
+            { n: 'Passport', p: 13 },
+            { n: 'Campari', p: 16, d: 'Escolha o preparo no balcão.' },
+            { n: 'Aperol', p: 8 },
+            { n: 'Smirnoff', p: 12 },
+            { n: 'Balalaika', p: 7 },
+            { n: 'Domecq', p: 10 },
+            { n: 'Taça de vinho', p: 12 },
+            { n: 'Cynar', p: 6 },
+            { n: 'Martini', p: 6 },
+            { n: 'Ypioca', p: 4 },
+            { n: 'Velho Barreiro / 51', p: 4 },
+            { n: 'Seleta / São Francisco', p: 6 },
+            { n: 'Salinas / Canelinha', p: 6 },
+            { n: 'Licor de cacau', p: 7 },
+            { n: 'Gin', p: 8 },
+            { n: 'Dreher', p: 6 },
+            { n: 'Groselha', p: 4 },
+            { n: 'Paratudo', p: 7 },
+            { n: 'José Cuervo', p: 8 },
+            { n: 'Montilla', p: 8 },
+          ] },
+        ] },
+      ],
+    },
+
+    tenda: {
+      destaque: { label: '★ Novidade na Tenda', titulo: 'Pastel de carne seca com catupiry e mussarela', texto: 'Adicione cebola por mais R$ 1,00.', stub: 'Pastel', preco: 15 },
+      secoes: [
+        { id: 'pizzas', nome: 'Pizzas', icone: 'pizzas', sub: 'Pizza inteira', nota: 'Pizzas somente após o horário de almoço. Pizza meio a meio mantém a de valor maior.', grupos: [
+          { itens: PIZZAS_TENDA },
+        ] },
+
+        { id: 'boteco', nome: 'Boteco', icone: 'boteco', sub: 'Comidas de boteco · 15 unidades', nota: 'Acompanham molho de alho e limão.', grupos: [
+          { itens: [
+            { n: 'Mini kibe', p: 33 },
+            { n: 'Mini coxinha de costela', p: 28 },
+            { n: 'Mini coxinha de frango', p: 28 },
+            { n: 'Mini croquete de carne com gorgonzola e cebola roxa', p: 28 },
+            { n: 'Mini bolinho de cupim com pimenta biquinho', p: 28 },
+            { n: 'Mini bolinho de mandioca com carne seca', p: 28 },
+            { n: 'Mini bolinho de mandioca com costela', p: 28 },
+          ] },
+        ] },
+
+        { id: 'porcoes', nome: 'Porções', icone: 'porcoes', sub: 'Para dividir · inteira ou média', grupos: [
+          { itens: [
+            { n: 'Fritas completa', p: [45, 30], d: 'Bacon e cheddar ou bacon e mussarela.' },
+            { n: 'Fritas só com bacon, só cheddar ou só mussarela', p: [40, 28] },
+            { n: 'Fritas simples', p: [32, 23] },
+            { n: 'Tilápia', p: [80, 55] },
+            { n: 'Mandioca', p: [28, 20] },
+            { n: 'Polenta', p: [28, 20] },
+            { n: 'Calabresa', p: [60, 45] },
+            { n: 'Torresmo', p: [60, 40] },
+            { n: 'Iscas de frango empanado no palito', p: [62, 46] },
+            { n: 'Contra filé acebolado', p: [80, 55] },
+            { n: 'Polenta recheada com queijo', p: 32, d: 'Inteira.' },
+          ] },
+        ] },
+
+        { id: 'pasteis', nome: 'Pastel & Salgados', icone: 'pasteis', grupos: [
+          { itens: [
+            { n: 'Pastel de carne seca com catupiry e mussarela', p: 15, tag: 'Novidade', d: 'Adicione cebola por mais R$ 1,00.' },
+            { n: 'Pastel', p: 12, d: 'Pizza · Presunto e queijo · Queijo · Carne · Brócolis com cheddar e bacon (troque o cheddar por catupiry ou mussarela).' },
+            { n: 'Adicionais', p: 2, d: 'Cheddar, queijo, bacon, catupiry ou azeitona. Preço por adicional.' },
+            { n: 'Salgados', p: 8 },
+            { n: 'Kibe', p: 10 },
+            { n: 'Espetinhos do quiosque', p: 9 },
+            { n: 'Fatia de torta', p: 12 },
+            { n: 'Fatia de pizza', p: 10 },
+          ] },
+        ] },
+
+        { id: 'bebidas', nome: 'Bebidas', icone: 'bebidas', grupos: [
+          { itens: [
+            { n: 'Refrigerante lata 350 ml', p: 7 },
+            { n: 'Coca-Cola 600 ml', p: 10 },
+            { n: 'Coca-Cola 1 L', p: 13 },
+            { n: 'Coca-Cola 2 L', p: 16 },
+            { n: 'Suco Del Valle lata 290 ml', p: 8 },
+            { n: 'Suco Kapo caixa 200 ml', p: 5 },
+            { n: 'H2OH 500 ml', p: 8 },
+            { n: 'Água com gás 500 ml', p: 6 },
+            { n: 'Água sem gás 500 ml', p: 5 },
+            { n: 'Água tônica lata 350 ml', p: 8 },
+            { n: 'Gatorade 500 ml', p: 9 },
+            { n: 'Energético Monster', p: 14 },
+            { n: 'Energético Red Bull', p: 14 },
+            { n: 'Smirnoff Ice', p: 12 },
+            { n: 'Toddynho', p: 6 },
+            { n: 'Água de coco', p: 6 },
+            { n: 'Suco Life 300 ml', p: 8 },
+            { n: 'Suco Life 900 ml', p: 15 },
+          ] },
+          { titulo: 'Suco natural', itens: [
+            { n: 'Suco natural', p: [12, 22], rot: ['Copo 500 ml', 'Jarra 1 L'], d: 'Abacaxi, acerola, frutas vermelhas, kiwi, laranja, limão, maracujá, mamão, melancia, melão ou morango. Polpas: abacaxi com hortelã, caju, goiaba ou manga.' },
+            { n: 'Adicional de fruta', p: [3, 5], rot: ['Copo', 'Jarra'] },
+          ] },
+        ] },
+
+        { id: 'cervejas', nome: 'Cervejas', icone: 'cervejas', grupos: [
+          { titulo: 'Garrafa', itens: [
+            { n: 'Heineken 600 ml', p: 12 },
+            { n: 'Amstel litrão', p: 11 },
+            { n: 'Budweiser litrão', p: 11 },
+            { n: 'A Outra Malzebier 600 ml', p: 10 },
+            { n: 'Stella 600 ml', p: 10 },
+            { n: 'Original 600 ml', p: 10 },
+            { n: 'Spaten 600 ml', p: 9 },
+            { n: 'Boa 600 ml', p: 9 },
+            { n: 'Brahma 600 ml', p: 9 },
+            { n: 'Skol 600 ml', p: 9 },
+            { n: 'Serra Malte 600 ml', p: 9 },
+            { n: 'Petra 600 ml', p: 7, d: 'Ou 4 Petra por R$ 25,00.' },
+          ] },
+          { titulo: 'Lata e long neck', itens: [
+            { n: 'Heineken lata 350 ml', p: 7 },
+            { n: 'Heineken Zero lata 350 ml', p: 7 },
+            { n: 'Brahma lata 350 ml', p: 5 },
+            { n: 'Skol lata 350 ml', p: 5 },
+            { n: 'Boa lata 350 ml', p: 5 },
+            { n: 'Brahma Malzbier long neck 355 ml', p: 6 },
+            { n: 'Corona Zero long neck 330 ml', p: 8 },
+            { n: 'Corona Extra long neck 330 ml', p: 8 },
+            { n: 'Michelob Ultra long neck 330 ml', p: 8 },
+            { n: 'Stella Pure Gold long neck 330 ml', p: 8 },
+          ] },
+        ] },
+
+        { id: 'drinks', nome: 'Drinks & Doses', icone: 'drinks', sub: 'Somente para maiores de 18 anos', grupos: [
+          { titulo: 'Drinks', nota: 'Adicional de fruta na caipirinha: R$ 5,00.', itens: [
+            { n: 'Caipirinha Velho Barreiro', p: 15 },
+            { n: 'Caipirinha 51', p: 15 },
+            { n: 'Caipirinha Smirnoff', p: 20 },
+            { n: 'Caipirinha Balalaika', p: 15 },
+            { n: 'Caipirinha Saquê', p: 15 },
+            { n: 'Caipirinha Vinho', p: 18 },
+            { n: 'Gin Tônica', p: 15 },
+            { n: 'Negroni', p: 20, d: 'Campari, gin, vermute rosso e rodela de laranja.' },
+            { n: 'Espanhola', p: 15, d: 'Vinho, abacaxi, morango e leite condensado.' },
+            { n: 'Spritz', p: 18, d: 'Aperol, tônica, vinho branco e laranja.' },
+            { n: 'Tropicaliente', p: 18, d: 'Aperol, gin, maracujá e abacaxi.' },
+            { n: 'Alexander', p: 16, d: 'Conhaque, licor de cacau e creme de leite.' },
+            { n: 'Blue Marguerita', p: 22, d: 'Curaçau blue, tequila prata e cointreau.' },
+          ] },
+          { titulo: 'Doses', itens: [
+            { n: 'Red Label', p: 22 },
+            { n: 'Passport', p: 13 },
+            { n: 'Campari', p: 16 },
+            { n: 'Velho Barreiro', p: 4 },
+            { n: '51', p: 4 },
+            { n: 'Smirnoff', p: 12 },
+            { n: 'Balalaika', p: 7 },
+            { n: 'Domecq', p: 10 },
+            { n: 'Taça de vinho', p: 12 },
+            { n: 'Seleta / São Francisco', p: 6 },
+            { n: 'Salinas / Canelinha', p: 6 },
+            { n: 'Aperol', p: 8 },
+          ] },
+        ] },
+      ],
+    },
+  };
 </script>
 
 <!-- ============ Comportamento da página ============ -->
@@ -579,6 +978,26 @@
   const DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
   const hm = s => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
   const fmt = s => { const [h, m] = s.split(':'); return +h + 'h' + (m !== '00' ? m : ''); };
+  const brl = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+  // Dia da semana, minutos e data (AAAA-MM-DD) no horário de Brasília
+  const partsSP = new Intl.DateTimeFormat('en-US', { timeZone: FUSO, weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+  function agora() {
+    const p = Object.fromEntries(partsSP.formatToParts(new Date()).map(x => [x.type, x.value]));
+    const dia = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(p.weekday);
+    return { dia, mins: +p.hour * 60 + +p.minute, iso: `${p.year}-${p.month}-${p.day}` };
+  }
+
+  // ---- Qual cardápio vale agora
+  const forcado = new URLSearchParams(location.search).get('modo');
+  function modoAgora(t) {
+    if (forcado === 'tenda' || forcado === 'completo') return forcado;
+    const semana = t.dia * 1440 + t.mins;
+    const ini = TENDA.de[0] * 1440 + hm(TENDA.de[1]), fim = TENDA.ate[0] * 1440 + hm(TENDA.ate[1]);
+    const dentro = ini <= fim ? semana >= ini && semana < fim : semana >= ini || semana < fim;
+    return dentro ? 'tenda' : 'completo';
+  }
 
   // ---- Idade do clube
   (() => {
@@ -590,13 +1009,14 @@
   })();
 
   // ---- Aberto agora / horários
-  function updateHours() {
-    const now = new Date(), d = now.getDay(), mins = now.getHours() * 60 + now.getMinutes();
-    const today = HORARIO[d];
+  function updateHours(t) {
+    const d = t.dia, mins = t.mins, today = HORARIO[d], lunch = ALMOCO[d];
     const box = document.getElementById('status');
     let text, open = false;
     if (today && mins >= hm(today[0]) && mins < hm(today[1])) {
-      open = true; text = `Aberto agora · fecha às ${fmt(today[1])}`;
+      open = true;
+      text = mins < hm(today[2]) ? `Aberto agora · cozinha até ${fmt(today[2])}` : `Aberto agora até ${fmt(today[1])} · cozinha já fechou`;
+      if (lunch && mins >= hm(lunch[0]) && mins < hm(lunch[1])) text += ` · almoço até ${fmt(lunch[1])}`;
     } else if (today && mins < hm(today[0])) {
       text = `Fechado · abre hoje às ${fmt(today[0])}`;
     } else {
@@ -608,13 +1028,72 @@
     }
     box.className = 'status ' + (open ? 'open' : 'closed');
     box.querySelector('span').textContent = text;
-    document.getElementById('todayHours').textContent =
-      today ? `Hoje (${DIAS[d].toLowerCase()}): das ${fmt(today[0])} às ${fmt(today[1])}` : `Hoje (${DIAS[d].toLowerCase()}): fechado`;
-    document.getElementById('hoursTable').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(i =>
-      `<tr class="${i === d ? 'now' : ''}"><td>${DIAS[i]}</td><td>${HORARIO[i] ? fmt(HORARIO[i][0]) + ' às ' + fmt(HORARIO[i][1]) : 'Fechado'}</td></tr>`).join('');
+    document.getElementById('todayHours').textContent = today
+      ? `Hoje (${DIAS[d].toLowerCase()}): das ${fmt(today[0])} às ${fmt(today[1])} · cozinha até ${fmt(today[2])}`
+      : `Hoje (${DIAS[d].toLowerCase()}): fechado`;
+    document.getElementById('hoursTable').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(i => {
+      const h = HORARIO[i];
+      return `<tr class="${i === d ? 'now' : ''}"><td>${DIAS[i]}</td><td>${h ? `${fmt(h[0])} às ${fmt(h[1])}<small>cozinha até ${fmt(h[2])}</small>` : 'Fechado'}</td></tr>`;
+    }).join('');
   }
-  updateHours();
-  setInterval(updateHours, 60000);
+
+  // ---- Monta o cardápio da vez
+  const ICONES = {
+    almoco: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/>',
+    porcoes: '<path d="M5.5 10h13l-2 11h-9z"/><path d="M8 10V4.5M11 10V3M14 10V4M17 10V6"/>',
+    boteco: '<path d="M12 3c3 4 6 8 6 11.5a6 6 0 0 1-12 0C6 11 9 7 12 3z"/><path d="M9 15.5a3 3 0 0 0 3 2"/>',
+    pasteis: '<path d="M3 16a9 9 0 0 1 18 0z"/><path d="M5 16l1 2.5M9 16l.7 2.5M15 16l-.7 2.5M19 16l-1 2.5"/>',
+    pizzas: '<path d="M12 21L3.5 6.5a17 17 0 0 1 17 0z"/><path d="M5 9a14 14 0 0 1 14 0"/><circle cx="10" cy="12.5" r="1.1"/><circle cx="13.6" cy="15" r="1.1"/>',
+    bebidas: '<path d="M6 8h12l-1.6 13H7.6z"/><path d="M10 8l1.2-5H15"/>',
+    cervejas: '<path d="M5 8h10v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M15 11h2.5a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H15"/><path d="M5 8a2.5 2.5 0 0 1 2.5-3 3 3 0 0 1 5 0A2.5 2.5 0 0 1 15 8"/>',
+    drinks: '<path d="M4 4h16l-8 9z"/><path d="M12 13v7M8 20h8"/>',
+    agenda: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+  };
+  const navBtn = (id, nome, icone) => `<button type="button" data-go="${id}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONES[icone]}</svg>${esc(nome)}</button>`;
+
+  function precoHTML(it) {
+    if (it.p == null) return '';
+    if (Array.isArray(it.p)) {
+      const rot = it.rot || ['Inteira', 'Média'];
+      return `<span class="price two">${it.p.map((v, i) => `<small>${esc(rot[i])}</small><span>${brl(v)}</span>`).join('')}</span>`;
+    }
+    return `<span class="price">${brl(it.p)}</span>`;
+  }
+  const itemHTML = it => `<li class="item">${it.tag ? `<span class="tag">★ ${esc(it.tag)}</span>` : ''}<div class="line${Array.isArray(it.p) ? ' duo' : ''}"><h4>${esc(it.n)}</h4><i class="lead"></i>${precoHTML(it)}</div>${it.d ? `<p>${esc(it.d)}</p>` : ''}</li>`;
+  const grupoHTML = g => `<div class="grp">${g.titulo ? `<h3 class="grp-title">${esc(g.titulo)}</h3>` : ''}${g.nota ? `<p class="grp-note">${esc(g.nota)}</p>` : ''}<ul class="items">${g.itens.map(itemHTML).join('')}</ul></div>`;
+  const secaoHTML = s => `<section class="sec" id="${s.id}"><header class="sec-head"><p class="orn">★★★</p><h2>${esc(s.nome)}</h2>${s.sub ? `<p>${esc(s.sub)}</p>` : ''}</header>${s.nota ? `<p class="sec-note">${esc(s.nota)}</p>` : ''}${s.grupos.map(grupoHTML).join('')}</section>`;
+
+  let modo = null;
+  function render(novo, t) {
+    modo = novo;
+    const c = CARDAPIO[modo], tenda = modo === 'tenda';
+    document.getElementById('secoes').innerHTML = c.secoes.map(secaoHTML).join('');
+    document.getElementById('navIn').innerHTML = c.secoes.map(s => navBtn(s.id, s.nome, s.icone)).join('') + navBtn('agenda', 'Agenda', 'agenda');
+
+    const k = c.destaque;
+    document.getElementById('tkLabel').textContent = k.label;
+    document.getElementById('tkTitle').textContent = k.titulo;
+    document.getElementById('tkText').textContent = k.texto;
+    document.getElementById('tkStub').textContent = k.stub;
+    document.getElementById('tkPrice').textContent = brl(k.preco);
+
+    document.getElementById('modePill').hidden = !tenda;
+    document.title = tenda ? 'Cardápio Especial Tenda · AAB' : 'Cardápio AAB';
+    updateModeNote(t);
+    observeSecs();
+  }
+  function updateModeNote(t) {
+    const note = document.getElementById('modeNote');
+    let html = '';
+    if (modo === 'tenda') {
+      html = `★ Cardápio Especial Tenda<small>Vale sexta-feira a partir das ${fmt(TENDA.de[1])}. No resto da semana, cardápio completo.</small>`;
+    } else if (t.dia === TENDA.de[0] && t.mins < hm(TENDA.de[1]) && !forcado) {
+      html = `Hoje, a partir das ${fmt(TENDA.de[1])}, vale o Cardápio Especial Tenda.`;
+    }
+    note.innerHTML = html;
+    note.className = 'mode-note' + (modo === 'tenda' ? ' tenda' : '');
+    note.hidden = !html;
+  }
 
   // ---- Letra maior (lembra a escolha neste aparelho)
   const fontBtn = document.getElementById('fontBtn');
@@ -637,10 +1116,9 @@
   });
 
   // ---- Categoria ativa no menu (e centraliza o botão na barra)
-  const navBtns = [...document.querySelectorAll('nav [data-go]')];
   const spy = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;
-    navBtns.forEach(b => {
+    document.querySelectorAll('nav [data-go]').forEach(b => {
       const on = b.dataset.go === e.target.id;
       b.classList.toggle('on', on);
       if (on) {
@@ -649,7 +1127,21 @@
       }
     });
   }), { rootMargin: '-35% 0px -60% 0px' });
-  document.querySelectorAll('.sec').forEach(s => spy.observe(s));
+  function observeSecs() {
+    spy.disconnect();
+    document.querySelectorAll('.sec').forEach(s => spy.observe(s));
+  }
+
+  // ---- Relógio: confere horário e cardápio a cada minuto (troca sozinho às 18h de sexta)
+  function tick() {
+    const t = agora();
+    updateHours(t);
+    const m = modoAgora(t);
+    if (m !== modo) render(m, t); else updateModeNote(t);
+  }
+  tick();
+  setInterval(tick, 60000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 
   // ---- Combo inclina com o mouse
   const ticket = document.getElementById('ticket');
@@ -664,7 +1156,7 @@
 
   // ---- Agenda automática
   function renderAgenda(list) {
-    const todayISO = new Date().toLocaleDateString('sv-SE'); // AAAA-MM-DD no fuso local
+    const todayISO = agora().iso;
     const next = list.filter(ev => ev.data >= todayISO).sort((a, b) => a.data.localeCompare(b.data));
     const box = document.getElementById('agendaList');
     if (!next.length) {
@@ -677,7 +1169,7 @@
       const mes = dt.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
       const sem = dt.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '');
       return `<div class="event"><div class="date"><b>${String(d).padStart(2, '0')}</b><span>${mes} · ${sem}</span></div>
-        <div><h3>${ev.titulo}</h3><p>${ev.hora ? 'A partir das ' + ev.hora : ''}</p></div></div>`;
+        <div><h3>${esc(ev.titulo)}</h3><p>${ev.hora ? 'A partir das ' + esc(ev.hora) : ''}</p></div></div>`;
     }).join('');
   }
   function parseCSV(text) {

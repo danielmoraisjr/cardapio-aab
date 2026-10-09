@@ -1,7 +1,7 @@
 # Cardápio oficial — Lanchonete AAB (Botucatu – SP)
 
-Transcrição fiel das fotos do cardápio impresso e do cartaz de horários da lanchonete,
-enviadas em 09/10/2026. Esta é a **fonte de verdade** para o site; nada aqui foi inventado.
+Transcrição fiel das fotos do cardápio impresso, do cartaz de horários da lanchonete
+e do "Cardápio Especial Tenda", enviadas em 09/10/2026 (2 lotes de fotos). Esta é a **fonte de verdade** para o site; nada aqui foi inventado.
 Onde a foto não deixa algo claro, está marcado com ⚠️.
 
 Slogan da capa: **"Tradição, Esporte, Lazer e Amizade."**
@@ -21,7 +21,10 @@ Avisos gerais dos impressos: "Imagens ilustrativas". Embalagem para viagem: **R$
 | Sábado | 10:00 às 21:00 | 20:00 |
 | Domingo | 10:00 às 20:00 | 19:00 |
 
-(Em dias de evento, os horários podem ser estendidos.)
+(Em dias de evento, os horários do bar e cozinha podem ser estendidos.)
+
+Na versão do horário que fica dentro do cardápio, a coluna "Lanchonete" aparece como **"Bar"**
+(ex.: "Bar das 14:30 às 22:00"). Os horários são os mesmos.
 
 ### Almoço
 | Dias | Horário |
@@ -189,7 +192,7 @@ Chocolate ao leite · Chocolate branco · Misto (ao leite + branco) · Romeu & J
 
 ### Novidade
 - **Carne seca** — carne seca desfiada, mussarela, catupiry, cebola, azeitona e orégano.
-  ⚠️ Preço não impresso no destaque; aparece logo depois do grupo de R$ 65,00. Confirmar com a lanchonete.
+  **R$ 65,00** (preço confirmado no Cardápio Especial Tenda).
 
 ### Especiais
 - **Filé mignon** — R$ 85,00 — mussarela, filé mignon, champignon, catupiry, azeitona preta e orégano.
@@ -205,6 +208,191 @@ Somente inteira, não fazemos meio a meio. (Pizza inteira e pizza fatia não ser
 
 ---
 
+## Bebidas
+"Bebidas para todos os momentos!"
+
+### Refrigerante
+- Lata 350 ml — R$ 7,00
+- Coca-Cola 600 ml — R$ 10,00
+- Coca-Cola 1 L — R$ 13,00
+- Coca-Cola 2 L — R$ 16,00
+- Itubaína vidro 355 ml — R$ 7,00
+
+### Água
+- Água com gás 500 ml — R$ 6,00
+- Água sem gás 500 ml — R$ 5,00
+- Água tônica lata 350 ml — R$ 8,00
+- H2OH 500 ml — R$ 8,00
+
+### Energético
+- Monster 473 ml — R$ 14,00
+- Red Bull 250 ml — R$ 14,00
+
+### Sucos prontos
+- Suco Del Valle lata 290 ml — R$ 8,00
+- Suco Kapo caixa 200 ml — R$ 8,00
+- Suco Life 300 ml — R$ 8,00
+- Suco Life 900 ml — R$ 15,00
+
+### Bebidas prontas
+- Gatorade 500 ml — R$ 9,00
+- Toddynho caixa 200 ml — R$ 6,00
+- Água de coco caixa 200 ml — R$ 6,00
+- Smirnoff Ice — R$ 12,00
+
+---
+
+## Suco Natural
+"Saúde, sabor e bem-estar!" · "Natural como deve ser, feito para você!"
+
+- **Copo 500 ml** — R$ 12,00
+- **Jarra 1 L** — R$ 22,00
+- Adicional de fruta — copo R$ 3,00 · jarra R$ 5,00
+- Adicional de leite — copo R$ 3,00 · jarra R$ 5,00
+
+**Frutas:** abacaxi, acerola, frutas vermelhas, kiwi, laranja, limão, maracujá, mamão, melancia, melão, morango.
+**Polpas:** abacaxi com hortelã, caju, goiaba, manga.
+
+- **Vitamina 3 frutas** (mamão, maçã e banana) 500 ml — R$ 15,00
+
+### Suco Detox 500 ml — R$ 12,00
+- **Detox 1** — abacaxi, maçã verde e erva-doce
+- **Detox 3** — maçã, cenoura, beterraba e gengibre
+- **Detox 5** — abacaxi, couve, gengibre e hortelã
+- **Detox 6** — morango, beterraba e gengibre
+
+(O impresso pula do 1 para o 3 e do 3 para o 5; não existem Detox 2 e 4 no cardápio.)
+
+---
+
+## Cervejas
+
+### Novidade
+- **Stella Pure Gold 600 ml** — R$ 12,00
+- **Stella Pure Gold long neck 330 ml** — R$ 8,00
+- **Heineken Ultimate long neck 330 ml** — R$ 8,00
+
+(No cartaz o preço aparece como "$12" e "$8".)
+
+### Litrão
+- Amstel — R$ 11,00
+- Budweiser — R$ 11,00
+
+### 600 ml
+- Heineken — R$ 12,00
+- A Outra Malzebier — R$ 10,00
+- Stella — R$ 10,00
+- Original — R$ 10,00
+- Spaten — R$ 9,00
+- Antártica — R$ 9,00 (no Cardápio Especial Tenda aparece como "Boa 600 ml", mesmo preço)
+- Brahma — R$ 9,00
+- Skol — R$ 9,00
+- Serra Malte — R$ 9,00
+- Petra — R$ 7,00 (ou 4 Petra por R$ 25,00)
+
+### Lata 350 ml
+- Heineken — R$ 7,00
+- Heineken Zero — R$ 7,00
+- Brahma — R$ 5,00
+- Skol — R$ 5,00
+- Antártica — R$ 5,00 (no Cardápio Tenda: "Boa lata 350 ml", R$ 5,00)
+
+### Long neck 330 ml / 355 ml
+- Corona Zero — R$ 8,00
+- Corona — R$ 8,00
+- Stella Pure Gold — R$ 8,00
+- Michelob Ultra — R$ 8,00
+- Brahma Malzbier — R$ 6,00
+
+---
+
+## Drinks
+
+### Caipirinha (1 fruta)
+- Velho Barreiro — R$ 15,00
+- 51 — R$ 15,00
+- Smirnoff — R$ 20,00
+- Balalaika — R$ 15,00
+- Saquê — R$ 15,00
+- Vinho — R$ 18,00
+
+Adicional de fruta na caipirinha: R$ 5,00.
+
+### Drinks
+- **Alexander** — R$ 16,00 — conhaque, licor de cacau, creme de leite.
+- **Blue Marguerita** — R$ 22,00 — curaçau blue, tequila prata, cointreau.
+- **Cuba Libre** — R$ 18,00 — rum, Coca-Cola, suco de limão.
+- **Espanhola** — R$ 15,00 — vinho, abacaxi, morango, leite condensado.
+- **Gin Tônica** — R$ 15,00
+- **Lagoa Azul** — R$ 20,00 — Smirnoff, curaçau blue, tônica.
+- **Maria-Mole** — R$ 8,00 — Domecq com vermouth (impresso: "Domeca").
+- **Mojito** — R$ 18,00 — gin, tônica, limão, hortelã.
+- **Negroni** — R$ 20,00 — Campari, gin, vermute rosso, rodela de laranja.
+- **Nevada** — R$ 18,00 — limão, vodka, leite condensado, gelo.
+- **Spritz** — R$ 18,00 — Aperol, tônica, vinho branco, laranja.
+- **Tropicaliente** — R$ 18,00 — Aperol, gin, maracujá, abacaxi.
+
+---
+
+## Doses
+- Red Label — R$ 22,00
+- Passport — R$ 13,00
+- Campari — R$ 16,00 (escolher o preparo do Campari no balcão)
+- Aperol — R$ 8,00
+- Smirnoff — R$ 12,00
+- Balalaika — R$ 7,00
+- Domecq — R$ 10,00
+- Taça de vinho — R$ 12,00
+- Cynar — R$ 6,00
+- Martini — R$ 6,00
+- Ypioca — R$ 4,00
+- Velho Barreiro / 51 — R$ 4,00
+- Seleta / São Francisco — R$ 6,00
+- Salinas / Canelinha — R$ 6,00
+- Licor de cacau — R$ 7,00
+- Gin — R$ 8,00
+- Dreher — R$ 6,00
+- Groselha — R$ 4,00
+- Paratudo — R$ 7,00
+- José Cuervo — R$ 8,00
+- Montilla — R$ 8,00
+
+---
+
+## Cardápio Especial Tenda
+Versão resumida usada na tenda (eventos / "Música na Tenda"). Mesmos preços do cardápio principal,
+com estas particularidades:
+
+- **Salgados** R$ 8,00 · **Kibe** R$ 10,00 · **Espetinhos do quiosque** R$ 9,00 · **Fatia de torta** R$ 12,00 · **Fatia de pizza** R$ 10,00
+- **Pizzas somente após o horário de almoço.** Pizza meio a meio mantém a de valor maior.
+- Pizzas (mesmos preços): Camarão R$ 90 (selo NOVIDADE) · Filé mignon R$ 85 · Atum, Brócolis com catupiry/bacon/mussarela, Milho com bacon e mussarela, Carijó, Palmito, Pepperoni, **Carne seca (NOVIDADE)** R$ 65 · Calabresa, Presunto e queijo, Mussarela R$ 60.
+- **Comidas de Boteco:** porções de **15 unidades**, acompanham molho de alho e limão (mesmos preços: mini kibe R$ 33, demais R$ 28).
+- **Porções (Inteira / Média):**
+  - Fritas completa (bacon e cheddar ou bacon e mussarela) — R$ 45 / R$ 30
+  - Fritas só com bacon ou só cheddar ou só mussarela — R$ 40 / R$ 28
+  - Fritas simples — R$ 32 / R$ 23
+  - Tilápia — R$ 80 / R$ 55
+  - Mandioca — R$ 28 / R$ 20
+  - Polenta — R$ 28 / R$ 20
+  - Calabresa — R$ 60 / R$ 45
+  - Torresmo — R$ 60 / R$ 40
+  - Iscas de frango empanado no palito — R$ 62 / R$ 46
+  - Contra filé acebolado — R$ 80 / R$ 55
+  - Polenta recheada com queijo — inteira R$ 32
+- **Pastel R$ 12,00** (tenda): pizza, presunto e queijo, queijo, carne, brócolis com cheddar e bacon (troque o cheddar por catupiry ou mussarela).
+  Novidade: pastel de carne seca com catupiry e mussarela R$ 15,00 (+ cebola R$ 1,00).
+  Adicionais R$ 2,00 cada: cheddar, queijo, bacon, catupiry, azeitona.
+- **Drinks, bebidas, sucos, cervejas e doses:** mesma lista e preços das seções acima (a tenda mostra uma seleção menor).
+
+---
+
+## Avisos do salão
+- **Pedimos a gentileza de devolver garrafas, copos e pratos até o balcão da lanchonete.**
+- **Colabore conosco! Lixo no lixo!** Faça a parte certa! Não deixe lixo nas mesas!
+  "Pequenas atitudes fazem um grande ambiente! Obrigado!"
+
+---
+
 ## O que as fotos NÃO cobrem
-Não vieram páginas de **lanches (X-burguer etc.), bebidas (refrigerantes, sucos, cervejas) nem açaí/sobremesas avulsas**.
+Não vieram páginas de **lanches (X-burguer, X-salada etc.) nem de açaí/sobremesas avulsas** (fora mini churros e pizza doce).
 Os itens e preços dessas categorias que estão hoje no `index.html` não foram confirmados por estas fotos.

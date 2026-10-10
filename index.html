@@ -354,6 +354,75 @@
     #keeper, #ball { transition-duration: .01s; }
   }
 
+  /* ============ Celular: menos camadas, comida mais cedo ============ */
+  @media (max-width: 599px) {
+    /* Capa compacta: identidade em meia tela, cardápio logo abaixo */
+    .cover { padding-bottom: 18px; }
+    .topbar { padding: 10px 12px 0; }
+    .font-btn { min-height: 40px; padding: 4px 12px; }
+    .font-btn span { display: none; }
+    #crest { height: 210px; }
+    .cover h1 { font-size: 2.3rem; margin: 0 0 6px; }
+    .cover .sub { font-size: .95rem; }
+    .since { margin-top: 10px; padding: 5px 14px; font-size: .78rem; }
+
+    /* Faixa de horário: só o essencial */
+    .today .in { padding: 8px 12px; gap: 2px 12px; }
+    .today .status { font-size: .95rem; width: auto; }
+    #todayHours { display: none; }
+    .today button { font-size: .85rem; }
+
+    /* Categorias: texto puro, sem ícones */
+    nav .in { gap: 4px; padding: 8px 12px; }
+    nav svg { display: none; }
+    nav button { min-width: 0; padding: 8px 14px; border-radius: 999px; font-size: .9rem; }
+
+    /* Folha sem moldura: ganha as laterais */
+    .menu { margin: 0; padding: 0; }
+    .sheet { border: 0; outline: 0; box-shadow: none; padding: 20px 16px 28px; }
+    .mode-note.tenda { display: none; }
+    .mode-note { margin-bottom: 18px; padding: 8px 12px; font-size: .9rem; }
+
+    /* Destaque em uma linha só */
+    .ticket { grid-template-columns: 1fr auto; border-radius: 8px; }
+    .ticket > div { padding: 12px 14px; }
+    .ticket .label { font-size: .7rem; }
+    .ticket h2 { font-size: 1.1rem; margin: 4px 0 0; }
+    #tkText, .ticket .stub small { display: none; }
+    .ticket .stub { border-top: 0; border-left: 2px dashed #ffffff44; }
+    .ticket .stub strong { font-size: 1.3rem; }
+
+    /* Seções e itens mais leves */
+    .sec { padding-top: 36px; scroll-margin-top: 64px; }
+    .sec-head { margin-bottom: 10px; }
+    .sec-head .orn { display: none; }
+    .sec-head h2 { font-size: 1.7rem; gap: 12px; }
+    .sec-head p { font-size: .9rem; }
+    .sec-note { font-size: .85rem; margin: 0 0 12px; }
+    .grp + .grp { margin-top: 24px; }
+    .grp-title { font-size: .9rem; }
+    .grp-note { font-size: .85rem; }
+    .item { padding: 11px 0 10px; }
+    .item .line { justify-content: space-between; }
+    .item .lead { display: none; }
+    .item h4 { font-size: 1.02rem; }
+    .item .price { font-size: 1.02rem; }
+    .item p { font-size: .88rem; line-height: 1.4; margin-top: 2px; }
+    .tag { font-size: .66rem; margin-bottom: 4px; padding: 2px 7px 1px; }
+
+    /* Uma categoria por vez */
+    .tabs .sec:not(.ativa) { display: none; }
+    .tabs .sec { padding-top: 24px; }
+    .next {
+      display: flex; width: 100%; justify-content: space-between; align-items: center;
+      margin-top: 22px; min-height: 52px; padding: 12px 16px;
+      background: var(--ink); color: #fff; border: 0; border-radius: 10px;
+      font-weight: 700; font-size: .95rem;
+    }
+    .next span { color: var(--yellow); }
+  }
+  @media (min-width: 600px) { .next { display: none; } }
+
   @media print {
     .topbar, #crest, nav, .today, #jogo, .fine .egg, .egg-hint { display: none !important; }
     .cover { background: none; color: var(--ink); padding: 0; }
@@ -375,7 +444,7 @@
 <header class="cover">
   <div class="topbar">
     <span></span>
-    <button class="font-btn" id="fontBtn" aria-pressed="false"><b>A+</b><span>Letra maior</span></button>
+    <button class="font-btn" id="fontBtn" aria-pressed="false" aria-label="Letra maior"><b>A+</b><span>Letra maior</span></button>
   </div>
 
   <div id="crest" role="img" aria-label="Escudo da AAB em 3D">
@@ -1080,8 +1149,31 @@
     document.getElementById('modePill').hidden = !tenda;
     document.title = tenda ? 'Cardápio Especial Tenda · AAB' : 'Cardápio AAB';
     updateModeNote(t);
+    montarProximos(c);
+    mostrar(document.getElementById(aba) ? aba : c.secoes[0].id);
     observeSecs();
   }
+
+  // ---- Celular: uma categoria por vez, com botão para a próxima
+  const celular = matchMedia('(max-width: 599px)');
+  let aba = null;
+  function montarProximos(c) {
+    const ordem = [...c.secoes.map(s => [s.id, s.nome]), ['agenda', 'Agenda']];
+    document.querySelectorAll('.next').forEach(b => b.remove());
+    ordem.forEach(([id], i) => {
+      const prox = ordem[i + 1];
+      if (!prox) return;
+      document.getElementById(id).insertAdjacentHTML('beforeend',
+        `<button type="button" class="next" data-go="${prox[0]}">Próximo: ${esc(prox[1])} <span>→</span></button>`);
+    });
+  }
+  function mostrar(id) {
+    aba = id;
+    document.querySelectorAll('.sec').forEach(s => s.classList.toggle('ativa', s.id === id));
+  }
+  function modoAbas() { document.documentElement.classList.toggle('tabs', celular.matches); }
+  modoAbas();
+  celular.addEventListener('change', modoAbas);
   function updateModeNote(t) {
     const note = document.getElementById('modeNote');
     let html = '';
@@ -1112,6 +1204,7 @@
     const btn = e.target.closest('[data-go]');
     if (!btn) return;
     const target = document.getElementById(btn.dataset.go);
+    if (target && target.classList.contains('sec')) mostrar(target.id);
     if (target) target.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
   });
 

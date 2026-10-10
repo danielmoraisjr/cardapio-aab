@@ -16,7 +16,7 @@
     --paper: #f4efe4;
     --card: #fffdf7;
     --ink: #151515;
-    --muted: #434343;
+    --muted: #2f2f2f;
     --rule: #15151526;
     --yellow: #f2c200;
     --green: #3ddc84;
@@ -244,6 +244,7 @@
     .line.duo .lead { display: none; }
     .line.duo .price.two { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 4px 8px; justify-content: flex-start; margin-top: 4px; }
     .line.duo .price.two small:not(:first-child) { margin-left: 14px; }
+    .line.duo .price.two small { font-size: .8rem; color: var(--ink); }
   }
   .price.two small { font-family: var(--sans); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 
@@ -369,14 +370,14 @@
 
     /* Faixa de horário: só o essencial */
     .today .in { padding: 8px 12px; gap: 2px 12px; }
-    .today .status { font-size: .95rem; width: auto; }
+    .today .status { font-size: 1.02rem; width: auto; }
     #todayHours { display: none; }
     .today button { font-size: .85rem; }
 
     /* Categorias: texto puro, sem ícones */
     nav .in { gap: 4px; padding: 8px 12px; }
     nav svg { display: none; }
-    nav button { min-width: 0; padding: 8px 14px; border-radius: 999px; font-size: .9rem; }
+    nav button { min-width: 0; padding: 10px 16px; border-radius: 999px; font-size: 1rem; color: var(--ink); }
 
     /* Folha sem moldura: ganha as laterais */
     .menu { margin: 0; padding: 0; }
@@ -398,27 +399,27 @@
     .sec-head { margin-bottom: 10px; }
     .sec-head .orn { display: none; }
     .sec-head h2 { font-size: 1.7rem; gap: 12px; }
-    .sec-head p { font-size: .9rem; }
-    .sec-note { font-size: .85rem; margin: 0 0 12px; }
-    .grp + .grp { margin-top: 24px; }
-    .grp-title { font-size: .9rem; }
-    .grp-note { font-size: .85rem; }
-    .item { padding: 11px 0 10px; }
+    .sec-head p { font-size: 1rem; }
+    .sec-note { font-size: .98rem; margin: 0 0 14px; }
+    .grp + .grp { margin-top: 28px; }
+    .grp-title { font-size: 1.02rem; }
+    .grp-note { font-size: .98rem; }
+    .item { padding: 14px 0 13px; border-bottom-color: #15151538; }
     .item .line { justify-content: space-between; }
     .item .lead { display: none; }
-    .item h4 { font-size: 1.02rem; }
-    .item .price { font-size: 1.02rem; }
-    .item p { font-size: .88rem; line-height: 1.4; margin-top: 2px; }
-    .tag { font-size: .66rem; margin-bottom: 4px; padding: 2px 7px 1px; }
+    .item h4 { font-size: 1.15rem; }
+    .item .price { font-size: 1.15rem; }
+    .item p { font-size: 1rem; line-height: 1.5; margin-top: 4px; }
+    .tag { font-size: .74rem; margin-bottom: 5px; padding: 3px 8px 2px; }
 
     /* Uma categoria por vez */
     .tabs .sec:not(.ativa) { display: none; }
     .tabs .sec { padding-top: 24px; }
     .next {
       display: flex; width: 100%; justify-content: space-between; align-items: center;
-      margin-top: 22px; min-height: 52px; padding: 12px 16px;
+      margin-top: 22px; min-height: 56px; padding: 14px 18px;
       background: var(--ink); color: #fff; border: 0; border-radius: 10px;
-      font-weight: 700; font-size: .95rem;
+      font-weight: 700; font-size: 1.05rem;
     }
     .next span { color: var(--yellow); }
   }

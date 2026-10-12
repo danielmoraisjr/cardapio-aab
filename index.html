@@ -110,6 +110,10 @@
   .idx:hover .seta, .idx.on .seta { transform: translateX(4px); color: var(--gold); }
   .idx.on { background: #ffffff0d; }
   .idx .info:empty { display: none; }
+  .como-pedir { max-width: 34ch; margin: 18px auto 0; padding: 12px 14px; border: 1px solid #ffffff2e; border-radius: 10px; color: #e6e6e6; text-align: center; font-size: .95rem; }
+  .como-pedir b { color: #fff; }
+  .como-pedir.claro { max-width: none; margin: 18px 0 0; border-color: var(--rule); background: #fff; color: var(--muted); text-align: left; }
+  .como-pedir.claro b { color: var(--ink); }
   .idx-agenda { display: inline-flex; gap: 8px; margin-top: 18px; padding: 10px 2px; color: #d8d8d8; font-weight: 700; text-decoration: none; border-bottom: 1px solid #ffffff40; }
   .idx.fora .nome { color: #9a9a9a; }
   .idx.fora .info { color: #9a9a9a; }
@@ -362,6 +366,8 @@
   <p class="status" id="status" aria-live="polite"><i></i><span>Carregando horário…</span></p>
   <p class="mode-pill" id="modePill" hidden>★ Especial Tenda</p>
 
+  <p class="como-pedir">Escolha os itens tocando no <b>+</b>. Quando terminar, <b>faça o pedido no balcão</b> mostrando a sua lista.</p>
+
   <nav class="indice" id="indiceNav" aria-label="Categorias do cardápio"><ol id="indice"></ol></nav>
   <a class="idx-agenda" href="#agenda">Agenda do clube <span aria-hidden="true">→</span></a>
 </header>
@@ -374,6 +380,7 @@
   </div>
   <div class="conteudo">
     <p class="mode-note" id="modeNote" hidden></p>
+    <p class="como-pedir claro">Toque no <b>+</b> para montar sua lista. Ao terminar, o pedido é feito <b>no balcão</b>.</p>
 
     <!-- As seções do cardápio são montadas a partir de CARDAPIO (configurações, mais abaixo) -->
     <div id="secoes"></div>
@@ -440,7 +447,7 @@
 
 <dialog class="folha" id="pedido" aria-labelledby="pedTitulo">
   <h3 id="pedTitulo">Meu pedido</h3>
-  <p class="ped-alerta"><b>Este pedido ainda não foi enviado.</b> Mostre esta tela no balcão para fazer o pedido.</p>
+  <p class="ped-alerta"><b>Este pedido ainda não foi enviado.</b> Quando tiver escolhido todos os itens, vá ao balcão e mostre esta tela para fazer o pedido.</p>
   <ul class="ped-lista" id="pedLista"></ul>
   <p class="ped-total"><span>Total</span><span id="pedTotal"></span></p>
   <p class="ped-aviso">Valores de referência. O pedido é feito e pago no balcão.</p>
@@ -559,12 +566,12 @@
       secoes: [
         { id: 'almoco', nome: 'Almoço', icone: 'almoco', sub: 'Quarta a sexta, 11h às 14h · Sábado e domingo, 11h às 15h', nota: 'Segunda e terça não servimos almoço.', grupos: [
           { titulo: 'Carnes', itens: [
-            { n: 'Virado à Paulista', p: 45, tag: 'Novidade', d: 'Arroz, tutu de feijão, copa lombo, banana milanesa, ovo frito e torresmo.' },
+            { n: 'Virado à Paulista', p: 45, tag: 'Novidade', d: 'Você pediu e ele voltou! Arroz, tutu de feijão, copa lombo, banana milanesa, ovo frito e torresmo.' },
             { n: 'Contra filé grelhado com batata frita', p: 50, d: 'Arroz, feijão, contra filé grelhado e batata frita.' },
-            { n: 'Filé de frango empanado', p: 35, d: 'Arroz, feijão, frango empanado e batata frita ou legumes.' },
-            { n: 'Filé de frango grelhado', p: 30, d: 'Arroz, feijão, filé de frango grelhado e batata frita ou legumes.' },
-            { n: 'Filé mignon ao molho de champignon', p: 53, d: 'Arroz, filé mignon grelhado ao molho de champignon e batata frita.' },
-            { n: 'Filé de tilápia grelhada', p: 40, d: 'Arroz, feijão, tilápia grelhada e batata frita ou legumes.' },
+            { n: 'Filé de frango empanado com batata frita ou legumes', p: 35, d: 'Arroz, feijão, frango empanado e batata frita ou legumes.' },
+            { n: 'Filé de frango grelhado com batata frita ou legumes', p: 30, d: 'Arroz, feijão, filé de frango grelhado e batata frita ou legumes.' },
+            { n: 'Filé mignon grelhado ao molho de champignon com batata frita', p: 53, d: 'Arroz, filé mignon grelhado ao molho de champignon e batata frita.' },
+            { n: 'Filé de tilápia grelhada com batata frita ou legumes', p: 40, d: 'Arroz, feijão, tilápia grelhada e batata frita ou legumes.' },
             { n: 'Salmão ao molho de maracujá', p: 55, d: 'Arroz com castanhas, salmão grelhado ao molho de maracujá e brócolis na manteiga.' },
             { n: 'Parmegiana de carne (filé mignon)', p: 48, d: 'Arroz, parmegiana de carne e batata frita.' },
             { n: 'Parmegiana de frango', p: 38, d: 'Arroz, parmegiana de frango e batata frita.' },
@@ -596,8 +603,8 @@
             { n: 'Brócolis com mussarela', p: 17 },
           ] },
           { titulo: 'Kids', nota: 'Não trocamos os ingredientes dos pratos kids.', itens: [
-            { n: 'Filé de frango grelhado', p: 20, d: 'Com batata smiles, arroz e feijão.' },
-            { n: 'Filé mignon grelhado', p: 26, d: 'Com batata smiles, arroz e feijão.' },
+            { n: 'Filé de frango grelhado com batata smiles, arroz e feijão', p: 20 },
+            { n: 'Filé mignon grelhado com batata smiles, arroz e feijão', p: 26 },
           ] },
           { titulo: 'Adicionais', itens: [
             { n: 'Arroz', p: 5 }, { n: 'Feijão', p: 6 }, { n: 'Fritas', p: 9 },
@@ -624,11 +631,11 @@
             { n: 'Tábua de frios', p: 75, d: 'Provolone, gorgonzola, presunto, mussarela, salame, azeitona, ovo de codorna, pimenta biquinho, cebolinha em conserva e limão. Somente após o horário de almoço.' },
             { n: 'Amendoim', p: 5, d: 'Xícara.' },
           ] },
-          { titulo: 'Camarão empanado', nota: 'Aprox. 20 unidades. Acompanha molho tártaro, molho de alho e limão.', itens: [
-            { n: 'Camarão empanado com batata frita', p: 75 },
-            { n: 'Camarão empanado com anéis de cebola', p: 75 },
-            { n: 'Anéis de cebola', p: [28, 20], d: 'Acompanha molho de alho.' },
-            { n: 'Mini churros recheado com doce de leite', p: 28, d: 'Aprox. 20 unidades. Canela e açúcar opcional.' },
+          { titulo: 'Porção de camarão empanado', itens: [
+            { n: 'Camarão empanado com batata frita', p: 75, d: 'Aprox. 20 un de camarões empanados. Acompanha molho tártaro, molho de alho e limão.' },
+            { n: 'Camarão empanado com anéis de cebola', p: 75, d: 'Aprox. 20 un de camarões empanados. Acompanha molho tártaro, molho de alho e limão.' },
+            { n: 'Porção de anéis de cebola', p: [28, 20], d: 'Acompanha molho de alho.' },
+            { n: 'Porção de mini churros recheado com doce de leite', p: 28, d: 'Aprox. 20 un (canela e açúcar opcional).' },
           ] },
           { titulo: 'Porção Mista Especial', nota: 'Não é permitido trocar os ingredientes dessa porção.', itens: [
             { n: 'Porção Mista Especial', p: 145, d: 'Contra filé acebolado, batata frita, anéis de cebola, mandioca e polenta. Acompanha molho de alho e limão.' },
@@ -651,9 +658,9 @@
         { id: 'pasteis', nome: 'Pastéis & Salgados', icone: 'pasteis', grupos: [
           { titulo: 'Pastéis', itens: [
             { n: 'Pastel de carne seca com catupiry e mussarela', p: 15, tag: 'Novidade', d: 'Adicione cebola por mais R$ 1,00.' },
-            { n: 'Pastel', p: 12, op: ['Carne', 'Queijo', 'Frango', 'Palmito', 'Pizza', 'Calabresa', 'Presunto e queijo', 'Brócolis com bacon e cheddar'], d: 'Pizza: presunto, queijo, tomate e orégano. No de brócolis, troque o cheddar por mussarela ou catupiry.' },
+            { n: 'Pastel', p: 12, op: ['Carne', 'Queijo', 'Frango', 'Palmito', 'Pizza (presunto, queijo, tomate e orégano)', 'Calabresa', 'Presunto e queijo', 'Brócolis com bacon e cheddar (troque o cheddar por mussarela ou catupiry)'] },
             { n: 'Pastel doce', p: 12, op: ['Chocolate ao leite', 'Chocolate branco', 'Misto (ao leite + branco)', 'Romeu & Julieta', 'Doce de leite'] },
-            { n: 'Adicional no pastel', p: 2, op: ['Queijo', 'Cheddar', 'Bacon', 'Catupiry', 'Azeitona'], d: 'Preço por adicional.' },
+            { n: 'Adicional no pastel', p: 2, op: ['Queijo', 'Cheddar', 'Bacon', 'Catupiry', 'Azeitona'], d: 'Cada adicional.' },
           ] },
           { titulo: 'Salgados', itens: [
             { n: 'Salgado assado', p: 8, op: ['Esfiha de carne', 'Esfiha de carne com catupiry', 'Enrolado de salsicha', 'Enrolado de presunto e queijo', 'Hambúrguer'] },
@@ -848,8 +855,8 @@
         { id: 'pasteis', nome: 'Pastel & Salgados', icone: 'pasteis', grupos: [
           { itens: [
             { n: 'Pastel de carne seca com catupiry e mussarela', p: 15, tag: 'Novidade', d: 'Adicione cebola por mais R$ 1,00.' },
-            { n: 'Pastel', p: 12, op: ['Pizza', 'Presunto e queijo', 'Queijo', 'Carne', 'Brócolis com cheddar e bacon'], d: 'No de brócolis, troque o cheddar por catupiry ou mussarela.' },
-            { n: 'Adicional no pastel', p: 2, op: ['Cheddar', 'Queijo', 'Bacon', 'Catupiry', 'Azeitona'], d: 'Preço por adicional.' },
+            { n: 'Pastel', p: 12, op: ['Pizza', 'Presunto e queijo', 'Queijo', 'Carne', 'Brócolis com cheddar e bacon (troque o cheddar por catupiry ou mussarela)'] },
+            { n: 'Adicional no pastel', p: 2, op: ['Cheddar', 'Queijo', 'Bacon', 'Catupiry', 'Azeitona'], d: 'Cada adicional.' },
             { n: 'Salgados', p: 8 },
             { n: 'Kibe', p: 10 },
             { n: 'Espetinhos do quiosque', p: 9 },
@@ -1038,7 +1045,7 @@
     const corpo = `<div>${line}</div>`;
     const add = it.p != null ? `<button type="button" class="add" data-add="${k}" aria-label="Adicionar ${esc(it.n)} ao pedido">+</button>` : '';
     const sr = Array.isArray(it.p) ? `<span class="sr">${(it.rot || ['Inteira', 'Média']).map((r, i) => `${esc(r)} ${brl(it.p[i])}`).join(', ')}</span>` : '';
-    const ops = it.op && it.op.length ? `<ul class="ops${it.op.some(o => o.length > 28) ? ' longas' : ''}" aria-label="Opções">${it.op.map(o => `<li>${esc(o)}</li>`).join('')}</ul>` : '';
+    const ops = it.op && it.op.length ? `<ul class="ops${it.op.join('').length / it.op.length > 25 ? ' longas' : ''}" aria-label="Opções">${it.op.map(o => `<li>${esc(o)}</li>`).join('')}</ul>` : '';
     return `<li class="item${it.d ? ' has-d' : ''}">${tag}<div class="row">${corpo}${sr}${add}</div>${it.d ? `<p>${esc(it.d)}</p>` : ''}${ops}</li>`;
   };
   let ctx = '';

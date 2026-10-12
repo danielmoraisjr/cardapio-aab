@@ -34,6 +34,7 @@
   html { font-size: 112.5%; }            /* 18px — base confortável */
   html.big { font-size: 131.25%; }       /* 21px — "Letra maior" */
   body { background: var(--night); color: var(--ink); font-family: var(--sans); font-size: 1rem; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  html, a, button, label, input { touch-action: manipulation; }
   button { font: inherit; cursor: pointer; }
   a { color: inherit; }
   :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
@@ -145,7 +146,6 @@
   .item { padding: 15px 0 14px; border-bottom: 1px solid var(--rule); }
   .item .row { display: flex; align-items: flex-start; gap: 12px; }
   .item .row > :first-child { flex: 1; min-width: 0; }
-  .item-tog { display: block; width: 100%; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: default; }
   .item .line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
   .item .lead { display: none; }
   .item h4 { font-size: 1.12rem; font-weight: 700; line-height: 1.3; }
@@ -173,13 +173,6 @@
   .ops li { display: inline; }
   .ops li + li::before { content: " · "; }
 
-  /* Descrição abre ao tocar (celular) */
-  @media (max-width: 899px) {
-    .item-tog { cursor: pointer; }
-    .item.has-d:not(.open) p { display: none; }
-    .item.has-d h4::after { content: "▾"; display: inline-block; margin-left: 6px; font-size: .85em; color: var(--muted); transition: transform .2s; }
-    .item.has-d.open h4::after { transform: rotate(180deg); }
-  }
 
   .next {
     display: flex; width: 100%; justify-content: space-between; align-items: center;
@@ -1016,7 +1009,7 @@
     const k = ITENS.push({ it, ctx }) - 1;
     const line = `<div class="line${Array.isArray(it.p) ? ' duo' : ''}"><h4>${esc(it.n)}</h4><i class="lead"></i>${precoHTML(it)}</div>`;
     const tag = it.tag ? `<span class="tag">★ ${esc(it.tag)}</span>` : '';
-    const corpo = it.d ? `<button type="button" class="item-tog" aria-expanded="false">${line}</button>` : `<div>${line}</div>`;
+    const corpo = `<div>${line}</div>`;
     const add = it.p != null ? `<button type="button" class="add" data-add="${k}" aria-label="Adicionar ${esc(it.n)} ao pedido">+</button>` : '';
     const ops = it.op && it.op.length ? `<ul class="ops" aria-label="Opções">${it.op.map(o => `<li>${esc(o)}</li>`).join('')}</ul>` : '';
     return `<li class="item${it.d ? ' has-d' : ''}">${tag}<div class="row">${corpo}${add}</div>${it.d ? `<p>${esc(it.d)}</p>` : ''}${ops}</li>`;
@@ -1212,12 +1205,6 @@
   document.addEventListener('click', e => {
     const add = e.target.closest('[data-add]');
     if (add) { abrirEscolha(ITENS[add.dataset.add]); return; }
-    const tog = e.target.closest('.item-tog');
-    if (tog && celular.matches) {
-      const aberto = tog.parentElement.classList.toggle('open');
-      tog.setAttribute('aria-expanded', aberto);
-      return;
-    }
   });
 
 

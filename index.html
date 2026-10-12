@@ -288,7 +288,7 @@
   .date span { font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
   .event h3 { font-family: var(--slab); font-size: 1.3rem; line-height: 1.2; }
   .event p { color: var(--muted); }
-  .empty { padding: 24px 0; text-align: center; color: var(--muted); }
+  .empty { grid-column: 1 / -1; padding: 24px 0; text-align: center; color: var(--muted); }
 
   /* ============ Rodapé ============ */
   footer { background: var(--night); color: #f1f1f1; padding: 56px 16px 32px; }
@@ -630,9 +630,11 @@
     { data: '2026-10-08', hora: '18h', titulo: 'Show de Prêmios AAB' },
     { data: '2026-10-17', hora: '21h', titulo: 'Baile do Caribe AAB 2026' },
   ];
-  // Opcional: link CSV de uma Planilha Google publicada (colunas: data, hora, titulo).
-  // Preenchido, a agenda passa a vir da planilha automaticamente.
-  const AGENDA_PLANILHA = '';
+
+  // Planilha Google do clube (Arquivo > Compartilhar > Publicar na Web > aba > CSV).
+  // Preenchidos, cardápio e agenda passam a vir da planilha; vazios ou com erro, vale o que está neste arquivo.
+  const CARDAPIO_PLANILHA = ''; // link CSV da aba "Cardapio"
+  const AGENDA_PLANILHA = '';   // link CSV da aba "Agenda" (colunas: Data, Hora, Evento)
 
   const FUNDACAO = new Date(1918, 3, 21); // 21 de abril de 1918
 
@@ -1148,10 +1150,10 @@
   const grupoHTML = g => `<div class="grp">${g.titulo ? `<h3 class="grp-title">${esc(g.titulo)}</h3>` : ''}${g.nota ? `<p class="grp-note">${esc(g.nota)}</p>` : ''}<ul class="items">${g.itens.map(itemHTML).join('')}</ul></div>`;
   const secaoHTML = s => `<section class="sec" id="${s.id}"><header class="sec-head"><p class="orn">★★★</p><h2>${esc(s.nome)}</h2>${s.sub ? `<p>${esc(s.sub)}</p>` : ''}</header>${s.nota ? `<p class="sec-note">${esc(s.nota)}</p>` : ''}${s.grupos.map(grupoHTML).join('')}</section>`;
 
-  let modo = null;
+  let modo = null, MENU = CARDAPIO;
   function render(novo, t) {
     modo = novo;
-    const c = CARDAPIO[modo], tenda = modo === 'tenda';
+    const c = MENU[modo], tenda = modo === 'tenda';
     document.getElementById('secoes').innerHTML = c.secoes.map(secaoHTML).join('');
     document.getElementById('navIn').innerHTML = c.secoes.map(s => navBtn(s.id, s.nome, s.icone)).join('') + navBtn('agenda', 'Agenda', 'agenda');
 
@@ -1275,7 +1277,7 @@
     const next = list.filter(ev => ev.data >= todayISO).sort((a, b) => a.data.localeCompare(b.data));
     const box = document.getElementById('agendaList');
     if (!next.length) {
-      box.outerHTML = '<p class="empty" id="agendaList">Nenhum evento marcado no momento. Acompanhe as novidades no Instagram <a href="https://www.instagram.com/aabbotucatu/" target="_blank" rel="noopener">@aabbotucatu</a>.</p>';
+      box.innerHTML = '<p class="empty">Nenhum evento marcado no momento. Acompanhe as novidades no Instagram <a href="https://www.instagram.com/aabbotucatu/" target="_blank" rel="noopener">@aabbotucatu</a>.</p>';
       return;
     }
     box.innerHTML = next.map(ev => {
@@ -1296,12 +1298,82 @@
     }
     return rows;
   }
+
+  // ---- Planilha Google: cardápio e agenda editados pelo clube
+  const chave = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const numero = s => {
+    const v = parseFloat(String(s || '').replace(/[^\d,.-]/g, '').replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.'));
+    return Number.isFinite(v) ? v : null;
+  };
+  const dataISO = s => {
+    s = String(s || '').trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    return m ? `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}` : '';
+  };
+  // Linhas da planilha -> mesmo formato de CARDAPIO. Ícones, subtítulos e notas vêm do cardápio embutido.
+  function cardapioDaPlanilha(csv) {
+    const [cab, ...linhas] = parseCSV(csv);
+    if (!cab) return null;
+    const col = Object.fromEntries(cab.map((h, i) => [chave(h), i]));
+    if (!['cardapio', 'secao', 'item'].every(k => k in col)) return null;
+    const get = (r, k) => (k in col ? (r[col[k]] || '').trim() : '');
+    const novo = {};
+    for (const m of ['completo', 'tenda']) {
+      const base = CARDAPIO[m], secoes = [];
+      for (const r of linhas) {
+        if (chave(get(r, 'cardapio')) !== m || !get(r, 'item') || /^n(ao)?$/.test(chave(get(r, 'mostrar')))) continue;
+        const nome = get(r, 'secao'), titulo = get(r, 'grupo');
+        let sec = secoes.find(x => x.nome === nome);
+        if (!sec) {
+          const b = base.secoes.find(x => chave(x.nome) === chave(nome));
+          const id = b ? b.id : 'sec-' + (chave(nome) || secoes.length);
+          sec = { id, nome, icone: b ? b.icone : 'porcoes', sub: b && b.sub, nota: b && b.nota, grupos: [], _b: b };
+          secoes.push(sec);
+        }
+        let g = sec.grupos.find(x => (x.titulo || '') === titulo);
+        if (!g) {
+          const bg = sec._b && sec._b.grupos.find(x => chave(x.titulo || '') === chave(titulo));
+          g = { titulo: titulo || undefined, nota: bg && bg.nota, itens: [] };
+          sec.grupos.push(g);
+        }
+        const p1 = numero(get(r, 'preco')), p2 = numero(get(r, 'preco2'));
+        const rot = get(r, 'rotulosdosprecos').split('/').map(x => x.trim()).filter(Boolean);
+        g.itens.push({
+          n: get(r, 'item'), d: get(r, 'descricao') || undefined, tag: get(r, 'selo') || undefined,
+          p: p1 != null && p2 != null ? [p1, p2] : p1, rot: rot.length === 2 ? rot : undefined,
+        });
+      }
+      secoes.forEach(x => delete x._b);
+      novo[m] = { destaque: base.destaque, secoes: secoes.length ? secoes : base.secoes };
+    }
+    return novo;
+  }
+  function usarCardapio(csv) {
+    const novo = csv && cardapioDaPlanilha(csv);
+    if (!novo) return false;
+    MENU = novo;
+    render(modo, agora());
+    return true;
+  }
+  function usarAgenda(csv) {
+    const [, ...rows] = parseCSV(csv || '');
+    const lista = rows.map(r => ({ data: dataISO(r[0]), hora: (r[1] || '').trim(), titulo: (r[2] || '').trim() })).filter(e => e.data && e.titulo);
+    renderAgenda(lista);
+  }
+  // Abre com a última versão que funcionou neste aparelho e busca a mais nova.
+  const guardado = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
   renderAgenda(AGENDA);
+  if (CARDAPIO_PLANILHA) {
+    usarCardapio(guardado('aab-cardapio'));
+    fetch(CARDAPIO_PLANILHA, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject())
+      .then(t => { if (usarCardapio(t)) guardar('aab-cardapio', t); }).catch(() => {});
+  }
   if (AGENDA_PLANILHA) {
-    fetch(AGENDA_PLANILHA).then(r => r.text()).then(t => {
-      const [, ...rows] = parseCSV(t);
-      renderAgenda(rows.filter(r => r[0]).map(r => ({ data: r[0], hora: r[1], titulo: r[2] })));
-    }).catch(() => {});
+    const g = guardado('aab-agenda'); if (g) usarAgenda(g);
+    fetch(AGENDA_PLANILHA, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject())
+      .then(t => { usarAgenda(t); guardar('aab-agenda', t); }).catch(() => {});
   }
 
   // ---- Easter egg: 3 toques na estrela abrem o jogo

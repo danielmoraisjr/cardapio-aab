@@ -232,7 +232,7 @@
 
   .items { list-style: none; display: grid; grid-template-columns: 1fr; column-gap: 48px; }
   @media (min-width: 820px) { .items { grid-template-columns: 1fr 1fr; } }
-  .item { padding: 16px 0 14px; border-bottom: 1px dashed var(--rule); }
+  .item { padding: 16px 0 14px; border-bottom: 1px solid #1515151f; }
   .item .line { display: flex; align-items: baseline; gap: 10px; }
   .item h4 { font-size: 1.22rem; font-weight: 700; line-height: 1.25; }
   .item .lead { flex: 1; min-width: 16px; border-bottom: 2px dotted #15151555; transform: translateY(-5px); }
@@ -255,14 +255,15 @@
   .add {
     flex: none; width: 42px; height: 42px; margin-top: -7px;
     display: grid; place-items: center;
-    border: 2px solid var(--ink); border-radius: 50%; background: var(--card); color: var(--ink);
+    border: 0; border-radius: 50%; background: #ece5d6; color: var(--ink);
     font-size: 1.35rem; font-weight: 700; line-height: 1;
     transition: transform .15s cubic-bezier(.2,.8,.2,1), background .2s, border-color .2s;
   }
   .add:active { transform: scale(.9); }
-  .add.tem { background: var(--yellow); border-color: var(--yellow); font-size: 1.05rem; }
-  .ops { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .ops li { padding: 4px 11px; border: 1px solid #15151533; border-radius: 999px; background: #fff; font-size: .92rem; }
+  .add.tem { background: var(--yellow); font-size: 1.05rem; }
+  .ops { list-style: none; margin-top: 4px; color: var(--muted); line-height: 1.5; }
+  .ops li { display: inline; }
+  .ops li + li::before { content: " · "; }
 
   /* Barra e folhas do pedido */
   .ped-bar {
@@ -370,7 +371,7 @@
   .egg:hover { color: var(--yellow); transform: rotate(20deg); }
   .egg-hint { font-size: .8rem; color: #8a8a8a; }
 
-  /* ============ Easter egg: Pênaltis da Veterana ============ */
+  /* ============ Easter egg: Pênaltis da AAB ============ */
   #jogo { background: #111; color: #fff; padding: 48px 16px 64px; text-align: center; }
   #jogo h2 { font-family: var(--slab); font-size: clamp(1.8rem, 6vw, 2.6rem); }
   #jogo .lede { color: #cfcfcf; margin: 6px auto 20px; max-width: 36ch; }
@@ -420,7 +421,6 @@
     .cover { padding-bottom: 18px; }
     .topbar { padding: 10px 12px 0; }
     .font-btn { min-height: 40px; padding: 4px 12px; }
-    .font-btn span { display: none; }
     #crest { height: 210px; }
     .cover h1 { font-size: 2.3rem; margin: 0 0 6px; }
     .cover .sub { font-size: .95rem; }
@@ -462,7 +462,7 @@
     .grp + .grp { margin-top: 28px; }
     .grp-title { font-size: 1.02rem; }
     .grp-note { font-size: .98rem; }
-    .item { padding: 14px 0 13px; border-bottom-color: #15151538; }
+    .item { padding: 15px 0 14px; }
     .item .line { justify-content: space-between; }
     .item .lead { display: none; }
     .item h4 { font-size: 1.15rem; }
@@ -640,7 +640,7 @@
 
 <!-- ============ Easter egg ============ -->
 <section id="jogo" hidden>
-  <h2>Pênaltis da Veterana</h2>
+  <h2>Pênaltis da AAB</h2>
   <p class="lede">5 cobranças contra o goleiro da AAB. Escolha o canto!</p>
   <div class="pitch-wrap">
     <svg class="pitch" viewBox="0 0 320 230" role="img" aria-label="Gol com o goleiro da AAB">
@@ -823,7 +823,7 @@
           ] },
         ] },
 
-        { id: 'boteco', nome: 'Boteco', icone: 'boteco', sub: 'Novidade · comidas de boteco', nota: 'Acompanham molho de alho e limão.', grupos: [
+        { id: 'boteco', nome: 'Boteco', icone: 'boteco', sub: 'Novidade', nota: 'Acompanham molho de alho e limão.', grupos: [
           { itens: [
             { n: 'Mini kibe', p: 33 },
             { n: 'Mini coxinha de costela', p: 28 },
@@ -836,7 +836,7 @@
           ] },
         ] },
 
-        { id: 'pasteis', nome: 'Pastéis & Salgados', icone: 'pasteis', sub: 'Pastel crocante, sequinho e saboroso', grupos: [
+        { id: 'pasteis', nome: 'Pastéis & Salgados', icone: 'pasteis', grupos: [
           { titulo: 'Pastéis', itens: [
             { n: 'Pastel de carne seca com catupiry e mussarela', p: 15, tag: 'Novidade', d: 'Adicione cebola por mais R$ 1,00.' },
             { n: 'Pastel', p: 12, op: ['Carne', 'Queijo', 'Frango', 'Palmito', 'Pizza', 'Calabresa', 'Presunto e queijo', 'Brócolis com bacon e cheddar'], d: 'Pizza: presunto, queijo, tomate e orégano. No de brócolis, troque o cheddar por mussarela ou catupiry.' },
@@ -875,7 +875,7 @@
           ] },
         ] },
 
-        { id: 'bebidas', nome: 'Bebidas', icone: 'bebidas', sub: 'Bebidas para todos os momentos', grupos: [
+        { id: 'bebidas', nome: 'Bebidas', icone: 'bebidas', grupos: [
           { titulo: 'Refrigerantes', itens: [
             { n: 'Refrigerante lata 350 ml', p: 7 },
             { n: 'Coca-Cola 600 ml', p: 10 },
@@ -901,7 +901,7 @@
             { n: 'Red Bull 250 ml', p: 14 },
             { n: 'Smirnoff Ice', p: 12 },
           ] },
-          { titulo: 'Suco natural', nota: 'Saúde, sabor e bem-estar.', itens: [
+          { titulo: 'Suco natural', itens: [
             { n: 'Suco natural', p: [12, 22], rot: ['Copo 500 ml', 'Jarra 1 L'], op: ['Abacaxi', 'Acerola', 'Frutas vermelhas', 'Kiwi', 'Laranja', 'Limão', 'Maracujá', 'Mamão', 'Melancia', 'Melão', 'Morango', 'Abacaxi com hortelã (polpa)', 'Caju (polpa)', 'Goiaba (polpa)', 'Manga (polpa)'] },
             { n: 'Adicional de fruta', p: [3, 5], rot: ['Copo', 'Jarra'] },
             { n: 'Adicional de leite', p: [3, 5], rot: ['Copo', 'Jarra'] },
@@ -910,7 +910,7 @@
           ] },
         ] },
 
-        { id: 'cervejas', nome: 'Cervejas', icone: 'cervejas', sub: 'Geladas para reunir', grupos: [
+        { id: 'cervejas', nome: 'Cervejas', icone: 'cervejas', grupos: [
           { titulo: 'Novidade', itens: [
             { n: 'Stella Pure Gold 600 ml', p: 12, tag: 'Novidade' },
             { n: 'Stella Pure Gold long neck 330 ml', p: 8, tag: 'Novidade' },
@@ -1553,7 +1553,7 @@
     }
   });
 
-  // ---- Pênaltis da Veterana
+  // ---- Pênaltis da AAB
   (() => {
     const ball = document.getElementById('ball'), keeper = document.getElementById('keeper');
     const msg = document.getElementById('gameMsg'), result = document.getElementById('result');
@@ -1581,7 +1581,7 @@
         ball.style.transform = ''; keeper.style.transform = '';
         busy = false;
         if (kicks < 5) { buttons.forEach(b => b.disabled = false); return; }
-        result.textContent = goals === 5 ? '5 de 5! Craque da Veterana! ★'
+        result.textContent = goals === 5 ? '5 de 5! Craque da AAB! ★'
           : goals >= 3 ? `${goals} gols. Jogou bonito!`
           : `${goals} ${goals === 1 ? 'gol' : 'gols'}. O goleiro da AAB tá impossível hoje!`;
         again.hidden = false;

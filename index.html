@@ -110,7 +110,7 @@
   .idx:hover .seta, .idx.on .seta { transform: translateX(4px); color: var(--gold); }
   .idx.on { background: #ffffff0d; }
   .idx .info:empty { display: none; }
-  .como-pedir { max-width: 360px; margin: 20px auto 0; padding: 14px 16px; border: 1px solid #ffffff2e; border-radius: 12px; color: #e6e6e6; font-size: .98rem; list-style: none; counter-reset: passo; }
+  .como-pedir { max-width: 30ch; margin: 16px auto 0; color: #d6d6d6; text-align: center; font-size: .98rem; text-wrap: balance; }
   ol.como-pedir li { counter-increment: passo; display: flex; align-items: baseline; gap: 10px; padding: 3px 0; }
   ol.como-pedir li::before { content: counter(passo); flex: none; width: 1.5rem; height: 1.5rem; display: inline-grid; place-items: center; border-radius: 50%; background: var(--gold); color: var(--ink); font-weight: 700; font-size: .85rem; }
   .como-pedir b { color: #fff; }
@@ -228,9 +228,11 @@
   .ped-bar[hidden] { display: none; }
   @media (min-width: 900px) {
     .ped-bar { left: calc(max(360px, 34%) + 32px); right: 32px; max-width: 620px; }
-    body .aviso { left: calc((100% + max(360px, 34%)) / 2); }
   }
   .ped-bar b { color: var(--yellow); white-space: nowrap; }
+  .ped-bar span { white-space: nowrap; }
+  .ped-bar.ok { background: #1f6f43; transition: background .2s; }
+  .ped-bar.ok b { color: #fff; }
   body.com-pedido { padding-bottom: 86px; }
   dialog.folha {
     width: min(560px, 100%); max-width: 100%; max-height: 88vh; margin: auto auto 0;
@@ -266,16 +268,6 @@
   .grupo-esc .conta { margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: #1111110f; font-size: .85rem; }
   .grupo-esc.completo .conta { background: var(--ink); color: #fff; }
   .escolhas input:disabled + span { opacity: .35; cursor: default; }
-  .aviso {
-    position: fixed; z-index: 45; left: 50%; bottom: 84px; transform: translateX(-50%);
-    width: max-content; max-width: calc(100% - 24px); display: flex; align-items: center; gap: 14px;
-    padding: 10px 10px 10px 16px; background: #1f6f43; color: #fff; border-radius: 12px; font-weight: 700;
-    box-shadow: 0 10px 24px -10px #000a; animation: sobeAviso .25s var(--ease);
-  }
-  .aviso[hidden] { display: none; }
-  .aviso button { padding: 8px 12px; border: 0; border-radius: 8px; background: #ffffff26; color: #fff; font-weight: 700; }
-  @keyframes sobeAviso { from { opacity: 0; transform: translate(-50%, 8px); } }
-  @media (prefers-reduced-motion: reduce) { .aviso { animation: none; } }
 
 
   /* ============ Rodapé ============ */
@@ -378,11 +370,7 @@
   <p class="status" id="status" aria-live="polite"><i></i><span>Carregando horário…</span></p>
   <p class="mode-pill" id="modePill" hidden>★ Especial Tenda</p>
 
-  <ol class="como-pedir" aria-label="Como pedir">
-    <li><span><b>Toque no +</b> dos itens que você quer</span></li>
-    <li><span>Toque em <b>Ver meu pedido</b>, embaixo da tela</span></li>
-    <li><span><b>Mostre no balcão</b> e pague lá</span></li>
-  </ol>
+  <p class="como-pedir">Toque no <b>+</b> para montar sua lista e <b>mostre no balcão</b> para pedir.</p>
 
   <nav class="indice" id="indiceNav" aria-label="Categorias do cardápio"><ol id="indice"></ol></nav>
   <a class="idx-agenda" href="#agenda">Agenda do clube <span aria-hidden="true">→</span></a>
@@ -396,7 +384,6 @@
   </div>
   <div class="conteudo">
     <p class="mode-note" id="modeNote" hidden></p>
-    <p class="como-pedir claro">Toque no <b>+</b> para adicionar. O pedido é feito e pago <b>no balcão</b>.</p>
 
     <!-- As seções do cardápio são montadas a partir de CARDAPIO (configurações, mais abaixo) -->
     <div id="secoes"></div>
@@ -448,8 +435,7 @@
 </footer>
 
 <!-- ============ Meu pedido ============ -->
-<button type="button" class="ped-bar" id="pedBar" hidden><span id="pedResumo"></span><b>Ver meu pedido</b></button>
-<div class="aviso" id="aviso" role="status" aria-live="polite" hidden><span></span><button type="button">Ver pedido</button></div>
+<button type="button" class="ped-bar" id="pedBar" hidden><span id="pedResumo" aria-live="polite"></span><b>Ver pedido →</b></button>
 
 <dialog class="folha" id="escolha" aria-labelledby="esTitulo">
   <form method="dialog" id="esForm">
@@ -1129,14 +1115,14 @@
     const duos = g.itens.filter(i => Array.isArray(i.p));
     grpCols = duos.length >= 2 ? (duos[0].rot || ['Inteira', 'Média']) : null;
     const curto = r => esc(/^\d/.test(r) ? r : r.split(' ')[0]);
-    const head = grpCols ? `<div class="cols-head" aria-hidden="true"><em>em R$</em><span>${curto(grpCols[0])}</span><span>${curto(grpCols[1])}</span></div>` : '';
+    const head = grpCols ? `<div class="cols-head" aria-hidden="true"><span>${curto(grpCols[0])}</span><span>${curto(grpCols[1])}</span></div>` : '';
     const html = `<div class="grp${grpCols ? ' cols' : ''}">${g.titulo ? `<h3 class="grp-title">${esc(g.titulo)}</h3>` : ''}${g.nota ? `<p class="grp-note">${esc(g.nota)}</p>` : ''}${head}<ul class="items">${g.itens.map(itemHTML).join('')}</ul></div>`;
     grpCols = null;
     return html;
   };
   let ctxSec = '';
   const num = i => String(i + 1).padStart(2, '0');
-  const secaoHTML = (s, i) => (ctxSec = s.nome, '') + `<section class="sec" id="${s.id}"><header class="sec-head"><p class="orn">${num(i)}</p><h2>${esc(s.nome)}</h2>${s.sub ? `<p>${esc(s.sub)}</p>` : ''}</header>${s.nota ? `<p class="sec-note">${esc(s.nota)}</p>` : ''}${s.grupos.map(grupoHTML).join('')}</section>`;
+  const secaoHTML = (s, i) => (ctxSec = s.nome, '') + `<section class="sec" id="${s.id}"><header class="sec-head"><h2>${esc(s.nome)}</h2>${s.sub ? `<p>${esc(s.sub)}</p>` : ''}</header>${s.nota ? `<p class="sec-note">${esc(s.nota)}</p>` : ''}${s.grupos.map(grupoHTML).join('')}</section>`;
 
   let modo = null, MENU = CARDAPIO, ITENS = [], PEDIDO = [];
   try { PEDIDO = JSON.parse(localStorage.getItem('aab-pedido')) || []; } catch (e) {}
@@ -1195,7 +1181,7 @@
     const ja = PEDIDO.find(x => x.k === k);
     if (ja) ja.q++; else PEDIDO.push({ k, ctx, n, t, o: op || '', p, q: 1 });
     salvarPedido();
-    avisar(`✓ ${n}${t ? ' · ' + t : ''} adicionado`);
+    avisar('✓ Adicionado');
   }
   function abrirEscolha(ent) {
     const { it } = ent, duo = Array.isArray(it.p);
@@ -1238,22 +1224,22 @@
     escolhendo = null;
   });
 
-  // Aviso rápido de "adicionado", com atalho para ver o pedido
-  const aviso = document.getElementById('aviso');
-  let avisoT;
+  // Confirmação dentro da própria barra do pedido
+  let avisoT, avisando = false;
   function avisar(txt) {
-    aviso.querySelector('span').textContent = txt;
-    aviso.hidden = false;
+    const bar = document.getElementById('pedBar');
+    avisando = true;
+    document.getElementById('pedResumo').textContent = txt;
+    bar.classList.add('ok');
     clearTimeout(avisoT);
-    avisoT = setTimeout(() => { aviso.hidden = true; }, 2600);
+    avisoT = setTimeout(() => { avisando = false; bar.classList.remove('ok'); atualizarPedido(); }, 1800);
   }
-  aviso.querySelector('button').addEventListener('click', () => { aviso.hidden = true; document.getElementById('pedido').showModal(); });
   function atualizarPedido() {
     const qtd = PEDIDO.reduce((a, x) => a + x.q, 0), total = PEDIDO.reduce((a, x) => a + x.q * x.p, 0);
     const bar = document.getElementById('pedBar');
     bar.hidden = !qtd;
     document.body.classList.toggle('com-pedido', !!qtd);
-    document.getElementById('pedResumo').textContent = `Meu pedido · ${qtd} ${qtd === 1 ? 'item' : 'itens'} · ${brl(total)}`;
+    if (!avisando) document.getElementById('pedResumo').textContent = `${qtd} ${qtd === 1 ? 'item' : 'itens'} · ${brl(total)}`;
     document.querySelectorAll('.add').forEach(b => {
       const { it, ctx } = ITENS[b.dataset.add];
       const n = PEDIDO.filter(x => x.ctx === ctx && (x.n === it.n || x.n.endsWith(' ' + it.n) || x.n.endsWith(' simples') && it.n === 'Simples')).reduce((a, x) => a + x.q, 0);

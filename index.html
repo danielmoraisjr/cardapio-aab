@@ -17,7 +17,8 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M12 18Q50 6 88 18V56Q88 80 50 97Q12 80 12 56Z' fill='%23111' stroke='%23fff' stroke-width='6'/%3E%3Cpath fill='%23fff' d='M50 26l7 20h21l-17 12 6 20-17-12-17 12 6-20-17-12h21z'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
@@ -76,9 +77,8 @@
   }
   .font-btn b { font-family: var(--display); font-size: 1.2rem; line-height: 1; }
 
-  #crest { position: relative; width: 100%; max-width: 360px; height: 150px; margin: 0 auto; }
-  #crest .fallback { position: absolute; inset: 4% 0; width: 100%; height: 92%; }
-  #crest .glow { position: absolute; left: 50%; bottom: 2%; width: 40%; height: 20px; transform: translateX(-50%); background: radial-gradient(closest-side, #ffffff1f, transparent); filter: blur(4px); }
+  #crest { display: flex; justify-content: center; height: 150px; margin: 4px auto 0; }
+  #crest img { height: 100%; width: auto; }
   @media (min-width: 900px) { #crest { height: 180px; } }
 
   .titulo { text-align: center; margin-top: 6px; }
@@ -112,7 +112,7 @@
   .idx .info:empty { display: none; }
   .como-pedir { max-width: 34ch; margin: 18px auto 0; padding: 12px 14px; border: 1px solid #ffffff2e; border-radius: 10px; color: #e6e6e6; text-align: center; font-size: .95rem; }
   .como-pedir b { color: #fff; }
-  .como-pedir.claro { max-width: none; margin: 18px 0 0; border-color: var(--rule); background: #fff; color: var(--muted); text-align: left; }
+  .como-pedir.claro { max-width: none; margin: 16px 0 0; padding: 0; border: 0; border-radius: 0; background: none; color: var(--muted); text-align: left; font-size: .92rem; }
   .como-pedir.claro b { color: var(--ink); }
   .idx-agenda { display: inline-flex; gap: 8px; margin-top: 18px; padding: 10px 2px; color: #d8d8d8; font-weight: 700; text-decoration: none; border-bottom: 1px solid #ffffff40; }
   .idx.fora .nome { color: #9a9a9a; }
@@ -263,7 +263,7 @@
   .foot { max-width: 1040px; margin: 0 auto; display: grid; gap: 36px; }
   @media (min-width: 860px) { .foot { grid-template-columns: 1.1fr 1fr 1fr; } }
   .brand { display: flex; gap: 16px; align-items: center; }
-  .brand svg { width: 64px; flex: none; }
+  .brand img { width: 56px; height: auto; flex: none; }
   .brand strong { display: block; font-family: var(--slab); font-size: 2rem; letter-spacing: .1em; line-height: 1; }
   .brand span { color: #c8c8c8; }
   footer h4 { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: #a8a8a8; margin-bottom: 8px; }
@@ -282,7 +282,10 @@
   .fine { max-width: 1040px; margin: 36px auto 0; padding-top: 18px; border-top: 1px solid #ffffff22; font-size: .88rem; color: #bdbdbd; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; }
   .egg { background: none; border: 0; color: #777; font-size: 1.3rem; line-height: 1; padding: 6px; transition: color .2s, transform .2s; }
   .egg:hover { color: var(--yellow); transform: rotate(20deg); }
-  .egg-hint { font-size: .8rem; color: #8a8a8a; }
+  .credito { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; color: #7a7a7a; }
+  .credito a { color: inherit; text-decoration: none; letter-spacing: .04em; }
+  .credito a:hover { color: #bdbdbd; }
+  .credito .egg { font-size: .9rem; padding: 4px; }
 
   /* ============ Easter egg: Pênaltis da AAB ============ */
   #jogo { background: #111; color: #fff; padding: 48px 16px 64px; text-align: center; }
@@ -345,18 +348,7 @@
     <button class="font-btn" id="fontBtn" aria-pressed="false" aria-label="Letra maior"><b>A+</b><span>Letra maior</span></button>
   </div>
 
-  <div id="crest" role="img" aria-label="Escudo da AAB">
-    <svg class="fallback" viewBox="0 0 200 240" aria-hidden="true">
-      <defs><path id="arco" d="M36,66 Q100,30 164,66" /></defs>
-      <text font-family="Big Shoulders Display, Arial Narrow, sans-serif" font-weight="800" font-size="44" fill="#fff" text-anchor="middle" letter-spacing="4">
-        <textPath href="#arco" startOffset="50%">AAB</textPath>
-      </text>
-      <path d="M44,90 Q100,74 156,90 L156,148 Q156,196 100,226 Q44,196 44,148 Z" fill="#fff" />
-      <path d="M53,98 Q100,85 147,98 L147,148 Q147,188 100,214 Q53,188 53,148 Z" fill="#0b0b0b" />
-      <polygon fill="#fff" points="100,110 109.8,138.5 140,139 116,157 124.7,186 100,169 75.3,186 84,157 60,139 90.2,138.5" />
-    </svg>
-    <div class="glow"></div>
-  </div>
+  <div id="crest"><img src="escudo-aab.png" width="300" height="413" alt="Escudo da AAB" fetchpriority="high"></div>
 
   <div class="titulo">
     <span class="pre">Lanchonete AAB · Botucatu</span>
@@ -402,8 +394,8 @@
   <div class="foot">
     <div>
       <div class="brand">
-        <svg viewBox="0 0 100 120" aria-hidden="true"><path d="M8 22Q50 8 92 22V70Q92 98 50 116Q8 98 8 70Z" fill="#fff"/><path d="M15 28Q50 17 85 28V70Q85 92 50 108Q15 92 15 70Z" fill="#0b0b0b"/><path fill="#fff" d="M50 34l6.8 19.6h20.7l-16.7 12.1 6.4 19.7L50 73.3 32.8 85.4l6.4-19.7-16.7-12.1h20.7z"/></svg>
-        <div><strong>AAB</strong><span id="sinceFoot">Botucatu – SP · desde 1918</span></div>
+        <img src="escudo-aab.png" width="56" height="77" alt="" loading="lazy">
+        <div><strong>Lanchonete AAB</strong><span id="sinceFoot">Botucatu – SP · desde 1918</span></div>
       </div>
     </div>
     <div>
@@ -427,7 +419,7 @@
   </div>
   <div class="fine">
     <span>Venda de bebidas alcoólicas proibida para menores de 18 anos.</span>
-    <span><span class="egg-hint">Psiu… toque 3 vezes na estrela </span><button class="egg" id="egg" aria-label="Segredo da estrela">★</button></span>
+    <span class="credito"><button class="egg" id="egg" aria-label="Estrela">★</button> <a href="https://www.instagram.com/dmsitesbr/" target="_blank" rel="noopener">Feito por DM Group</a></span>
   </div>
 </footer>
 
@@ -691,6 +683,56 @@
             { n: 'Chocolate ao leite com M&M', p: 35 },
             { n: 'Banana com chocolate branco e canela', p: 35 },
             { n: 'Banana com chocolate branco, doce de leite e canela', p: 35 },
+          ] },
+        ] },
+
+        { id: 'acai', nome: 'Açaí', icone: 'acai', sub: 'Açaí, smoothies e milkshakes', grupos: [
+          { titulo: 'Açaí no copo', nota: 'Acompanhamentos e cobertura você escolhe no balcão.', itens: [
+            { n: 'Casquinha simples', p: 6 },
+            { n: 'Copo 150 ml', p: 10, d: '1 acompanhamento + 1 cobertura.' },
+            { n: 'Copo 300 ml', p: 17, d: '2 acompanhamentos + 1 cobertura.' },
+            { n: 'Copo 500 ml', p: 25, d: '3 acompanhamentos + 1 cobertura.' },
+          ] },
+          { titulo: 'Açaí puro batido', itens: [
+            { n: 'Açaí puro batido', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Adoce com mel, xarope de guaraná, açúcar cristal ou banana. Escolha um acompanhamento:', op: ['Banana', 'Morango', 'Whey', 'Amendoim', 'Leite em pó', 'Granola', 'Farinha láctea'] },
+          ] },
+          { titulo: 'Adicionais', itens: [
+            { n: 'Adicional comum', p: 3 },
+            { n: 'Adicional Nutella', p: 7 },
+            { n: 'Adicional whey', p: 7 },
+          ] },
+          { titulo: 'Coberturas e acompanhamentos', itens: [
+            { n: 'Coberturas', op: ['Xarope de guaraná', 'Cobertura de chocolate', 'Cobertura de morango', 'Leite condensado', 'Chocolate', 'Chantilly', 'Mel'] },
+            { n: 'Acompanhamentos', op: ['Amendoim triturado', 'Castanha de caju', 'Gotas de chocolate', 'Farinha láctea', 'Morango', 'Banana', 'Ovomaltine', 'Granulado', 'Sucrilhos', 'Uva', 'Granola', 'Leite em pó', 'M&M', 'Chocobol', 'Paçoca'] },
+          ] },
+          { titulo: 'Smoothies e milkshakes', itens: [
+            { n: 'Smoothie Antioxidante', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Iogurte natural, frutas vermelhas e whey.' },
+            { n: 'Smoothie Energético', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Leite, banana, polpa de açaí e whey.' },
+            { n: 'Smoothie Saciedade e Foco', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Leite condensado, banana, paçoca e whey.' },
+            { n: 'Milkshake', p: [18, 24], rot: ['300 ml', '500 ml'], op: ['Baunilha', 'Chocolate', 'Açaí', 'Morango', 'Ovomaltine'] },
+          ] },
+        ] },
+
+        { id: 'tapiocas', nome: 'Tapiocas', icone: 'tapiocas', sub: 'Tapioca, crepioca e Rap10', grupos: [
+          { titulo: 'Tapioca e crepioca', nota: 'Os recheios você escolhe no balcão.', itens: [
+            { n: 'Simples', p: [10, 12], rot: ['Tapioca', 'Crepioca'] },
+            { n: '1 recheio', p: [14, 16], rot: ['Tapioca', 'Crepioca'] },
+            { n: '2 recheios', p: [17, 18], rot: ['Tapioca', 'Crepioca'] },
+            { n: '3 recheios', p: [20, 20], rot: ['Tapioca', 'Crepioca'] },
+          ] },
+          { titulo: 'Rap10', itens: [
+            { n: 'Rap10 com 1 recheio', p: 16 },
+            { n: 'Rap10 com 2 recheios', p: 18 },
+            { n: 'Rap10 com 3 recheios', p: 20 },
+            { n: 'Mais um recheio', p: 5 },
+          ] },
+          { titulo: 'Recheios', itens: [
+            { n: 'Salgados', op: ['Queijo muçarela', 'Queijo coalho', 'Queijo parmesão', 'Catupiry', 'Cheddar', 'Creme de ricota', 'Presunto ralado', 'Bacon em cubos', 'Carne seca desfiada', 'Frango desfiado', 'Brócolis', 'Calabresa', 'Ovo mexido', 'Tomate'] },
+            { n: 'Doces', op: ['Mel', 'Doce de leite', 'Chocolate ao leite', 'Leite condensado', 'Banana', 'Morango'] },
+          ] },
+          { titulo: 'Especiais', itens: [
+            { n: 'Tapioca de Nutella', p: 25, d: '+ 1 acompanhamento.' },
+            { n: 'Tapioca de Nutella com sorvete de creme', p: 28 },
           ] },
         ] },
 
@@ -987,10 +1029,8 @@
   // ---- Idade do clube
   (() => {
     const now = new Date();
-    let anos = now.getFullYear() - FUNDACAO.getFullYear();
-    if (now < new Date(now.getFullYear(), FUNDACAO.getMonth(), FUNDACAO.getDate())) anos--;
-    document.getElementById('since').textContent = `Desde 1918 · ${anos} anos`;
-    document.getElementById('sinceFoot').textContent = `Botucatu – SP · desde 1918 · ${anos} anos de história`;
+    document.getElementById('since').textContent = 'Desde 1918';
+    document.getElementById('sinceFoot').textContent = 'Botucatu – SP · desde 1918';
   })();
 
   // ---- Aberto agora / horários
@@ -1054,7 +1094,7 @@
     ctx = g.titulo || ctxSec;
     const duos = g.itens.filter(i => Array.isArray(i.p));
     grpCols = duos.length >= 2 ? (duos[0].rot || ['Inteira', 'Média']) : null;
-    const curto = r => esc(r.split(' ')[0]);
+    const curto = r => esc(/^\d/.test(r) ? r : r.split(' ')[0]);
     const head = grpCols ? `<div class="cols-head" aria-hidden="true"><em>em R$</em><span>${curto(grpCols[0])}</span><span>${curto(grpCols[1])}</span></div>` : '';
     const html = `<div class="grp${grpCols ? ' cols' : ''}">${g.titulo ? `<h3 class="grp-title">${esc(g.titulo)}</h3>` : ''}${g.nota ? `<p class="grp-note">${esc(g.nota)}</p>` : ''}${head}<ul class="items">${g.itens.map(itemHTML).join('')}</ul></div>`;
     grpCols = null;
@@ -1126,7 +1166,7 @@
     const rot = it.rot || ['Inteira', 'Média'];
     document.getElementById('esTitulo').textContent = it.n;
     document.getElementById('esCampos').innerHTML =
-      (duo ? `<p class="sub">Tamanho</p><div class="escolhas">${rot.map((r, i) => `<label><input type="radio" name="tam" value="${i}"${i ? '' : ' checked'}><span>${esc(r)} · ${brl(it.p[i])}</span></label>`).join('')}</div>` : '') +
+      (duo ? `<p class="sub">${it.rot && !/ml|L$/.test(it.rot[0]) ? 'Escolha' : 'Tamanho'}</p><div class="escolhas">${rot.map((r, i) => `<label><input type="radio" name="tam" value="${i}"${i ? '' : ' checked'}><span>${esc(r)} · ${brl(it.p[i])}</span></label>`).join('')}</div>` : '') +
       (it.op && it.op.length ? `<p class="sub">Escolha uma opção</p><div class="escolhas">${it.op.map(o => `<label><input type="radio" name="op" value="${esc(o)}" required><span>${esc(o)}</span></label>`).join('')}</div>` : '');
     esOk.disabled = !!(it.op && it.op.length);
     document.getElementById('escolha').showModal();

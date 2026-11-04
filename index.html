@@ -110,7 +110,9 @@
   .idx:hover .seta, .idx.on .seta { transform: translateX(4px); color: var(--gold); }
   .idx.on { background: #ffffff0d; }
   .idx .info:empty { display: none; }
-  .como-pedir { max-width: 34ch; margin: 18px auto 0; padding: 12px 14px; border: 1px solid #ffffff2e; border-radius: 10px; color: #e6e6e6; text-align: center; font-size: .95rem; }
+  .como-pedir { max-width: 360px; margin: 20px auto 0; padding: 14px 16px; border: 1px solid #ffffff2e; border-radius: 12px; color: #e6e6e6; font-size: .98rem; list-style: none; counter-reset: passo; }
+  ol.como-pedir li { counter-increment: passo; display: flex; align-items: baseline; gap: 10px; padding: 3px 0; }
+  ol.como-pedir li::before { content: counter(passo); flex: none; width: 1.5rem; height: 1.5rem; display: inline-grid; place-items: center; border-radius: 50%; background: var(--gold); color: var(--ink); font-weight: 700; font-size: .85rem; }
   .como-pedir b { color: #fff; }
   .como-pedir.claro { max-width: none; margin: 16px 0 0; padding: 0; border: 0; border-radius: 0; background: none; color: var(--muted); text-align: left; font-size: .92rem; }
   .como-pedir.claro b { color: var(--ink); }
@@ -224,6 +226,10 @@
     box-shadow: 0 14px 30px -12px #000c;
   }
   .ped-bar[hidden] { display: none; }
+  @media (min-width: 900px) {
+    .ped-bar { left: calc(max(360px, 34%) + 32px); right: 32px; max-width: 620px; }
+    body .aviso { left: calc((100% + max(360px, 34%)) / 2); }
+  }
   .ped-bar b { color: var(--yellow); white-space: nowrap; }
   body.com-pedido { padding-bottom: 86px; }
   dialog.folha {
@@ -255,7 +261,21 @@
   .ped-lista .qtd button { width: 40px; height: 40px; border: 2px solid var(--ink); border-radius: 50%; background: var(--card); color: var(--ink); font-size: 1.25rem; font-weight: 700; }
   .ped-total { display: flex; justify-content: space-between; padding: 14px 0 4px; font-family: var(--slab); font-size: 1.55rem; font-weight: 700; }
   .ped-aviso { color: var(--muted); font-size: .92rem; }
-  .ped-alerta { margin-top: 10px; padding: 10px 12px; background: #fff4c2; border-left: 4px solid var(--yellow); }
+  .ped-alerta { margin-top: 10px; padding: 12px 14px; background: #fff4c2; border-left: 4px solid var(--yellow); font-size: 1.02rem; }
+  .grupo-esc { border: 0; margin: 0; padding: 0; min-width: 0; }
+  .grupo-esc .conta { margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: #1111110f; font-size: .85rem; }
+  .grupo-esc.completo .conta { background: var(--ink); color: #fff; }
+  .escolhas input:disabled + span { opacity: .35; cursor: default; }
+  .aviso {
+    position: fixed; z-index: 45; left: 50%; bottom: 84px; transform: translateX(-50%);
+    width: max-content; max-width: calc(100% - 24px); display: flex; align-items: center; gap: 14px;
+    padding: 10px 10px 10px 16px; background: #1f6f43; color: #fff; border-radius: 12px; font-weight: 700;
+    box-shadow: 0 10px 24px -10px #000a; animation: sobeAviso .25s var(--ease);
+  }
+  .aviso[hidden] { display: none; }
+  .aviso button { padding: 8px 12px; border: 0; border-radius: 8px; background: #ffffff26; color: #fff; font-weight: 700; }
+  @keyframes sobeAviso { from { opacity: 0; transform: translate(-50%, 8px); } }
+  @media (prefers-reduced-motion: reduce) { .aviso { animation: none; } }
 
 
   /* ============ Rodapé ============ */
@@ -358,7 +378,11 @@
   <p class="status" id="status" aria-live="polite"><i></i><span>Carregando horário…</span></p>
   <p class="mode-pill" id="modePill" hidden>★ Especial Tenda</p>
 
-  <p class="como-pedir">Escolha os itens tocando no <b>+</b>. Quando terminar, <b>faça o pedido no balcão</b> mostrando a sua lista.</p>
+  <ol class="como-pedir" aria-label="Como pedir">
+    <li><span><b>Toque no +</b> dos itens que você quer</span></li>
+    <li><span>Toque em <b>Ver meu pedido</b>, embaixo da tela</span></li>
+    <li><span><b>Mostre no balcão</b> e pague lá</span></li>
+  </ol>
 
   <nav class="indice" id="indiceNav" aria-label="Categorias do cardápio"><ol id="indice"></ol></nav>
   <a class="idx-agenda" href="#agenda">Agenda do clube <span aria-hidden="true">→</span></a>
@@ -372,7 +396,7 @@
   </div>
   <div class="conteudo">
     <p class="mode-note" id="modeNote" hidden></p>
-    <p class="como-pedir claro">Toque no <b>+</b> para montar sua lista. Ao terminar, o pedido é feito <b>no balcão</b>.</p>
+    <p class="como-pedir claro">Toque no <b>+</b> para adicionar. O pedido é feito e pago <b>no balcão</b>.</p>
 
     <!-- As seções do cardápio são montadas a partir de CARDAPIO (configurações, mais abaixo) -->
     <div id="secoes"></div>
@@ -424,7 +448,8 @@
 </footer>
 
 <!-- ============ Meu pedido ============ -->
-<button type="button" class="ped-bar" id="pedBar" hidden><span id="pedResumo"></span><b>Mostrar no balcão</b></button>
+<button type="button" class="ped-bar" id="pedBar" hidden><span id="pedResumo"></span><b>Ver meu pedido</b></button>
+<div class="aviso" id="aviso" role="status" aria-live="polite" hidden><span></span><button type="button">Ver pedido</button></div>
 
 <dialog class="folha" id="escolha" aria-labelledby="esTitulo">
   <form method="dialog" id="esForm">
@@ -439,7 +464,7 @@
 
 <dialog class="folha" id="pedido" aria-labelledby="pedTitulo">
   <h3 id="pedTitulo">Meu pedido</h3>
-  <p class="ped-alerta"><b>Este pedido ainda não foi enviado.</b> Quando tiver escolhido todos os itens, vá ao balcão e mostre esta tela para fazer o pedido.</p>
+  <p class="ped-alerta"><b>Agora é só ir ao balcão.</b> Mostre esta tela para o atendente e pague lá. O pedido não é enviado pelo celular.</p>
   <ul class="ped-lista" id="pedLista"></ul>
   <p class="ped-total"><span>Total</span><span id="pedTotal"></span></p>
   <p class="ped-aviso">Valores de referência. O pedido é feito e pago no balcão.</p>
@@ -535,8 +560,16 @@
   /* ===== Cardápios =====
      Cada item: n = nome, p = preço (número, ou [inteira, média]), d = descrição,
      tag = selo (ex.: 'Novidade'), rot = rótulos dos dois preços (padrão: Inteira / Média),
+     esc = escolhas ao pedir, ex.: [{ t: 'Escolha 2 recheios', max: 2, op: RECHEIOS }],
      op = opções que o cliente escolhe ao montar o pedido (sabores, frutas...).
      Fonte: fotos do cardápio impresso (ver dados/cardapio-oficial.md). */
+  // Listas usadas na hora de montar o pedido (o cliente toca no que quer).
+  const RECHEIOS = ['Queijo muçarela', 'Queijo coalho', 'Queijo parmesão', 'Catupiry', 'Cheddar', 'Creme de ricota', 'Presunto ralado', 'Bacon em cubos', 'Carne seca desfiada', 'Frango desfiado', 'Brócolis', 'Calabresa', 'Ovo mexido', 'Tomate', 'Mel', 'Doce de leite', 'Chocolate ao leite', 'Leite condensado', 'Banana', 'Morango'];
+  const ACOMP_ACAI = ['Amendoim triturado', 'Castanha de caju', 'Gotas de chocolate', 'Farinha láctea', 'Morango', 'Banana', 'Ovomaltine', 'Granulado', 'Sucrilhos', 'Uva', 'Granola', 'Leite em pó', 'M&M', 'Chocobol', 'Paçoca'];
+  const COBERTURAS = ['Xarope de guaraná', 'Cobertura de chocolate', 'Cobertura de morango', 'Leite condensado', 'Chocolate', 'Chantilly', 'Mel'];
+  const recheios = n => [{ t: n === 1 ? 'Escolha o recheio' : `Escolha ${n} recheios`, max: n, op: RECHEIOS }];
+  const copo = n => [{ t: n === 1 ? 'Escolha o acompanhamento' : `Escolha ${n} acompanhamentos`, max: n, op: ACOMP_ACAI }, { t: 'Escolha a cobertura', max: 1, op: COBERTURAS }];
+
   const PIZZAS_TENDA = [
     { n: 'Camarão', p: 90, tag: 'Novidade', d: 'Mussarela, catupiry, camarão, azeitona preta e orégano.' },
     { n: 'Filé mignon', p: 85, d: 'Mussarela, filé mignon, champignon, catupiry, azeitona preta e orégano.' },
@@ -687,14 +720,15 @@
         ] },
 
         { id: 'acai', nome: 'Açaí', icone: 'acai', sub: 'Açaí, smoothies e milkshakes', grupos: [
-          { titulo: 'Açaí no copo', nota: 'Acompanhamentos e cobertura você escolhe no balcão.', itens: [
+          { titulo: 'Açaí no copo', itens: [
             { n: 'Casquinha simples', p: 6 },
-            { n: 'Copo 150 ml', p: 10, d: '1 acompanhamento + 1 cobertura.' },
-            { n: 'Copo 300 ml', p: 17, d: '2 acompanhamentos + 1 cobertura.' },
-            { n: 'Copo 500 ml', p: 25, d: '3 acompanhamentos + 1 cobertura.' },
+            { n: 'Copo 150 ml', p: 10, d: '1 acompanhamento + 1 cobertura.', esc: copo(1) },
+            { n: 'Copo 300 ml', p: 17, d: '2 acompanhamentos + 1 cobertura.', esc: copo(2) },
+            { n: 'Copo 500 ml', p: 25, d: '3 acompanhamentos + 1 cobertura.', esc: copo(3) },
           ] },
           { titulo: 'Açaí puro batido', itens: [
-            { n: 'Açaí puro batido', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Adoce com mel, xarope de guaraná, açúcar cristal ou banana. Escolha um acompanhamento:', op: ['Banana', 'Morango', 'Whey', 'Amendoim', 'Leite em pó', 'Granola', 'Farinha láctea'] },
+            { n: 'Açaí puro batido', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Adoce com mel, xarope de guaraná, açúcar cristal ou banana. Vem com 1 acompanhamento: banana, morango, whey, amendoim, leite em pó, granola ou farinha láctea.',
+              esc: [{ t: 'Adoçar com', max: 1, op: ['Mel', 'Xarope de guaraná', 'Açúcar cristal', 'Banana'] }, { t: 'Escolha o acompanhamento', max: 1, op: ['Banana', 'Morango', 'Whey', 'Amendoim', 'Leite em pó', 'Granola', 'Farinha láctea'] }] },
           ] },
           { titulo: 'Adicionais', itens: [
             { n: 'Adicional comum', p: 3 },
@@ -714,17 +748,17 @@
         ] },
 
         { id: 'tapiocas', nome: 'Tapiocas', icone: 'tapiocas', sub: 'Tapioca, crepioca e Rap10', grupos: [
-          { titulo: 'Tapioca e crepioca', nota: 'Os recheios você escolhe no balcão.', itens: [
+          { titulo: 'Tapioca e crepioca', itens: [
             { n: 'Simples', p: [10, 12], rot: ['Tapioca', 'Crepioca'] },
-            { n: '1 recheio', p: [14, 16], rot: ['Tapioca', 'Crepioca'] },
-            { n: '2 recheios', p: [17, 18], rot: ['Tapioca', 'Crepioca'] },
-            { n: '3 recheios', p: [20, 20], rot: ['Tapioca', 'Crepioca'] },
+            { n: '1 recheio', p: [14, 16], rot: ['Tapioca', 'Crepioca'], esc: recheios(1) },
+            { n: '2 recheios', p: [17, 18], rot: ['Tapioca', 'Crepioca'], esc: recheios(2) },
+            { n: '3 recheios', p: [20, 20], rot: ['Tapioca', 'Crepioca'], esc: recheios(3) },
           ] },
           { titulo: 'Rap10', itens: [
-            { n: 'Rap10 com 1 recheio', p: 16 },
-            { n: 'Rap10 com 2 recheios', p: 18 },
-            { n: 'Rap10 com 3 recheios', p: 20 },
-            { n: 'Mais um recheio', p: 5 },
+            { n: 'Rap10 com 1 recheio', p: 16, esc: recheios(1) },
+            { n: 'Rap10 com 2 recheios', p: 18, esc: recheios(2) },
+            { n: 'Rap10 com 3 recheios', p: 20, esc: recheios(3) },
+            { n: 'Mais um recheio', p: 5, esc: recheios(1) },
           ] },
           { titulo: 'Recheios', itens: [
             { n: 'Salgados', op: ['Queijo muçarela', 'Queijo coalho', 'Queijo parmesão', 'Catupiry', 'Cheddar', 'Creme de ricota', 'Presunto ralado', 'Bacon em cubos', 'Carne seca desfiada', 'Frango desfiado', 'Brócolis', 'Calabresa', 'Ovo mexido', 'Tomate'] },
@@ -1151,33 +1185,69 @@
     try { localStorage.setItem('aab-pedido', JSON.stringify(PEDIDO)); } catch (e) {}
     atualizarPedido();
   }
+  const gruposDe = it => it.esc || (it.op && it.op.length ? [{ t: 'Escolha uma opção', max: 1, op: it.op }] : []);
   function adicionar({ it, ctx }, tam, op) {
     const duo = Array.isArray(it.p), rot = it.rot || ['Inteira', 'Média'];
-    const t = duo ? rot[tam] : '', p = duo ? it.p[tam] : it.p;
-    const k = [ctx, it.n, t, op].join('|');
+    let t = duo ? rot[tam] : '', n = it.n;
+    const p = duo ? it.p[tam] : it.p;
+    if (t && !/ml|L$|Inteira|Média|Copo|Jarra/.test(t)) { n = `${t} ${it.n.replace(/^Simples$/, 'simples')}`; t = ''; } // Tapioca/Crepioca
+    const k = [ctx, n, t, op].join('|');
     const ja = PEDIDO.find(x => x.k === k);
-    if (ja) ja.q++; else PEDIDO.push({ k, ctx, n: it.n, t, o: op || '', p, q: 1 });
+    if (ja) ja.q++; else PEDIDO.push({ k, ctx, n, t, o: op || '', p, q: 1 });
     salvarPedido();
+    avisar(`✓ ${n}${t ? ' · ' + t : ''} adicionado`);
   }
   function abrirEscolha(ent) {
     const { it } = ent, duo = Array.isArray(it.p);
-    if (!duo && !(it.op && it.op.length)) return adicionar(ent, 0, '');
+    const grupos = gruposDe(it);
+    if (!duo && !grupos.length) return adicionar(ent, 0, '');
     escolhendo = ent;
     const rot = it.rot || ['Inteira', 'Média'];
     document.getElementById('esTitulo').textContent = it.n;
     document.getElementById('esCampos').innerHTML =
       (duo ? `<p class="sub">${it.rot && !/ml|L$/.test(it.rot[0]) ? 'Escolha' : 'Tamanho'}</p><div class="escolhas">${rot.map((r, i) => `<label><input type="radio" name="tam" value="${i}"${i ? '' : ' checked'}><span>${esc(r)} · ${brl(it.p[i])}</span></label>`).join('')}</div>` : '') +
-      (it.op && it.op.length ? `<p class="sub">Escolha uma opção</p><div class="escolhas">${it.op.map(o => `<label><input type="radio" name="op" value="${esc(o)}" required><span>${esc(o)}</span></label>`).join('')}</div>` : '');
-    esOk.disabled = !!(it.op && it.op.length);
+      grupos.map((g, k) => `<fieldset class="grupo-esc" data-max="${g.max}"><legend class="sub">${esc(g.t)}${g.max > 1 ? ` <span class="conta">0 de ${g.max}</span>` : ''}</legend><div class="escolhas">${
+        g.op.map(o => `<label><input type="${g.max > 1 ? 'checkbox' : 'radio'}" name="e${k}" value="${esc(o)}"${g.max > 1 ? '' : ' required'}><span>${esc(o)}</span></label>`).join('')}</div></fieldset>`).join('');
+    validarEscolha();
     document.getElementById('escolha').showModal();
   }
-  esForm.addEventListener('change', () => { esOk.disabled = !esForm.checkValidity(); });
+  // Escolhas múltiplas: exige o número certo e trava as demais quando completa
+  function validarEscolha() {
+    let ok = esForm.checkValidity();
+    esForm.querySelectorAll('.grupo-esc').forEach(fs => {
+      const max = +fs.dataset.max;
+      if (max < 2) return;
+      const marcadas = fs.querySelectorAll('input:checked').length;
+      fs.querySelector('.conta').textContent = `${marcadas} de ${max}`;
+      fs.querySelectorAll('input:not(:checked)').forEach(i => i.disabled = marcadas >= max);
+      fs.classList.toggle('completo', marcadas === max);
+      if (marcadas !== max) ok = false;
+    });
+    esOk.disabled = !ok;
+    esOk.textContent = ok ? 'Adicionar ao pedido' : 'Escolha para adicionar';
+  }
+  esForm.addEventListener('change', validarEscolha);
   esForm.addEventListener('submit', e => {
     if (!e.submitter || e.submitter.value !== 'ok' || !escolhendo) return;
-    const f = new FormData(esForm);
-    adicionar(escolhendo, +(f.get('tam') || 0), f.get('op') || '');
+    const f = new FormData(esForm), grupos = gruposDe(escolhendo.it);
+    const partes = grupos.map((g, k) => {
+      const v = f.getAll('e' + k).join(', ');
+      return grupos.length > 1 && v ? `${g.t.replace(/^Escolha (o |a |\d+ )?/, '').replace(/^./, c => c.toUpperCase())}: ${v}` : v;
+    }).filter(Boolean);
+    adicionar(escolhendo, +(f.get('tam') || 0), partes.join(' · '));
     escolhendo = null;
   });
+
+  // Aviso rápido de "adicionado", com atalho para ver o pedido
+  const aviso = document.getElementById('aviso');
+  let avisoT;
+  function avisar(txt) {
+    aviso.querySelector('span').textContent = txt;
+    aviso.hidden = false;
+    clearTimeout(avisoT);
+    avisoT = setTimeout(() => { aviso.hidden = true; }, 2600);
+  }
+  aviso.querySelector('button').addEventListener('click', () => { aviso.hidden = true; document.getElementById('pedido').showModal(); });
   function atualizarPedido() {
     const qtd = PEDIDO.reduce((a, x) => a + x.q, 0), total = PEDIDO.reduce((a, x) => a + x.q * x.p, 0);
     const bar = document.getElementById('pedBar');
@@ -1186,7 +1256,7 @@
     document.getElementById('pedResumo').textContent = `Meu pedido · ${qtd} ${qtd === 1 ? 'item' : 'itens'} · ${brl(total)}`;
     document.querySelectorAll('.add').forEach(b => {
       const { it, ctx } = ITENS[b.dataset.add];
-      const n = PEDIDO.filter(x => x.ctx === ctx && x.n === it.n).reduce((a, x) => a + x.q, 0);
+      const n = PEDIDO.filter(x => x.ctx === ctx && (x.n === it.n || x.n.endsWith(' ' + it.n) || x.n.endsWith(' simples') && it.n === 'Simples')).reduce((a, x) => a + x.q, 0);
       b.textContent = n || '+';
       b.classList.toggle('tem', !!n);
     });
@@ -1372,7 +1442,10 @@
         }
         const p1 = numero(get(r, 'preco')), p2 = numero(get(r, 'preco2'));
         const rot = get(r, 'rotulosdosprecos').split('/').map(x => x.trim()).filter(Boolean);
+        // escolhas do pedido (recheios, acompanhamentos) vêm do cardápio embutido, pelo nome do item
+        const igual = sec._b && sec._b.grupos.flatMap(x => x.itens).find(x => chave(x.n) === chave(get(r, 'item')));
         g.itens.push({
+          esc: igual && igual.esc,
           n: get(r, 'item'), d: get(r, 'descricao') || undefined, tag: get(r, 'selo') || undefined,
           p: p1 != null && p2 != null ? [p1, p2] : p1, rot: rot.length === 2 ? rot : undefined,
           op: get(r, 'opcoes') ? get(r, 'opcoes').split(';').map(x => x.trim()).filter(Boolean) : undefined,

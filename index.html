@@ -571,6 +571,57 @@
     { n: 'Mussarela', p: 60, d: 'Mussarela, tomate, azeitona preta e orégano.' },
   ];
 
+  // Açaí e tapiocas valem nos dois cardápios (completo e Tenda).
+  const ACAI = { id: 'acai', nome: 'Açaí', icone: 'acai', sub: 'Açaí, smoothies e milkshakes', grupos: [
+          { titulo: 'Açaí no copo', itens: [
+            { n: 'Casquinha simples', p: 6 },
+            { n: 'Copo 150 ml', p: 10, d: '1 acompanhamento + 1 cobertura.', esc: copo(1) },
+            { n: 'Copo 300 ml', p: 17, d: '2 acompanhamentos + 1 cobertura.', esc: copo(2) },
+            { n: 'Copo 500 ml', p: 25, d: '3 acompanhamentos + 1 cobertura.', esc: copo(3) },
+          ] },
+          { titulo: 'Açaí puro batido', itens: [
+            { n: 'Açaí puro batido', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Adoce com mel, xarope de guaraná, açúcar cristal ou banana. Vem com 1 acompanhamento: banana, morango, whey, amendoim, leite em pó, granola ou farinha láctea.',
+              esc: [{ t: 'Adoçar com', max: 1, op: ['Mel', 'Xarope de guaraná', 'Açúcar cristal', 'Banana'] }, { t: 'Escolha o acompanhamento', max: 1, op: ['Banana', 'Morango', 'Whey', 'Amendoim', 'Leite em pó', 'Granola', 'Farinha láctea'] }] },
+          ] },
+          { titulo: 'Adicionais', itens: [
+            { n: 'Adicional comum', p: 3 },
+            { n: 'Adicional Nutella', p: 7 },
+            { n: 'Adicional whey', p: 7 },
+          ] },
+          { titulo: 'Coberturas e acompanhamentos', itens: [
+            { n: 'Coberturas', op: ['Xarope de guaraná', 'Cobertura de chocolate', 'Cobertura de morango', 'Leite condensado', 'Chocolate', 'Chantilly', 'Mel'] },
+            { n: 'Acompanhamentos', op: ['Amendoim triturado', 'Castanha de caju', 'Gotas de chocolate', 'Farinha láctea', 'Morango', 'Banana', 'Ovomaltine', 'Granulado', 'Sucrilhos', 'Uva', 'Granola', 'Leite em pó', 'M&M', 'Chocobol', 'Paçoca'] },
+          ] },
+          { titulo: 'Smoothies e milkshakes', itens: [
+            { n: 'Smoothie Antioxidante', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Iogurte natural, frutas vermelhas e whey.' },
+            { n: 'Smoothie Energético', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Leite, banana, polpa de açaí e whey.' },
+            { n: 'Smoothie Saciedade e Foco', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Leite condensado, banana, paçoca e whey.' },
+            { n: 'Milkshake', p: [18, 24], rot: ['300 ml', '500 ml'], op: ['Baunilha', 'Chocolate', 'Açaí', 'Morango', 'Ovomaltine'] },
+          ] },
+        ] };
+  const TAPIOCAS = { id: 'tapiocas', nome: 'Tapiocas', icone: 'tapiocas', sub: 'Tapioca, crepioca e Rap10', grupos: [
+          { titulo: 'Tapioca e crepioca', itens: [
+            { n: 'Simples', p: [10, 12], rot: ['Tapioca', 'Crepioca'] },
+            { n: '1 recheio', p: [14, 16], rot: ['Tapioca', 'Crepioca'], esc: recheios(1) },
+            { n: '2 recheios', p: [17, 18], rot: ['Tapioca', 'Crepioca'], esc: recheios(2) },
+            { n: '3 recheios', p: [20, 20], rot: ['Tapioca', 'Crepioca'], esc: recheios(3) },
+          ] },
+          { titulo: 'Rap10', itens: [
+            { n: 'Rap10 com 1 recheio', p: 16, esc: recheios(1) },
+            { n: 'Rap10 com 2 recheios', p: 18, esc: recheios(2) },
+            { n: 'Rap10 com 3 recheios', p: 20, esc: recheios(3) },
+            { n: 'Mais um recheio', p: 5, esc: recheios(1) },
+          ] },
+          { titulo: 'Recheios', itens: [
+            { n: 'Salgados', op: ['Queijo muçarela', 'Queijo coalho', 'Queijo parmesão', 'Catupiry', 'Cheddar', 'Creme de ricota', 'Presunto ralado', 'Bacon em cubos', 'Carne seca desfiada', 'Frango desfiado', 'Brócolis', 'Calabresa', 'Ovo mexido', 'Tomate'] },
+            { n: 'Doces', op: ['Mel', 'Doce de leite', 'Chocolate ao leite', 'Leite condensado', 'Banana', 'Morango'] },
+          ] },
+          { titulo: 'Especiais', itens: [
+            { n: 'Tapioca de Nutella', p: 25, d: '+ 1 acompanhamento.' },
+            { n: 'Tapioca de Nutella com sorvete de creme', p: 28 },
+          ] },
+        ] };
+
   const CARDAPIO = {
     completo: {
       destaque: { label: '★ Novidade no almoço', titulo: 'Virado à Paulista', texto: 'Arroz, tutu de feijão, copa lombo, banana milanesa, ovo frito e torresmo. Você pediu e ele voltou!', stub: 'Almoço executivo', preco: 45 },
@@ -634,7 +685,7 @@
             { n: 'Polenta frita', p: [28, 20], d: 'Acompanha molho de alho.' },
             { n: 'Polenta recheada com queijo', p: 32, d: 'Inteira. Acompanha molho de alho.' },
             { n: 'Calabresa acebolada', p: [60, 45], d: 'Acompanha pão francês e limão.' },
-            { n: 'Torresmo (pururuca)', p: [60, 40], d: 'Acompanha molho de alho.' },
+            { n: 'Torresmo (pururuca)', p: [60, 40], d: 'Acompanha limão.' },
             { n: 'Iscas de frango empanado no palito', p: [62, 46], d: 'Acompanha molho de alho e limão.' },
             { n: 'Contrafilé acebolado', p: [80, 55], d: 'Acompanha pão francês e limão.' },
             { n: 'Tilápia', p: [80, 55], d: 'Acompanha molho de alho, limão, cebolinha em conserva e pimenta biquinho.' },
@@ -705,56 +756,8 @@
           ] },
         ] },
 
-        { id: 'acai', nome: 'Açaí', icone: 'acai', sub: 'Açaí, smoothies e milkshakes', grupos: [
-          { titulo: 'Açaí no copo', itens: [
-            { n: 'Casquinha simples', p: 6 },
-            { n: 'Copo 150 ml', p: 10, d: '1 acompanhamento + 1 cobertura.', esc: copo(1) },
-            { n: 'Copo 300 ml', p: 17, d: '2 acompanhamentos + 1 cobertura.', esc: copo(2) },
-            { n: 'Copo 500 ml', p: 25, d: '3 acompanhamentos + 1 cobertura.', esc: copo(3) },
-          ] },
-          { titulo: 'Açaí puro batido', itens: [
-            { n: 'Açaí puro batido', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Adoce com mel, xarope de guaraná, açúcar cristal ou banana. Vem com 1 acompanhamento: banana, morango, whey, amendoim, leite em pó, granola ou farinha láctea.',
-              esc: [{ t: 'Adoçar com', max: 1, op: ['Mel', 'Xarope de guaraná', 'Açúcar cristal', 'Banana'] }, { t: 'Escolha o acompanhamento', max: 1, op: ['Banana', 'Morango', 'Whey', 'Amendoim', 'Leite em pó', 'Granola', 'Farinha láctea'] }] },
-          ] },
-          { titulo: 'Adicionais', itens: [
-            { n: 'Adicional comum', p: 3 },
-            { n: 'Adicional Nutella', p: 7 },
-            { n: 'Adicional whey', p: 7 },
-          ] },
-          { titulo: 'Coberturas e acompanhamentos', itens: [
-            { n: 'Coberturas', op: ['Xarope de guaraná', 'Cobertura de chocolate', 'Cobertura de morango', 'Leite condensado', 'Chocolate', 'Chantilly', 'Mel'] },
-            { n: 'Acompanhamentos', op: ['Amendoim triturado', 'Castanha de caju', 'Gotas de chocolate', 'Farinha láctea', 'Morango', 'Banana', 'Ovomaltine', 'Granulado', 'Sucrilhos', 'Uva', 'Granola', 'Leite em pó', 'M&M', 'Chocobol', 'Paçoca'] },
-          ] },
-          { titulo: 'Smoothies e milkshakes', itens: [
-            { n: 'Smoothie Antioxidante', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Iogurte natural, frutas vermelhas e whey.' },
-            { n: 'Smoothie Energético', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Leite, banana, polpa de açaí e whey.' },
-            { n: 'Smoothie Saciedade e Foco', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Leite condensado, banana, paçoca e whey.' },
-            { n: 'Milkshake', p: [18, 24], rot: ['300 ml', '500 ml'], op: ['Baunilha', 'Chocolate', 'Açaí', 'Morango', 'Ovomaltine'] },
-          ] },
-        ] },
-
-        { id: 'tapiocas', nome: 'Tapiocas', icone: 'tapiocas', sub: 'Tapioca, crepioca e Rap10', grupos: [
-          { titulo: 'Tapioca e crepioca', itens: [
-            { n: 'Simples', p: [10, 12], rot: ['Tapioca', 'Crepioca'] },
-            { n: '1 recheio', p: [14, 16], rot: ['Tapioca', 'Crepioca'], esc: recheios(1) },
-            { n: '2 recheios', p: [17, 18], rot: ['Tapioca', 'Crepioca'], esc: recheios(2) },
-            { n: '3 recheios', p: [20, 20], rot: ['Tapioca', 'Crepioca'], esc: recheios(3) },
-          ] },
-          { titulo: 'Rap10', itens: [
-            { n: 'Rap10 com 1 recheio', p: 16, esc: recheios(1) },
-            { n: 'Rap10 com 2 recheios', p: 18, esc: recheios(2) },
-            { n: 'Rap10 com 3 recheios', p: 20, esc: recheios(3) },
-            { n: 'Mais um recheio', p: 5, esc: recheios(1) },
-          ] },
-          { titulo: 'Recheios', itens: [
-            { n: 'Salgados', op: ['Queijo muçarela', 'Queijo coalho', 'Queijo parmesão', 'Catupiry', 'Cheddar', 'Creme de ricota', 'Presunto ralado', 'Bacon em cubos', 'Carne seca desfiada', 'Frango desfiado', 'Brócolis', 'Calabresa', 'Ovo mexido', 'Tomate'] },
-            { n: 'Doces', op: ['Mel', 'Doce de leite', 'Chocolate ao leite', 'Leite condensado', 'Banana', 'Morango'] },
-          ] },
-          { titulo: 'Especiais', itens: [
-            { n: 'Tapioca de Nutella', p: 25, d: '+ 1 acompanhamento.' },
-            { n: 'Tapioca de Nutella com sorvete de creme', p: 28 },
-          ] },
-        ] },
+        ACAI,
+        TAPIOCAS,
 
         { id: 'bebidas', nome: 'Bebidas', icone: 'bebidas', grupos: [
           { titulo: 'Refrigerantes', itens: [
@@ -772,7 +775,7 @@
           ] },
           { titulo: 'Sucos e bebidas prontas', itens: [
             { n: 'Suco Del Valle lata 290 ml', p: 8 },
-            { n: 'Suco Kapo caixa 200 ml', p: 8 },
+            { n: 'Suco Kapo caixa 200 ml', p: 5 },
             { n: 'Suco Life 300 ml', p: 8 },
             { n: 'Suco Life 900 ml', p: 15 },
             { n: 'Gatorade 500 ml', p: 9 },
@@ -907,7 +910,7 @@
             { n: 'Mandioca', p: [28, 20] },
             { n: 'Polenta', p: [28, 20] },
             { n: 'Calabresa', p: [60, 45] },
-            { n: 'Torresmo', p: [60, 40] },
+            { n: 'Torresmo', p: [60, 40], d: 'Acompanha limão.' },
             { n: 'Iscas de frango empanado no palito', p: [62, 46] },
             { n: 'Contra filé acebolado', p: [80, 55] },
             { n: 'Polenta recheada com queijo', p: 32, d: 'Inteira.' },
@@ -926,6 +929,9 @@
             { n: 'Fatia de pizza', p: 10 },
           ] },
         ] },
+
+        ACAI,
+        TAPIOCAS,
 
         { id: 'bebidas', nome: 'Bebidas', icone: 'bebidas', grupos: [
           { itens: [

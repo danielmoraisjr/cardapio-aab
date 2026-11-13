@@ -4,295 +4,278 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cardápio AAB</title>
-<meta name="description" content="Cardápio da lanchonete da AAB, em Botucatu – SP.">
-<meta name="robots" content="noindex, nofollow">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M12 18Q50 6 88 18V56Q88 80 50 97Q12 80 12 56Z' fill='%23111' stroke='%23fff' stroke-width='6'/%3E%3Cpath fill='%23fff' d='M50 26l7 20h21l-17 12 6 20-17-12-17 12 6-20-17-12h21z'/%3E%3C/svg%3E">
+<meta name="description" content="Cardápio da Lanchonete AAB, em Botucatu – SP: almoço executivo, porções, pastéis, pizzas, bebidas, cervejas e drinks, com horários atualizados.">
+<meta name="theme-color" content="#0c0c0c">
+<!-- Prévia ao compartilhar (WhatsApp, Instagram). Ao trocar o endereço do site, atualize as duas URLs abaixo. -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="AAB · Botucatu">
+<meta property="og:title" content="Cardápio da Lanchonete AAB">
+<meta property="og:description" content="Almoço, porções, pastéis, pizzas, bebidas e drinks. Lanchonete da AAB, Botucatu – SP.">
+<meta property="og:url" content="https://cardapio-aab.vercel.app/">
+<meta property="og:image" content="https://cardapio-aab.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  /* ============ Tokens ============ */
+  /* ============ Tokens ============
+     Conceito: "programa de jogo" do clube — índice numerado como uma escalação,
+     preto e branco do escudo, dourado só nos números. */
   :root {
-    --paper: #f4efe4;
-    --card: #fffdf7;
-    --ink: #151515;
-    --muted: #434343;
-    --rule: #15151526;
+    --night: #0c0c0c;
+    --paper: #f5f1e8;
+    --card: #fbf9f4;
+    --ink: #111111;
+    --muted: #3a3a3a;
+    --rule: #1111111f;
+    --gold: #c8a24a;
     --yellow: #f2c200;
     --green: #3ddc84;
-    --night: #0b0b0b;
-    --slab: "Arvo", Georgia, serif;
+    --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
     --sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+    --slab: var(--display);
+    --ease: cubic-bezier(.16, 1, .3, 1);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { font-size: 112.5%; }            /* 18px — base confortável */
   html.big { font-size: 131.25%; }       /* 21px — "Letra maior" */
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-size: 1rem;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
-  }
+  body { background: var(--night); color: var(--ink); font-family: var(--sans); font-size: 1rem; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  html, a, button, label, input { touch-action: manipulation; }
   button { font: inherit; cursor: pointer; }
   a { color: inherit; }
   :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
 
-  /* ============ Capa ============ */
-  .cover {
-    position: relative;
-    overflow: hidden;
-    color: #fff;
-    text-align: center;
-    background: radial-gradient(ellipse 70% 60% at 50% 38%, #2b2b2b 0%, var(--night) 70%);
-    padding-bottom: 40px;
+  /* ============ Estrutura: índice + página ============ */
+  .app { min-height: 100svh; }
+  @media (max-width: 899px) {
+    html:not(.em-categoria) .pagina { display: none; }
+    html.em-categoria .inicio, html.em-categoria footer { display: none; }
   }
-  /* fachos de refletor */
-  .cover::before {
-    content: "";
-    position: absolute; inset: 0;
-    pointer-events: none;
-    background:
-      linear-gradient(118deg, transparent 38%, #ffffff0b 47%, transparent 56%),
-      linear-gradient(242deg, transparent 38%, #ffffff0b 47%, transparent 56%);
+  @media (min-width: 900px) {
+    .app { display: grid; grid-template-columns: minmax(360px, 34%) 1fr; }
+    .inicio { position: sticky; top: 0; height: 100vh; overflow-y: auto; scrollbar-width: thin; }
+    .barra { display: none !important; }
   }
-  .topbar {
-    position: relative; z-index: 2;
-    display: flex; justify-content: space-between; align-items: center; gap: 12px;
-    max-width: 1100px; margin: 0 auto; padding: 14px 16px;
+
+  /* ============ Início (índice) ============ */
+  .inicio {
+    position: relative; color: #fff;
+    background: radial-gradient(ellipse 90% 45% at 50% 0%, #262626 0%, var(--night) 70%);
+    padding: 14px 22px 36px;
   }
-  .status {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: .85rem; font-weight: 700;
-    border: 1px solid #ffffff38; border-radius: 999px;
-    padding: 6px 14px;
-    text-align: left;
+  .topo { display: flex; justify-content: flex-end; }
+  .font-btn {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 14px;
+    background: transparent; color: #fff; border: 1px solid #ffffff4d; border-radius: 999px;
+    font-weight: 700; font-size: .85rem; white-space: nowrap;
   }
-  .status i { width: 10px; height: 10px; border-radius: 50%; background: #888; flex: none; }
+  .font-btn b { font-family: var(--display); font-size: 1.2rem; line-height: 1; }
+
+  #crest { display: flex; justify-content: center; height: 150px; margin: 4px auto 0; }
+  #crest img { height: 100%; width: auto; }
+  @media (min-width: 900px) { #crest { height: 180px; } }
+
+  .titulo { text-align: center; margin-top: 6px; }
+  .titulo .pre { display: block; font-size: .8rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+  .titulo h1 { font-family: var(--display); font-weight: 800; font-size: clamp(3.2rem, 17vw, 4.6rem); line-height: .9; letter-spacing: .01em; text-transform: uppercase; margin-top: 6px; }
+  .titulo .since { margin-top: 8px; color: #bdbdbd; font-size: .95rem; }
+
+  .status { margin: 18px auto 0; max-width: 30ch; font-weight: 700; font-size: 1rem; text-align: center; text-wrap: balance; }
+  .status i { display: inline-block; width: 10px; height: 10px; margin-right: 8px; vertical-align: .08em; border-radius: 50%; background: #888; }
   .status.open i { background: var(--green); box-shadow: 0 0 0 0 #3ddc8488; animation: pulse 2s infinite; }
   .status.closed i { background: #ff5a4f; }
   @keyframes pulse { 70% { box-shadow: 0 0 0 10px #3ddc8400; } 100% { box-shadow: 0 0 0 0 #3ddc8400; } }
 
-  .font-btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    min-height: 44px; padding: 6px 14px;
-    background: #fff; color: var(--ink);
-    border: 0; border-radius: 999px;
-    font-weight: 700; font-size: .85rem;
-    white-space: nowrap;
-    transition: transform .15s cubic-bezier(.2,.8,.2,1);
-  }
-  .font-btn b { font-family: var(--slab); font-size: 1.1rem; line-height: 1; }
-  .font-btn:active { transform: scale(.96); }
+  .mode-pill { display: block; width: fit-content; margin: 12px auto 0; padding: 5px 14px; background: var(--yellow); color: var(--ink); border-radius: 999px; font-weight: 700; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; }
+  .mode-pill[hidden] { display: none; }
 
-  #crest {
-    position: relative;
-    width: 100%; max-width: 680px;
-    height: clamp(360px, 100vw, 560px);
-    margin: 0 auto;
-    cursor: grab;
-    touch-action: pan-y;
+  /* O índice: uma linha por categoria, como a escalação de um time */
+  .indice { margin-top: 26px; }
+  .indice ol { list-style: none; border-bottom: 1px solid #ffffff1f; }
+  .idx {
+    display: grid; grid-template-columns: 2.4rem 1fr auto; align-items: center; column-gap: 10px;
+    padding: 15px 4px; border-top: 1px solid #ffffff1f; text-decoration: none; color: #fff;
+    transition: background .2s;
   }
-  @media (min-width: 900px) { #crest { height: min(64vh, 620px); } }
-  #crest:active { cursor: grabbing; }
-  #crest canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  #crest .fallback { position: absolute; inset: 8% 0; width: 100%; height: 84%; transition: opacity .4s; }
-  #crest.ready .fallback { opacity: 0; }
-  #crest .glow {
-    position: absolute; left: 50%; bottom: 4%;
-    width: 50%; height: 30px; transform: translateX(-50%);
-    background: radial-gradient(closest-side, #ffffff26, transparent);
-    filter: blur(4px);
-  }
+  .idx .num { font-family: var(--display); font-weight: 600; font-size: 1.15rem; color: var(--gold); letter-spacing: .04em; }
+  .idx .nome { font-family: var(--display); font-weight: 800; font-size: 1.95rem; line-height: 1; text-transform: uppercase; letter-spacing: .01em; }
+  .idx .info { grid-column: 2; font-size: .92rem; color: #bdbdbd; margin-top: 4px; }
+  .idx .seta { grid-column: 3; grid-row: 1 / span 2; font-size: 1.4rem; color: #ffffff80; transition: transform .25s var(--ease), color .2s; }
+  .idx:hover .seta, .idx.on .seta { transform: translateX(4px); color: var(--gold); }
+  .idx.on { background: #ffffff0d; }
+  .idx .info:empty { display: none; }
+  .como-pedir { max-width: 30ch; margin: 16px auto 0; color: #d6d6d6; text-align: center; font-size: .98rem; text-wrap: balance; }
+  ol.como-pedir li { counter-increment: passo; display: flex; align-items: baseline; gap: 10px; padding: 3px 0; }
+  ol.como-pedir li::before { content: counter(passo); flex: none; width: 1.5rem; height: 1.5rem; display: inline-grid; place-items: center; border-radius: 50%; background: var(--gold); color: var(--ink); font-weight: 700; font-size: .85rem; }
+  .como-pedir b { color: #fff; }
+  .como-pedir.claro { max-width: none; margin: 16px 0 0; padding: 0; border: 0; border-radius: 0; background: none; color: var(--muted); text-align: left; font-size: .92rem; }
+  .como-pedir.claro b { color: var(--ink); }
+  .idx-agenda { display: inline-flex; gap: 8px; margin-top: 18px; padding: 10px 2px; color: #d8d8d8; font-weight: 700; text-decoration: none; border-bottom: 1px solid #ffffff40; }
+  .idx.fora .nome { color: #9a9a9a; }
+  .idx.fora .info { color: #9a9a9a; }
 
-  .cover h1 {
-    position: relative;
-    font-family: var(--slab); font-weight: 700;
-    font-size: clamp(2.6rem, 12vw, 5.2rem);
-    letter-spacing: .14em;
-    line-height: 1;
-    margin: 4px 0 10px;
-    padding-left: .14em;
-  }
-  .cover .sub { position: relative; font-size: 1.05rem; color: #d6d6d6; }
-  .cover .mode-pill {
-    position: relative; display: inline-block; margin-top: 10px; padding: 4px 14px;
-    background: var(--yellow); color: var(--ink); border-radius: 999px;
-    font-weight: 700; font-size: .85rem; letter-spacing: .08em; text-transform: uppercase;
-  }
-  .since {
-    position: relative;
-    display: inline-flex; align-items: center; gap: 10px;
-    margin-top: 18px; padding: 8px 18px;
-    border-top: 1px solid #ffffff55; border-bottom: 1px solid #ffffff55;
-    font-family: var(--slab); font-size: .95rem; letter-spacing: .08em; text-transform: uppercase;
-  }
+  /* entrada: as linhas sobem em sequência, uma única vez */
+  .indice.entra li { animation: sobe .7s var(--ease) both; animation-delay: calc(var(--i) * 45ms + 200ms); }
+  @keyframes sobe { from { opacity: 0; transform: translateY(14px); } }
 
-  /* ============ Faixa de horário ============ */
-  .today {
-    background: var(--ink); color: #fff;
-    border-top: 1px solid #ffffff22;
+  /* ============ Página da categoria ============ */
+  .pagina { background: var(--paper); color: var(--ink); min-height: 100svh; }
+  .pagina.entra { animation: entra .38s var(--ease); }
+  @keyframes entra { from { opacity: 0; transform: translateX(22px); } }
+  .barra {
+    position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 12px;
+    padding: 8px 12px; background: var(--paper); border-bottom: 1px solid var(--rule);
   }
-  .today .in {
-    max-width: 1100px; margin: 0 auto; padding: 12px 16px;
-    display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 18px;
-    font-size: .95rem;
-    text-align: center;
+  .voltar {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 8px 16px 8px 12px;
+    background: var(--ink); color: #fff; border: 0; border-radius: 999px; font-weight: 700; font-size: 1.02rem; text-decoration: none;
   }
-  .today .status { width: 100%; justify-content: center; border: 0; padding: 0; font-size: 1.05rem; }
-  @media (min-width: 720px) { .today .status { width: auto; } }
-  .today button { background: none; border: 0; color: var(--yellow); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; padding: 4px; }
+  .barra .onde { font-family: var(--display); font-weight: 800; font-size: 1.3rem; text-transform: uppercase; margin-left: auto; padding-right: 6px; }
+  .conteudo { max-width: 760px; margin: 0 auto; padding: 8px 20px 40px; }
+  @media (min-width: 900px) { .conteudo { padding: 56px 56px 64px; } }
 
-  /* ============ Categorias ============ */
-  nav {
-    position: sticky; top: 0; z-index: 30;
-    background: var(--paper);
-    border-bottom: 2px solid var(--ink);
-    box-shadow: 0 6px 16px -12px #00000055;
-  }
-  nav .in {
-    display: flex; gap: 6px;
-    max-width: 1100px; margin: 0 auto; padding: 8px 12px;
-    overflow-x: auto; scrollbar-width: none;
-  }
-  @media (min-width: 900px) { nav .in { justify-content: center; } }
-  nav button {
-    flex: none;
-    display: flex; flex-direction: column; align-items: center; gap: 2px;
-    min-width: 76px; padding: 8px 10px;
-    background: none; border: 0;
-    border-radius: 12px;
-    font-weight: 700; font-size: .85rem;
-    color: var(--muted);
-    transition: background .2s, color .2s;
-  }
-  nav svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  nav button:hover { background: #15151510; color: var(--ink); }
-  nav button.on { background: var(--ink); color: #fff; }
+  .mode-note { margin: 18px 0 0; padding: 10px 14px; border-left: 4px solid var(--yellow); background: #fff; font-weight: 700; }
+  .mode-note small { display: block; font-weight: 400; }
+  .mode-note[hidden] { display: none; }
 
-  /* ============ Cartão do cardápio ============ */
-  .menu {
-    max-width: 1040px;
-    margin: 28px auto 56px;
-    padding: 0 16px;
-  }
-  .sheet {
-    background: var(--card);
-    border: 2px solid var(--ink);
-    outline: 1px solid var(--ink);
-    outline-offset: -10px;
-    padding: 40px 22px 32px;
-    box-shadow: 0 30px 60px -40px #00000066;
-  }
-  @media (min-width: 720px) { .sheet { padding: 56px 56px 40px; } }
+  .sec { display: none; padding-top: 22px; scroll-margin-top: 100vh; }
+  .sec.ativa { display: block; }
+  .sec-head { margin-bottom: 18px; }
+  .sec-head .orn { font-family: var(--display); font-weight: 600; font-size: 1.1rem; color: #8a7333; letter-spacing: .04em; }
+  .sec-head h2 { font-family: var(--display); font-weight: 800; font-size: clamp(2.6rem, 12vw, 3.6rem); line-height: .95; text-transform: uppercase; }
+  .sec-head p { margin-top: 6px; color: var(--muted); font-size: 1rem; }
+  .sec-note { color: var(--muted); margin: -8px 0 18px; }
 
-  /* Combo em destaque */
-  .ticket-zone { perspective: 1000px; margin-bottom: 8px; }
-  .ticket {
-    --rx: 0deg; --ry: 0deg;
-    display: grid; grid-template-columns: 1fr;
-    max-width: 760px; margin: 0 auto;
-    background: var(--night); color: #fff;
-    border-radius: 10px;
-    transform: rotateX(var(--rx)) rotateY(var(--ry));
-    transition: transform .4s cubic-bezier(.2,.8,.2,1);
-    box-shadow: 0 18px 30px -18px #000000aa;
-  }
-  @media (min-width: 640px) { .ticket { grid-template-columns: 1fr 200px; } }
-  .ticket > div { padding: 24px 26px; }
-  .ticket .label { font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--yellow); }
-  .ticket h2 { font-family: var(--slab); font-size: clamp(1.5rem, 5vw, 2.1rem); line-height: 1.15; margin: 8px 0 6px; }
-  .ticket p { color: #d0d0d0; }
-  .ticket .stub {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    border-top: 2px dashed #ffffff44;
-  }
-  @media (min-width: 640px) { .ticket .stub { border-top: 0; border-left: 2px dashed #ffffff44; } }
-  .ticket .stub small { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: #bdbdbd; }
-  .ticket .stub strong { font-family: var(--slab); font-size: 2.4rem; line-height: 1.1; white-space: nowrap; }
+  .grp + .grp { margin-top: 30px; }
+  .grp-title { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 800; font-size: 1.3rem; letter-spacing: .04em; text-transform: uppercase; }
+  .grp-title::after { content: ""; flex: 1; height: 1px; background: var(--ink); opacity: .25; }
+  .grp-note { color: var(--muted); margin-top: 2px; }
 
-  /* Seções */
-  .sec { padding-top: 56px; scroll-margin-top: 96px; }
-  .sec-head { text-align: center; margin-bottom: 18px; }
-  .sec-head .orn { font-size: .9rem; letter-spacing: .6em; padding-left: .6em; }
-  .sec-head h2 {
-    display: flex; align-items: center; gap: 16px;
-    font-family: var(--slab); font-weight: 700;
-    font-size: clamp(1.9rem, 6vw, 2.6rem);
-    text-transform: uppercase; letter-spacing: .06em;
-    line-height: 1.1;
-    margin: 4px 0 4px;
-  }
-  .sec-head h2::before, .sec-head h2::after { content: ""; flex: 1; height: 2px; background: var(--ink); }
-  .sec-head p { color: var(--muted); font-size: 1rem; }
+  .items { list-style: none; }
+  .item { padding: 15px 0 14px; border-bottom: 1px solid var(--rule); }
+  .item .row { display: flex; align-items: flex-start; gap: 12px; }
+  .item .row > :first-child { flex: 1; min-width: 0; }
+  .item .line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .item .lead { display: none; }
+  .item h4 { font-size: 1.12rem; font-weight: 700; line-height: 1.3; }
+  .item .price { font-family: var(--display); font-weight: 800; font-size: 1.45rem; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .item p { color: var(--muted); margin-top: 4px; max-width: 52ch; }
+  .price small.rs { font-size: .62em; margin-right: .12em; letter-spacing: 0; }
+  /* Grupos com dois tamanhos: colunas alinhadas, rótulos uma vez só */
+  .cols .price, .cols-head span { display: inline-block; width: 3.5rem; text-align: right; }
+  .cols .pr { display: flex; gap: 6px; flex: none; }
+  .cols .pr .vazio { color: #11111140; }
+  .cols-head { display: flex; justify-content: flex-end; gap: 6px; padding: 14px 56px 4px 0; border-bottom: 1px solid var(--rule); font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+  .cols-head span { line-height: 1.2; }
+  .cols-head em { margin-right: auto; font-style: normal; font-weight: 400; letter-spacing: .02em; text-transform: none; }
+  .pr.lab { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: none; }
+  .pr.lab > span { display: flex; align-items: baseline; gap: 6px; }
+  .pr.lab small:not(.rs) { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .tag { display: inline-block; margin-bottom: 6px; padding: 3px 8px 2px; background: var(--yellow); color: var(--ink); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border-radius: 3px; }
 
-  .items { list-style: none; display: grid; grid-template-columns: 1fr; column-gap: 48px; }
-  @media (min-width: 820px) { .items { grid-template-columns: 1fr 1fr; } }
-  .item { padding: 16px 0 14px; border-bottom: 1px dashed var(--rule); }
-  .item .line { display: flex; align-items: baseline; gap: 10px; }
-  .item h4 { font-size: 1.22rem; font-weight: 700; line-height: 1.25; }
-  .item .lead { flex: 1; min-width: 16px; border-bottom: 2px dotted #15151555; transform: translateY(-5px); }
-  .item .price { font-family: var(--slab); font-size: 1.22rem; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .item p { color: var(--muted); margin-top: 3px; max-width: 46ch; }
-  .price.two { display: grid; grid-template-columns: auto auto; column-gap: 8px; align-items: baseline; text-align: right; }
-  @media (max-width: 599px) {
-    .line.duo { flex-wrap: wrap; }
-    .line.duo .lead { display: none; }
-    .line.duo .price.two { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 4px 8px; justify-content: flex-start; margin-top: 4px; }
-    .line.duo .price.two small:not(:first-child) { margin-left: 14px; }
+  .add {
+    flex: none; width: 44px; height: 44px; margin-top: -9px; display: grid; place-items: center;
+    border: 0; border-radius: 50%; background: #e9e2d2; color: var(--ink);
+    font-size: 1.4rem; font-weight: 700; line-height: 1;
+    transition: transform .15s var(--ease), background .2s;
   }
-  .price.two small { font-family: var(--sans); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .add:active { transform: scale(.9); }
+  .add.tem { background: var(--yellow); font-size: 1.05rem; }
+  .ops { list-style: none; margin-top: 4px; color: var(--muted); line-height: 1.5; }
+  .ops li { display: inline; }
+  .ops li + li::before { content: " · "; }
+  .ops.longas li { display: block; }
+  .ops.longas li + li::before { content: none; }
 
-  /* Grupos dentro de cada seção */
-  .grp + .grp { margin-top: 34px; }
-  .grp-title {
-    display: flex; align-items: center; gap: 12px;
-    font-family: var(--slab); font-size: 1.05rem; font-weight: 700;
-    letter-spacing: .12em; text-transform: uppercase;
-  }
-  .grp-title::after { content: ""; flex: 1; height: 1px; background: var(--ink); opacity: .35; }
-  .grp-note { color: var(--muted); font-size: .95rem; margin-top: 2px; }
-  .sec-note { text-align: center; color: var(--muted); font-size: .95rem; margin: -6px 0 18px; }
 
-  /* Aviso do cardápio da vez (Tenda) */
-  .mode-note {
-    max-width: 760px; margin: 0 auto 28px; padding: 12px 18px;
-    border: 2px solid var(--ink); text-align: center; font-weight: 700;
+  .next {
+    display: flex; width: 100%; justify-content: space-between; align-items: center;
+    margin-top: 28px; min-height: 58px; padding: 14px 18px;
+    background: var(--ink); color: #fff; border-radius: 12px; text-decoration: none;
+    font-weight: 700; font-size: 1.05rem;
   }
-  .mode-note.tenda { background: var(--yellow); }
-  .mode-note small { display: block; font-weight: 400; color: var(--ink); }
-  .tag {
-    display: inline-block;
-    margin-bottom: 6px;
-    padding: 3px 9px 2px;
-    background: var(--yellow); color: var(--ink);
-    font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-    border-radius: 3px;
-    transform: rotate(-2deg);
-    box-shadow: 1px 2px 0 #15151522;
-  }
-  .note18 { margin-top: 14px; font-size: .9rem; color: var(--muted); text-align: center; }
+  .next span { color: var(--gold); }
+  @media (min-width: 900px) { .next { max-width: 420px; margin-left: auto; } }
 
   /* Agenda */
-  .agenda-list { display: grid; grid-template-columns: 1fr; border-top: 2px solid var(--ink); }
-  @media (min-width: 720px) { .agenda-list { grid-template-columns: 1fr 1fr; column-gap: 32px; } }
-  .event { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; padding: 20px 0; border-bottom: 1px dashed var(--rule); }
-  .date { width: 92px; text-align: center; border: 2px solid var(--ink); border-radius: 6px; padding: 6px 0 5px; }
-  .date b { display: block; font-family: var(--slab); font-size: 2.1rem; line-height: 1; }
-  .date span { font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-  .event h3 { font-family: var(--slab); font-size: 1.3rem; line-height: 1.2; }
+  .agenda-list { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--ink); }
+  .event { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+  .date { width: 84px; text-align: center; border: 2px solid var(--ink); border-radius: 6px; padding: 6px 0 5px; }
+  .date b { display: block; font-family: var(--display); font-weight: 800; font-size: 2.2rem; line-height: 1; }
+  .date span { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .event h3 { font-family: var(--display); font-weight: 800; font-size: 1.5rem; line-height: 1.05; text-transform: uppercase; }
   .event p { color: var(--muted); }
-  .empty { padding: 24px 0; text-align: center; color: var(--muted); }
+  .empty { grid-column: 1 / -1; padding: 24px 0; color: var(--muted); }
+
+  .note18 { margin-top: 36px; font-size: .9rem; color: var(--muted); }
+
+  /* Barra e folhas do pedido */
+  .ped-bar {
+    position: fixed; z-index: 40; left: 12px; right: 12px; bottom: 12px;
+    max-width: 560px; margin: 0 auto; min-height: 58px; padding: 12px 18px;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    background: var(--ink); color: #fff; border: 0; border-radius: 14px;
+    font-weight: 700; font-size: 1.02rem; text-align: left;
+    box-shadow: 0 14px 30px -12px #000c;
+  }
+  .ped-bar[hidden] { display: none; }
+  @media (min-width: 900px) {
+    .ped-bar { left: calc(max(360px, 34%) + 32px); right: 32px; max-width: 620px; }
+  }
+  .ped-bar b { color: var(--yellow); white-space: nowrap; }
+  .ped-bar span { white-space: nowrap; }
+  .ped-bar.ok { background: #1f6f43; transition: background .2s; }
+  .ped-bar.ok b { color: #fff; }
+  body.com-pedido { padding-bottom: 86px; }
+  dialog.folha {
+    width: min(560px, 100%); max-width: 100%; max-height: 88vh; margin: auto auto 0;
+    padding: 22px 18px 18px; border: 0; border-radius: 18px 18px 0 0;
+    background: var(--card); color: var(--ink);
+  }
+  @media (min-width: 600px) { dialog.folha { margin: auto; border-radius: 16px; } }
+  dialog.folha::backdrop { background: #000a; }
+  .folha h3 { font-family: var(--slab); font-size: 1.45rem; line-height: 1.2; }
+  .folha .sub { color: var(--muted); margin: 6px 0 4px; font-weight: 700; }
+  .escolhas { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 16px; }
+  .escolhas label { position: relative; }
+  .escolhas input { position: absolute; inset: 0; opacity: 0; }
+  .escolhas span { display: block; padding: 10px 14px; border: 2px solid #15151533; border-radius: 12px; font-weight: 700; cursor: pointer; }
+  .escolhas input:checked + span { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .escolhas input:focus-visible + span { outline: 3px solid var(--yellow); outline-offset: 2px; }
+  .folha .acoes { display: flex; gap: 10px; margin-top: 10px; }
+  .folha .acoes button { flex: 1; min-height: 52px; border: 2px solid var(--ink); border-radius: 12px; background: var(--card); color: var(--ink); font-weight: 700; font-size: 1rem; }
+  .folha .acoes .ok { background: var(--ink); color: #fff; }
+  .folha .acoes .ok:disabled { opacity: .35; }
+  .ped-lista { list-style: none; margin-top: 14px; border-top: 2px solid var(--ink); }
+  .ped-lista li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--rule); }
+  .ped-lista .nome { font-weight: 700; font-size: 1.1rem; }
+  .ped-lista .det { color: var(--muted); }
+  .ped-lista .val { font-family: var(--slab); font-weight: 700; }
+  .ped-lista .qtd { display: flex; align-items: center; gap: 10px; flex: none; }
+  .ped-lista .qtd b { min-width: 1.4em; text-align: center; font-size: 1.15rem; }
+  .ped-lista .qtd button { width: 40px; height: 40px; border: 2px solid var(--ink); border-radius: 50%; background: var(--card); color: var(--ink); font-size: 1.25rem; font-weight: 700; }
+  .ped-total { display: flex; justify-content: space-between; padding: 14px 0 4px; font-family: var(--slab); font-size: 1.55rem; font-weight: 700; }
+  .ped-aviso { color: var(--muted); font-size: .92rem; }
+  .ped-alerta { margin-top: 10px; padding: 12px 14px; background: #fff4c2; border-left: 4px solid var(--yellow); font-size: 1.02rem; }
+  .grupo-esc { border: 0; margin: 0; padding: 0; min-width: 0; }
+  .grupo-esc .conta { margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: #1111110f; font-size: .85rem; }
+  .grupo-esc.completo .conta { background: var(--ink); color: #fff; }
+  .escolhas input:disabled + span { opacity: .35; cursor: default; }
+
 
   /* ============ Rodapé ============ */
   footer { background: var(--night); color: #f1f1f1; padding: 56px 16px 32px; }
   .foot { max-width: 1040px; margin: 0 auto; display: grid; gap: 36px; }
   @media (min-width: 860px) { .foot { grid-template-columns: 1.1fr 1fr 1fr; } }
   .brand { display: flex; gap: 16px; align-items: center; }
-  .brand svg { width: 64px; flex: none; }
+  .brand img { width: 56px; height: auto; flex: none; }
   .brand strong { display: block; font-family: var(--slab); font-size: 2rem; letter-spacing: .1em; line-height: 1; }
   .brand span { color: #c8c8c8; }
   footer h4 { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: #a8a8a8; margin-bottom: 8px; }
@@ -303,14 +286,20 @@
   .hours td { padding: 5px 0; border-bottom: 1px solid #ffffff1a; }
   .hours td:last-child { text-align: right; }
   .hours small { display: block; color: #a8a8a8; font-size: .8rem; }
+  #hojeHorario { font-size: 1.05rem; }
+  .todos summary { margin-top: 10px; padding: 8px 0; color: var(--yellow); font-weight: 700; cursor: pointer; }
+  .todos[open] summary { margin-bottom: 6px; }
   .hours-extra { margin-top: 12px; font-size: .9rem; color: #c8c8c8; }
   .hours tr.now td { color: var(--yellow); font-weight: 700; }
   .fine { max-width: 1040px; margin: 36px auto 0; padding-top: 18px; border-top: 1px solid #ffffff22; font-size: .88rem; color: #bdbdbd; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center; }
   .egg { background: none; border: 0; color: #777; font-size: 1.3rem; line-height: 1; padding: 6px; transition: color .2s, transform .2s; }
   .egg:hover { color: var(--yellow); transform: rotate(20deg); }
-  .egg-hint { font-size: .8rem; color: #8a8a8a; }
+  .credito { display: inline-flex; align-items: center; gap: 6px; font-size: .75rem; color: #7a7a7a; }
+  .credito a { color: inherit; text-decoration: none; letter-spacing: .04em; }
+  .credito a:hover { color: #bdbdbd; }
+  .credito .egg { font-size: .9rem; padding: 4px; }
 
-  /* ============ Easter egg: Pênaltis da Veterana ============ */
+  /* ============ Easter egg: Pênaltis da AAB ============ */
   #jogo { background: #111; color: #fff; padding: 48px 16px 64px; text-align: center; }
   #jogo h2 { font-family: var(--slab); font-size: clamp(1.8rem, 6vw, 2.6rem); }
   #jogo .lede { color: #cfcfcf; margin: 6px auto 20px; max-width: 36ch; }
@@ -350,108 +339,74 @@
 
   /* ============ Movimento ============ */
   @media (prefers-reduced-motion: reduce) {
-    .status.open i, .sway { animation: none; }
+    .status.open i, .sway, .indice.entra li, .pagina.entra { animation: none; }
     #keeper, #ball { transition-duration: .01s; }
   }
 
   @media print {
-    .topbar, #crest, nav, .today, #jogo, .fine .egg, .egg-hint { display: none !important; }
-    .cover { background: none; color: var(--ink); padding: 0; }
-    .cover .sub { color: var(--ink); }
-    .sheet { box-shadow: none; }
-    .sec { break-inside: avoid; }
+    .topo, #crest, .barra, #jogo, .fine .egg, .egg-hint, .ped-bar, .add, .next { display: none !important; }
+    .inicio { background: none; color: var(--ink); }
+    .sec { display: block !important; }
   }
 </style>
-<script type="importmap">
-{ "imports": {
-  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-} }
-</script>
 </head>
 <body>
 
-<!-- ============ Capa ============ -->
-<header class="cover">
-  <div class="topbar">
-    <span></span>
-    <button class="font-btn" id="fontBtn" aria-pressed="false"><b>A+</b><span>Letra maior</span></button>
+<div class="app">
+
+<!-- ============ Início: o índice do cardápio ============ -->
+<header class="inicio" id="inicio">
+  <div class="topo">
+    <button class="font-btn" id="fontBtn" aria-pressed="false" aria-label="Letra maior"><b>A+</b><span>Letra maior</span></button>
   </div>
 
-  <div id="crest" role="img" aria-label="Escudo da AAB em 3D">
-    <!-- Escudo plano: aparece enquanto o 3D carrega (ou se o aparelho não suportar 3D) -->
-    <svg class="fallback" viewBox="0 0 200 240" aria-hidden="true">
-      <defs><path id="arco" d="M36,66 Q100,30 164,66" /></defs>
-      <text font-family="Arvo, Georgia, serif" font-weight="700" font-size="44" fill="#fff" text-anchor="middle" letter-spacing="4">
-        <textPath href="#arco" startOffset="50%">AAB</textPath>
-      </text>
-      <path d="M44,90 Q100,74 156,90 L156,148 Q156,196 100,226 Q44,196 44,148 Z" fill="#fff" />
-      <path d="M53,98 Q100,85 147,98 L147,148 Q147,188 100,214 Q53,188 53,148 Z" fill="#0b0b0b" />
-      <polygon fill="#fff" points="100,110 109.8,138.5 140,139 116,157 124.7,186 100,169 75.3,186 84,157 60,139 90.2,138.5" />
-    </svg>
-    <div class="glow"></div>
-  </div>
+  <div id="crest"><img src="escudo-aab.png" width="300" height="413" alt="Escudo da AAB" fetchpriority="high"></div>
 
-  <h1>CARDÁPIO</h1>
-  <p class="sub">Lanchonete AAB · Botucatu – SP</p>
+  <div class="titulo">
+    <span class="pre">Lanchonete AAB · Botucatu</span>
+    <h1>Cardápio</h1>
+    <p class="since" id="since">Desde 1918</p>
+  </div>
+  <p class="status" id="status" aria-live="polite"><i></i><span>Carregando horário…</span></p>
   <p class="mode-pill" id="modePill" hidden>★ Especial Tenda</p>
-  <p class="since"><span>★</span><span id="since">Desde 1918</span><span>★</span></p>
+
+  <p class="como-pedir">Toque no <b>+</b> para montar sua lista e <b>mostre no balcão</b> para pedir.</p>
+
+  <nav class="indice" id="indiceNav" aria-label="Categorias do cardápio"><ol id="indice"></ol></nav>
+  <a class="idx-agenda" href="#agenda">Agenda do clube <span aria-hidden="true">→</span></a>
 </header>
 
-<div class="today">
-  <div class="in">
-    <p class="status" id="status" aria-live="polite"><i></i><span>Carregando horário…</span></p>
-    <span id="todayHours">Horário da lanchonete</span>
-    <button type="button" data-go="horarios">Ver todos os horários</button>
+<!-- ============ Página da categoria escolhida ============ -->
+<main class="pagina" id="pagina">
+  <div class="barra">
+    <a class="voltar" href="#" id="voltar">← Cardápio</a>
+    <span class="onde" id="onde" aria-hidden="true"></span>
   </div>
-</div>
-
-<!-- ============ Categorias ============ -->
-<nav aria-label="Categorias do cardápio">
-  <div class="in" id="navIn"></div>
-</nav>
-
-<!-- ============ Cardápio ============ -->
-<main class="menu">
-  <div class="sheet">
-
+  <div class="conteudo">
     <p class="mode-note" id="modeNote" hidden></p>
-
-    <div class="ticket-zone">
-      <article class="ticket" id="ticket">
-        <div>
-          <p class="label" id="tkLabel"></p>
-          <h2 id="tkTitle"></h2>
-          <p id="tkText"></p>
-        </div>
-        <div class="stub">
-          <small id="tkStub"></small>
-          <strong id="tkPrice"></strong>
-        </div>
-      </article>
-    </div>
 
     <!-- As seções do cardápio são montadas a partir de CARDAPIO (configurações, mais abaixo) -->
     <div id="secoes"></div>
 
     <section class="sec" id="agenda">
-      <header class="sec-head"><p class="orn">★★★</p><h2>Agenda</h2><p>Próximos eventos do clube</p></header>
+      <header class="sec-head"><p class="orn" id="agendaNum"></p><h2>Agenda</h2><p>Próximos eventos do clube</p></header>
       <div class="agenda-list" id="agendaList"></div>
     </section>
 
-    <p class="note18">Preços sujeitos a alteração. Embalagem para viagem R$ 1,00.<br>
-      Por gentileza, devolva garrafas, copos e pratos no balcão da lanchonete. Lixo no lixo!<br>
-      Venda de bebidas alcoólicas proibida para menores de 18 anos.</p>
+    <p class="note18">Preços sujeitos a alteração. Embalagem para viagem R$ 1,00.
+      Por gentileza, devolva garrafas, copos e pratos no balcão. Venda de bebidas alcoólicas proibida para menores de 18 anos.</p>
   </div>
 </main>
+
+</div>
 
 <!-- ============ Rodapé ============ -->
 <footer>
   <div class="foot">
     <div>
       <div class="brand">
-        <svg viewBox="0 0 100 120" aria-hidden="true"><path d="M8 22Q50 8 92 22V70Q92 98 50 116Q8 98 8 70Z" fill="#fff"/><path d="M15 28Q50 17 85 28V70Q85 92 50 108Q15 92 15 70Z" fill="#0b0b0b"/><path fill="#fff" d="M50 34l6.8 19.6h20.7l-16.7 12.1 6.4 19.7L50 73.3 32.8 85.4l6.4-19.7-16.7-12.1h20.7z"/></svg>
-        <div><strong>AAB</strong><span id="sinceFoot">Botucatu – SP · desde 1918</span></div>
+        <img src="escudo-aab.png" width="56" height="77" alt="" loading="lazy">
+        <div><strong>Lanchonete AAB</strong><span id="sinceFoot">Botucatu – SP · desde 1918</span></div>
       </div>
     </div>
     <div>
@@ -463,21 +418,51 @@
     </div>
     <div id="horarios">
       <h4>Horário da lanchonete</h4>
-      <table class="hours"><tbody id="hoursTable"></tbody></table>
-      <p class="hours-extra">Almoço: quarta a sexta, 11h às 14h · sábado e domingo, 11h às 15h. Segunda e terça não servimos almoço.</p>
-      <p class="hours-extra">Sexta, a partir das 18h: Cardápio Especial Tenda.</p>
-      <p class="hours-extra">Em dias de evento, os horários do bar e da cozinha podem ser estendidos.</p>
+      <p id="hojeHorario"></p>
+      <details class="todos">
+        <summary>Ver todos os horários</summary>
+        <table class="hours"><tbody id="hoursTable"></tbody></table>
+        <p class="hours-extra">Almoço: quarta a sexta, 11h às 14h · sábado e domingo, 11h às 15h. Segunda e terça não servimos almoço.</p>
+        <p class="hours-extra">Sexta, a partir das 18h: Cardápio Especial Tenda.</p>
+        <p class="hours-extra">Em dias de evento, os horários do bar e da cozinha podem ser estendidos.</p>
+      </details>
     </div>
   </div>
   <div class="fine">
     <span>Venda de bebidas alcoólicas proibida para menores de 18 anos.</span>
-    <span><span class="egg-hint">Psiu… toque 3 vezes na estrela </span><button class="egg" id="egg" aria-label="Segredo da estrela">★</button></span>
+    <span class="credito"><button class="egg" id="egg" aria-label="Estrela">★</button> <a href="https://www.instagram.com/dmsitesbr/" target="_blank" rel="noopener">Feito por DM Group</a></span>
   </div>
 </footer>
 
+<!-- ============ Meu pedido ============ -->
+<button type="button" class="ped-bar" id="pedBar" hidden><span id="pedResumo" aria-live="polite"></span><b>Ver pedido →</b></button>
+
+<dialog class="folha" id="escolha" aria-labelledby="esTitulo">
+  <form method="dialog" id="esForm">
+    <h3 id="esTitulo"></h3>
+    <div id="esCampos"></div>
+    <div class="acoes">
+      <button value="cancel" formnovalidate>Cancelar</button>
+      <button class="ok" id="esOk" value="ok">Adicionar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="folha" id="pedido" aria-labelledby="pedTitulo">
+  <h3 id="pedTitulo">Meu pedido</h3>
+  <p class="ped-alerta"><b>Agora é só ir ao balcão.</b> Mostre esta tela para o atendente e pague lá. O pedido não é enviado pelo celular.</p>
+  <ul class="ped-lista" id="pedLista"></ul>
+  <p class="ped-total"><span>Total</span><span id="pedTotal"></span></p>
+  <p class="ped-aviso">Valores de referência. O pedido é feito e pago no balcão.</p>
+  <div class="acoes">
+    <button type="button" id="pedLimpar">Limpar pedido</button>
+    <button type="button" class="ok" id="pedFechar">Continuar</button>
+  </div>
+</dialog>
+
 <!-- ============ Easter egg ============ -->
 <section id="jogo" hidden>
-  <h2>Pênaltis da Veterana</h2>
+  <h2>Pênaltis da AAB</h2>
   <p class="lede">5 cobranças contra o goleiro da AAB. Escolha o canto!</p>
   <div class="pitch-wrap">
     <svg class="pitch" viewBox="0 0 320 230" role="img" aria-label="Gol com o goleiro da AAB">
@@ -550,16 +535,27 @@
     { data: '2026-10-08', hora: '18h', titulo: 'Show de Prêmios AAB' },
     { data: '2026-10-17', hora: '21h', titulo: 'Baile do Caribe AAB 2026' },
   ];
-  // Opcional: link CSV de uma Planilha Google publicada (colunas: data, hora, titulo).
-  // Preenchido, a agenda passa a vir da planilha automaticamente.
-  const AGENDA_PLANILHA = '';
+
+  // Planilha Google do clube (Arquivo > Compartilhar > Publicar na Web > aba > CSV).
+  // Preenchidos, cardápio e agenda passam a vir da planilha; vazios ou com erro, vale o que está neste arquivo.
+  const CARDAPIO_PLANILHA = ''; // link CSV da aba "Cardapio"
+  const AGENDA_PLANILHA = '';   // link CSV da aba "Agenda" (colunas: Data, Hora, Evento)
 
   const FUNDACAO = new Date(1918, 3, 21); // 21 de abril de 1918
 
   /* ===== Cardápios =====
      Cada item: n = nome, p = preço (número, ou [inteira, média]), d = descrição,
-     tag = selo (ex.: 'Novidade'), rot = rótulos dos dois preços (padrão: Inteira / Média).
+     tag = selo (ex.: 'Novidade'), rot = rótulos dos dois preços (padrão: Inteira / Média),
+     esc = escolhas ao pedir, ex.: [{ t: 'Escolha 2 recheios', max: 2, op: RECHEIOS }],
+     op = opções que o cliente escolhe ao montar o pedido (sabores, frutas...).
      Fonte: fotos do cardápio impresso (ver dados/cardapio-oficial.md). */
+  // Listas usadas na hora de montar o pedido (o cliente toca no que quer).
+  const RECHEIOS = ['Queijo muçarela', 'Queijo coalho', 'Queijo parmesão', 'Catupiry', 'Cheddar', 'Creme de ricota', 'Presunto ralado', 'Bacon em cubos', 'Carne seca desfiada', 'Frango desfiado', 'Brócolis', 'Calabresa', 'Ovo mexido', 'Tomate', 'Mel', 'Doce de leite', 'Chocolate ao leite', 'Leite condensado', 'Banana', 'Morango'];
+  const ACOMP_ACAI = ['Amendoim triturado', 'Castanha de caju', 'Gotas de chocolate', 'Farinha láctea', 'Morango', 'Banana', 'Ovomaltine', 'Granulado', 'Sucrilhos', 'Uva', 'Granola', 'Leite em pó', 'M&M', 'Chocobol', 'Paçoca'];
+  const COBERTURAS = ['Xarope de guaraná', 'Cobertura de chocolate', 'Cobertura de morango', 'Leite condensado', 'Chocolate', 'Chantilly', 'Mel'];
+  const recheios = n => [{ t: n === 1 ? 'Escolha o recheio' : `Escolha ${n} recheios`, max: n, op: RECHEIOS }];
+  const copo = n => [{ t: n === 1 ? 'Escolha o acompanhamento' : `Escolha ${n} acompanhamentos`, max: n, op: ACOMP_ACAI }, { t: 'Escolha a cobertura', max: 1, op: COBERTURAS }];
+
   const PIZZAS_TENDA = [
     { n: 'Camarão', p: 90, tag: 'Novidade', d: 'Mussarela, catupiry, camarão, azeitona preta e orégano.' },
     { n: 'Filé mignon', p: 85, d: 'Mussarela, filé mignon, champignon, catupiry, azeitona preta e orégano.' },
@@ -575,18 +571,69 @@
     { n: 'Mussarela', p: 60, d: 'Mussarela, tomate, azeitona preta e orégano.' },
   ];
 
+  // Açaí e tapiocas valem nos dois cardápios (completo e Tenda).
+  const ACAI = { id: 'acai', nome: 'Açaí', icone: 'acai', sub: 'Açaí, smoothies e milkshakes', grupos: [
+          { titulo: 'Açaí no copo', itens: [
+            { n: 'Casquinha simples', p: 6 },
+            { n: 'Copo 150 ml', p: 10, d: '1 acompanhamento + 1 cobertura.', esc: copo(1) },
+            { n: 'Copo 300 ml', p: 17, d: '2 acompanhamentos + 1 cobertura.', esc: copo(2) },
+            { n: 'Copo 500 ml', p: 25, d: '3 acompanhamentos + 1 cobertura.', esc: copo(3) },
+          ] },
+          { titulo: 'Açaí puro batido', itens: [
+            { n: 'Açaí puro batido', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Adoce com mel, xarope de guaraná, açúcar cristal ou banana. Vem com 1 acompanhamento: banana, morango, whey, amendoim, leite em pó, granola ou farinha láctea.',
+              esc: [{ t: 'Adoçar com', max: 1, op: ['Mel', 'Xarope de guaraná', 'Açúcar cristal', 'Banana'] }, { t: 'Escolha o acompanhamento', max: 1, op: ['Banana', 'Morango', 'Whey', 'Amendoim', 'Leite em pó', 'Granola', 'Farinha láctea'] }] },
+          ] },
+          { titulo: 'Adicionais', itens: [
+            { n: 'Adicional comum', p: 3 },
+            { n: 'Adicional Nutella', p: 7 },
+            { n: 'Adicional whey', p: 7 },
+          ] },
+          { titulo: 'Coberturas e acompanhamentos', itens: [
+            { n: 'Coberturas', op: ['Xarope de guaraná', 'Cobertura de chocolate', 'Cobertura de morango', 'Leite condensado', 'Chocolate', 'Chantilly', 'Mel'] },
+            { n: 'Acompanhamentos', op: ['Amendoim triturado', 'Castanha de caju', 'Gotas de chocolate', 'Farinha láctea', 'Morango', 'Banana', 'Ovomaltine', 'Granulado', 'Sucrilhos', 'Uva', 'Granola', 'Leite em pó', 'M&M', 'Chocobol', 'Paçoca'] },
+          ] },
+          { titulo: 'Smoothies e milkshakes', itens: [
+            { n: 'Smoothie Antioxidante', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Iogurte natural, frutas vermelhas e whey.' },
+            { n: 'Smoothie Energético', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Leite, banana, polpa de açaí e whey.' },
+            { n: 'Smoothie Saciedade e Foco', p: [20, 25], rot: ['300 ml', '500 ml'], d: 'Leite condensado, banana, paçoca e whey.' },
+            { n: 'Milkshake', p: [18, 24], rot: ['300 ml', '500 ml'], op: ['Baunilha', 'Chocolate', 'Açaí', 'Morango', 'Ovomaltine'] },
+          ] },
+        ] };
+  const TAPIOCAS = { id: 'tapiocas', nome: 'Tapiocas', icone: 'tapiocas', sub: 'Tapioca, crepioca e Rap10', grupos: [
+          { titulo: 'Tapioca e crepioca', itens: [
+            { n: 'Simples', p: [10, 12], rot: ['Tapioca', 'Crepioca'] },
+            { n: '1 recheio', p: [14, 16], rot: ['Tapioca', 'Crepioca'], esc: recheios(1) },
+            { n: '2 recheios', p: [17, 18], rot: ['Tapioca', 'Crepioca'], esc: recheios(2) },
+            { n: '3 recheios', p: [20, 20], rot: ['Tapioca', 'Crepioca'], esc: recheios(3) },
+          ] },
+          { titulo: 'Rap10', itens: [
+            { n: 'Rap10 com 1 recheio', p: 16, esc: recheios(1) },
+            { n: 'Rap10 com 2 recheios', p: 18, esc: recheios(2) },
+            { n: 'Rap10 com 3 recheios', p: 20, esc: recheios(3) },
+            { n: 'Mais um recheio', p: 5, esc: recheios(1) },
+          ] },
+          { titulo: 'Recheios', itens: [
+            { n: 'Salgados', op: ['Queijo muçarela', 'Queijo coalho', 'Queijo parmesão', 'Catupiry', 'Cheddar', 'Creme de ricota', 'Presunto ralado', 'Bacon em cubos', 'Carne seca desfiada', 'Frango desfiado', 'Brócolis', 'Calabresa', 'Ovo mexido', 'Tomate'] },
+            { n: 'Doces', op: ['Mel', 'Doce de leite', 'Chocolate ao leite', 'Leite condensado', 'Banana', 'Morango'] },
+          ] },
+          { titulo: 'Especiais', itens: [
+            { n: 'Tapioca de Nutella', p: 25, d: '+ 1 acompanhamento.' },
+            { n: 'Tapioca de Nutella com sorvete de creme', p: 28 },
+          ] },
+        ] };
+
   const CARDAPIO = {
     completo: {
       destaque: { label: '★ Novidade no almoço', titulo: 'Virado à Paulista', texto: 'Arroz, tutu de feijão, copa lombo, banana milanesa, ovo frito e torresmo. Você pediu e ele voltou!', stub: 'Almoço executivo', preco: 45 },
       secoes: [
         { id: 'almoco', nome: 'Almoço', icone: 'almoco', sub: 'Quarta a sexta, 11h às 14h · Sábado e domingo, 11h às 15h', nota: 'Segunda e terça não servimos almoço.', grupos: [
           { titulo: 'Carnes', itens: [
-            { n: 'Virado à Paulista', p: 45, tag: 'Novidade', d: 'Arroz, tutu de feijão, copa lombo, banana milanesa, ovo frito e torresmo.' },
+            { n: 'Virado à Paulista', p: 45, tag: 'Novidade', d: 'Você pediu e ele voltou! Arroz, tutu de feijão, copa lombo, banana milanesa, ovo frito e torresmo.' },
             { n: 'Contra filé grelhado com batata frita', p: 50, d: 'Arroz, feijão, contra filé grelhado e batata frita.' },
-            { n: 'Filé de frango empanado', p: 35, d: 'Arroz, feijão, frango empanado e batata frita ou legumes.' },
-            { n: 'Filé de frango grelhado', p: 30, d: 'Arroz, feijão, filé de frango grelhado e batata frita ou legumes.' },
-            { n: 'Filé mignon ao molho de champignon', p: 53, d: 'Arroz, filé mignon grelhado ao molho de champignon e batata frita.' },
-            { n: 'Filé de tilápia grelhada', p: 40, d: 'Arroz, feijão, tilápia grelhada e batata frita ou legumes.' },
+            { n: 'Filé de frango empanado com batata frita ou legumes', p: 35, d: 'Arroz, feijão, frango empanado e batata frita ou legumes.' },
+            { n: 'Filé de frango grelhado com batata frita ou legumes', p: 30, d: 'Arroz, feijão, filé de frango grelhado e batata frita ou legumes.' },
+            { n: 'Filé mignon grelhado ao molho de champignon com batata frita', p: 53, d: 'Arroz, filé mignon grelhado ao molho de champignon e batata frita.' },
+            { n: 'Filé de tilápia grelhada com batata frita ou legumes', p: 40, d: 'Arroz, feijão, tilápia grelhada e batata frita ou legumes.' },
             { n: 'Salmão ao molho de maracujá', p: 55, d: 'Arroz com castanhas, salmão grelhado ao molho de maracujá e brócolis na manteiga.' },
             { n: 'Parmegiana de carne (filé mignon)', p: 48, d: 'Arroz, parmegiana de carne e batata frita.' },
             { n: 'Parmegiana de frango', p: 38, d: 'Arroz, parmegiana de frango e batata frita.' },
@@ -618,8 +665,8 @@
             { n: 'Brócolis com mussarela', p: 17 },
           ] },
           { titulo: 'Kids', nota: 'Não trocamos os ingredientes dos pratos kids.', itens: [
-            { n: 'Filé de frango grelhado', p: 20, d: 'Com batata smiles, arroz e feijão.' },
-            { n: 'Filé mignon grelhado', p: 26, d: 'Com batata smiles, arroz e feijão.' },
+            { n: 'Filé de frango grelhado com batata smiles, arroz e feijão', p: 20 },
+            { n: 'Filé mignon grelhado com batata smiles, arroz e feijão', p: 26 },
           ] },
           { titulo: 'Adicionais', itens: [
             { n: 'Arroz', p: 5 }, { n: 'Feijão', p: 6 }, { n: 'Fritas', p: 9 },
@@ -638,7 +685,7 @@
             { n: 'Polenta frita', p: [28, 20], d: 'Acompanha molho de alho.' },
             { n: 'Polenta recheada com queijo', p: 32, d: 'Inteira. Acompanha molho de alho.' },
             { n: 'Calabresa acebolada', p: [60, 45], d: 'Acompanha pão francês e limão.' },
-            { n: 'Torresmo (pururuca)', p: [60, 40], d: 'Acompanha molho de alho.' },
+            { n: 'Torresmo (pururuca)', p: [60, 40], d: 'Acompanha limão.' },
             { n: 'Iscas de frango empanado no palito', p: [62, 46], d: 'Acompanha molho de alho e limão.' },
             { n: 'Contrafilé acebolado', p: [80, 55], d: 'Acompanha pão francês e limão.' },
             { n: 'Tilápia', p: [80, 55], d: 'Acompanha molho de alho, limão, cebolinha em conserva e pimenta biquinho.' },
@@ -646,18 +693,18 @@
             { n: 'Tábua de frios', p: 75, d: 'Provolone, gorgonzola, presunto, mussarela, salame, azeitona, ovo de codorna, pimenta biquinho, cebolinha em conserva e limão. Somente após o horário de almoço.' },
             { n: 'Amendoim', p: 5, d: 'Xícara.' },
           ] },
-          { titulo: 'Camarão empanado', nota: 'Aprox. 20 unidades. Acompanha molho tártaro, molho de alho e limão.', itens: [
-            { n: 'Camarão empanado com batata frita', p: 75 },
-            { n: 'Camarão empanado com anéis de cebola', p: 75 },
-            { n: 'Anéis de cebola', p: [28, 20], d: 'Acompanha molho de alho.' },
-            { n: 'Mini churros recheado com doce de leite', p: 28, d: 'Aprox. 20 unidades. Canela e açúcar opcional.' },
+          { titulo: 'Porção de camarão empanado', itens: [
+            { n: 'Camarão empanado com batata frita', p: 75, d: 'Aprox. 20 un de camarões empanados. Acompanha molho tártaro, molho de alho e limão.' },
+            { n: 'Camarão empanado com anéis de cebola', p: 75, d: 'Aprox. 20 un de camarões empanados. Acompanha molho tártaro, molho de alho e limão.' },
+            { n: 'Porção de anéis de cebola', p: [28, 20], d: 'Acompanha molho de alho.' },
+            { n: 'Porção de mini churros recheado com doce de leite', p: 28, d: 'Aprox. 20 un (canela e açúcar opcional).' },
           ] },
           { titulo: 'Porção Mista Especial', nota: 'Não é permitido trocar os ingredientes dessa porção.', itens: [
             { n: 'Porção Mista Especial', p: 145, d: 'Contra filé acebolado, batata frita, anéis de cebola, mandioca e polenta. Acompanha molho de alho e limão.' },
           ] },
         ] },
 
-        { id: 'boteco', nome: 'Boteco', icone: 'boteco', sub: 'Novidade · comidas de boteco', nota: 'Acompanham molho de alho e limão.', grupos: [
+        { id: 'boteco', nome: 'Boteco', icone: 'boteco', sub: 'Comidas de boteco · novidade', nota: 'Acompanham molho de alho e limão.', grupos: [
           { itens: [
             { n: 'Mini kibe', p: 33 },
             { n: 'Mini coxinha de costela', p: 28 },
@@ -670,16 +717,16 @@
           ] },
         ] },
 
-        { id: 'pasteis', nome: 'Pastéis & Salgados', icone: 'pasteis', sub: 'Pastel crocante, sequinho e saboroso', grupos: [
+        { id: 'pasteis', nome: 'Pastéis & Salgados', icone: 'pasteis', grupos: [
           { titulo: 'Pastéis', itens: [
             { n: 'Pastel de carne seca com catupiry e mussarela', p: 15, tag: 'Novidade', d: 'Adicione cebola por mais R$ 1,00.' },
-            { n: 'Pastel', p: 12, d: 'Carne · Queijo · Frango · Palmito · Pizza (presunto, queijo, tomate e orégano) · Calabresa · Presunto e queijo · Brócolis com bacon e cheddar (troque o cheddar por mussarela ou catupiry).' },
-            { n: 'Pastel doce', p: 12, d: 'Chocolate ao leite · Chocolate branco · Misto (ao leite + branco) · Romeu & Julieta · Doce de leite.' },
-            { n: 'Adicionais', p: 2, d: 'Queijo, cheddar, bacon, catupiry ou azeitona. Preço por adicional.' },
+            { n: 'Pastel', p: 12, op: ['Carne', 'Queijo', 'Frango', 'Palmito', 'Pizza (presunto, queijo, tomate e orégano)', 'Calabresa', 'Presunto e queijo', 'Brócolis com bacon e cheddar (troque o cheddar por mussarela ou catupiry)'] },
+            { n: 'Pastel doce', p: 12, op: ['Chocolate ao leite', 'Chocolate branco', 'Misto (ao leite + branco)', 'Romeu & Julieta', 'Doce de leite'] },
+            { n: 'Adicional no pastel', p: 2, op: ['Queijo', 'Cheddar', 'Bacon', 'Catupiry', 'Azeitona'], d: 'Cada adicional.' },
           ] },
           { titulo: 'Salgados', itens: [
-            { n: 'Salgados assados', p: 8, d: 'Esfiha de carne · Esfiha de carne com catupiry · Enrolado de salsicha · Enrolado de presunto e queijo · Hambúrguer.' },
-            { n: 'Salgados fritos', p: 8, d: 'Coxinha de frango · Coxinha de frango com catupiry · Risoles de queijo · Bolinho de carne · Bolinho de carne com ovo.' },
+            { n: 'Salgado assado', p: 8, op: ['Esfiha de carne', 'Esfiha de carne com catupiry', 'Enrolado de salsicha', 'Enrolado de presunto e queijo', 'Hambúrguer'] },
+            { n: 'Salgado frito', p: 8, op: ['Coxinha de frango', 'Coxinha de frango com catupiry', 'Risoles de queijo', 'Bolinho de carne', 'Bolinho de carne com ovo'] },
             { n: 'Kibe', p: 10 },
             { n: 'Fatia de pizza', p: 10 },
             { n: 'Fatia de torta de frango', p: 12 },
@@ -709,7 +756,10 @@
           ] },
         ] },
 
-        { id: 'bebidas', nome: 'Bebidas', icone: 'bebidas', sub: 'Bebidas para todos os momentos', grupos: [
+        ACAI,
+        TAPIOCAS,
+
+        { id: 'bebidas', nome: 'Bebidas', icone: 'bebidas', grupos: [
           { titulo: 'Refrigerantes', itens: [
             { n: 'Refrigerante lata 350 ml', p: 7 },
             { n: 'Coca-Cola 600 ml', p: 10 },
@@ -725,7 +775,7 @@
           ] },
           { titulo: 'Sucos e bebidas prontas', itens: [
             { n: 'Suco Del Valle lata 290 ml', p: 8 },
-            { n: 'Suco Kapo caixa 200 ml', p: 8 },
+            { n: 'Suco Kapo caixa 200 ml', p: 5 },
             { n: 'Suco Life 300 ml', p: 8 },
             { n: 'Suco Life 900 ml', p: 15 },
             { n: 'Gatorade 500 ml', p: 9 },
@@ -735,16 +785,16 @@
             { n: 'Red Bull 250 ml', p: 14 },
             { n: 'Smirnoff Ice', p: 12 },
           ] },
-          { titulo: 'Suco natural', nota: 'Saúde, sabor e bem-estar.', itens: [
-            { n: 'Suco natural', p: [12, 22], rot: ['Copo 500 ml', 'Jarra 1 L'], d: 'Abacaxi, acerola, frutas vermelhas, kiwi, laranja, limão, maracujá, mamão, melancia, melão ou morango. Polpas: abacaxi com hortelã, caju, goiaba ou manga.' },
+          { titulo: 'Suco natural', itens: [
+            { n: 'Suco natural', p: [12, 22], rot: ['Copo 500 ml', 'Jarra 1 L'], op: ['Abacaxi', 'Acerola', 'Frutas vermelhas', 'Kiwi', 'Laranja', 'Limão', 'Maracujá', 'Mamão', 'Melancia', 'Melão', 'Morango', 'Abacaxi com hortelã (polpa)', 'Caju (polpa)', 'Goiaba (polpa)', 'Manga (polpa)'] },
             { n: 'Adicional de fruta', p: [3, 5], rot: ['Copo', 'Jarra'] },
             { n: 'Adicional de leite', p: [3, 5], rot: ['Copo', 'Jarra'] },
             { n: 'Vitamina 3 frutas 500 ml', p: 15, d: 'Mamão, maçã e banana.' },
-            { n: 'Suco detox 500 ml', p: 12, d: 'Detox 1: abacaxi, maçã verde e erva-doce · Detox 3: maçã, cenoura, beterraba e gengibre · Detox 5: abacaxi, couve, gengibre e hortelã · Detox 6: morango, beterraba e gengibre.' },
+            { n: 'Suco detox 500 ml', p: 12, op: ['Detox 1: abacaxi, maçã verde e erva-doce', 'Detox 3: maçã, cenoura, beterraba e gengibre', 'Detox 5: abacaxi, couve, gengibre e hortelã', 'Detox 6: morango, beterraba e gengibre'] },
           ] },
         ] },
 
-        { id: 'cervejas', nome: 'Cervejas', icone: 'cervejas', sub: 'Geladas para reunir', grupos: [
+        { id: 'cervejas', nome: 'Cervejas', icone: 'cervejas', grupos: [
           { titulo: 'Novidade', itens: [
             { n: 'Stella Pure Gold 600 ml', p: 12, tag: 'Novidade' },
             { n: 'Stella Pure Gold long neck 330 ml', p: 8, tag: 'Novidade' },
@@ -860,7 +910,7 @@
             { n: 'Mandioca', p: [28, 20] },
             { n: 'Polenta', p: [28, 20] },
             { n: 'Calabresa', p: [60, 45] },
-            { n: 'Torresmo', p: [60, 40] },
+            { n: 'Torresmo', p: [60, 40], d: 'Acompanha limão.' },
             { n: 'Iscas de frango empanado no palito', p: [62, 46] },
             { n: 'Contra filé acebolado', p: [80, 55] },
             { n: 'Polenta recheada com queijo', p: 32, d: 'Inteira.' },
@@ -870,8 +920,8 @@
         { id: 'pasteis', nome: 'Pastel & Salgados', icone: 'pasteis', grupos: [
           { itens: [
             { n: 'Pastel de carne seca com catupiry e mussarela', p: 15, tag: 'Novidade', d: 'Adicione cebola por mais R$ 1,00.' },
-            { n: 'Pastel', p: 12, d: 'Pizza · Presunto e queijo · Queijo · Carne · Brócolis com cheddar e bacon (troque o cheddar por catupiry ou mussarela).' },
-            { n: 'Adicionais', p: 2, d: 'Cheddar, queijo, bacon, catupiry ou azeitona. Preço por adicional.' },
+            { n: 'Pastel', p: 12, op: ['Pizza', 'Presunto e queijo', 'Queijo', 'Carne', 'Brócolis com cheddar e bacon (troque o cheddar por catupiry ou mussarela)'] },
+            { n: 'Adicional no pastel', p: 2, op: ['Cheddar', 'Queijo', 'Bacon', 'Catupiry', 'Azeitona'], d: 'Cada adicional.' },
             { n: 'Salgados', p: 8 },
             { n: 'Kibe', p: 10 },
             { n: 'Espetinhos do quiosque', p: 9 },
@@ -879,6 +929,9 @@
             { n: 'Fatia de pizza', p: 10 },
           ] },
         ] },
+
+        ACAI,
+        TAPIOCAS,
 
         { id: 'bebidas', nome: 'Bebidas', icone: 'bebidas', grupos: [
           { itens: [
@@ -902,7 +955,7 @@
             { n: 'Suco Life 900 ml', p: 15 },
           ] },
           { titulo: 'Suco natural', itens: [
-            { n: 'Suco natural', p: [12, 22], rot: ['Copo 500 ml', 'Jarra 1 L'], d: 'Abacaxi, acerola, frutas vermelhas, kiwi, laranja, limão, maracujá, mamão, melancia, melão ou morango. Polpas: abacaxi com hortelã, caju, goiaba ou manga.' },
+            { n: 'Suco natural', p: [12, 22], rot: ['Copo 500 ml', 'Jarra 1 L'], op: ['Abacaxi', 'Acerola', 'Frutas vermelhas', 'Kiwi', 'Laranja', 'Limão', 'Maracujá', 'Mamão', 'Melancia', 'Melão', 'Morango', 'Abacaxi com hortelã (polpa)', 'Caju (polpa)', 'Goiaba (polpa)', 'Manga (polpa)'] },
             { n: 'Adicional de fruta', p: [3, 5], rot: ['Copo', 'Jarra'] },
           ] },
         ] },
@@ -978,7 +1031,7 @@
   const DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
   const hm = s => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
   const fmt = s => { const [h, m] = s.split(':'); return +h + 'h' + (m !== '00' ? m : ''); };
-  const brl = v => 'R$ ' + v.toFixed(2).replace('.', ',');
+  const brl = v => 'R$ ' + (Number.isInteger(v) ? v : v.toFixed(2).replace('.', ','));
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
   // Dia da semana, minutos e data (AAAA-MM-DD) no horário de Brasília
@@ -1002,10 +1055,8 @@
   // ---- Idade do clube
   (() => {
     const now = new Date();
-    let anos = now.getFullYear() - FUNDACAO.getFullYear();
-    if (now < new Date(now.getFullYear(), FUNDACAO.getMonth(), FUNDACAO.getDate())) anos--;
-    document.getElementById('since').textContent = `Desde 1918 · ${anos} anos`;
-    document.getElementById('sinceFoot').textContent = `Botucatu – SP · desde 1918 · ${anos} anos de história`;
+    document.getElementById('since').textContent = 'Desde 1918';
+    document.getElementById('sinceFoot').textContent = 'Botucatu – SP · desde 1918';
   })();
 
   // ---- Aberto agora / horários
@@ -1028,9 +1079,8 @@
     }
     box.className = 'status ' + (open ? 'open' : 'closed');
     box.querySelector('span').textContent = text;
-    document.getElementById('todayHours').textContent = today
-      ? `Hoje (${DIAS[d].toLowerCase()}): das ${fmt(today[0])} às ${fmt(today[1])} · cozinha até ${fmt(today[2])}`
-      : `Hoje (${DIAS[d].toLowerCase()}): fechado`;
+    document.getElementById('hojeHorario').textContent = today
+      ? `Hoje: ${fmt(today[0])} às ${fmt(today[1])} · cozinha até ${fmt(today[2])}` : 'Hoje: fechado';
     document.getElementById('hoursTable').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(i => {
       const h = HORARIO[i];
       return `<tr class="${i === d ? 'now' : ''}"><td>${DIAS[i]}</td><td>${h ? `${fmt(h[0])} às ${fmt(h[1])}<small>cozinha até ${fmt(h[2])}</small>` : 'Fechado'}</td></tr>`;
@@ -1038,50 +1088,241 @@
   }
 
   // ---- Monta o cardápio da vez
-  const ICONES = {
-    almoco: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/>',
-    porcoes: '<path d="M5.5 10h13l-2 11h-9z"/><path d="M8 10V4.5M11 10V3M14 10V4M17 10V6"/>',
-    boteco: '<path d="M12 3c3 4 6 8 6 11.5a6 6 0 0 1-12 0C6 11 9 7 12 3z"/><path d="M9 15.5a3 3 0 0 0 3 2"/>',
-    pasteis: '<path d="M3 16a9 9 0 0 1 18 0z"/><path d="M5 16l1 2.5M9 16l.7 2.5M15 16l-.7 2.5M19 16l-1 2.5"/>',
-    pizzas: '<path d="M12 21L3.5 6.5a17 17 0 0 1 17 0z"/><path d="M5 9a14 14 0 0 1 14 0"/><circle cx="10" cy="12.5" r="1.1"/><circle cx="13.6" cy="15" r="1.1"/>',
-    bebidas: '<path d="M6 8h12l-1.6 13H7.6z"/><path d="M10 8l1.2-5H15"/>',
-    cervejas: '<path d="M5 8h10v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M15 11h2.5a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H15"/><path d="M5 8a2.5 2.5 0 0 1 2.5-3 3 3 0 0 1 5 0A2.5 2.5 0 0 1 15 8"/>',
-    drinks: '<path d="M4 4h16l-8 9z"/><path d="M12 13v7M8 20h8"/>',
-    agenda: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
-  };
-  const navBtn = (id, nome, icone) => `<button type="button" data-go="${id}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONES[icone]}</svg>${esc(nome)}</button>`;
 
-  function precoHTML(it) {
+  const preco = v => `<span class="price"><small class="rs">R$</small>${brl(v).slice(3)}</span>`;
+  // Em grupo com colunas, todo item ocupa as duas colunas (o que não tem média mostra "—").
+  function precoHTML(it, cols) {
     if (it.p == null) return '';
+    if (cols) {
+      const [a, b] = Array.isArray(it.p) ? it.p : [it.p, null];
+      const n = v => `<span class="price">${brl(v).slice(3)}</span>`;
+      return `<span class="pr" aria-hidden="true">${n(a)}${b != null ? n(b) : '<span class="price vazio">—</span>'}</span>`;
+    }
     if (Array.isArray(it.p)) {
       const rot = it.rot || ['Inteira', 'Média'];
-      return `<span class="price two">${it.p.map((v, i) => `<small>${esc(rot[i])}</small><span>${brl(v)}</span>`).join('')}</span>`;
+      return `<span class="pr lab" aria-hidden="true">${it.p.map((v, i) => `<span><small>${esc(rot[i])}</small>${preco(v)}</span>`).join('')}</span>`;
     }
-    return `<span class="price">${brl(it.p)}</span>`;
+    return preco(it.p);
   }
-  const itemHTML = it => `<li class="item">${it.tag ? `<span class="tag">★ ${esc(it.tag)}</span>` : ''}<div class="line${Array.isArray(it.p) ? ' duo' : ''}"><h4>${esc(it.n)}</h4><i class="lead"></i>${precoHTML(it)}</div>${it.d ? `<p>${esc(it.d)}</p>` : ''}</li>`;
-  const grupoHTML = g => `<div class="grp">${g.titulo ? `<h3 class="grp-title">${esc(g.titulo)}</h3>` : ''}${g.nota ? `<p class="grp-note">${esc(g.nota)}</p>` : ''}<ul class="items">${g.itens.map(itemHTML).join('')}</ul></div>`;
-  const secaoHTML = s => `<section class="sec" id="${s.id}"><header class="sec-head"><p class="orn">★★★</p><h2>${esc(s.nome)}</h2>${s.sub ? `<p>${esc(s.sub)}</p>` : ''}</header>${s.nota ? `<p class="sec-note">${esc(s.nota)}</p>` : ''}${s.grupos.map(grupoHTML).join('')}</section>`;
+  const itemHTML = it => {
+    const k = ITENS.push({ it, ctx }) - 1;
+    const line = `<div class="line"><h4>${esc(it.n)}</h4>${precoHTML(it, grpCols)}</div>`;
+    const tag = it.tag ? `<span class="tag">★ ${esc(it.tag)}</span>` : '';
+    const corpo = `<div>${line}</div>`;
+    const add = it.p != null ? `<button type="button" class="add" data-add="${k}" aria-label="Adicionar ${esc(it.n)} ao pedido">+</button>` : '';
+    const sr = Array.isArray(it.p) ? `<span class="sr">${(it.rot || ['Inteira', 'Média']).map((r, i) => `${esc(r)} ${brl(it.p[i])}`).join(', ')}</span>` : '';
+    const ops = it.op && it.op.length ? `<ul class="ops${it.op.join('').length / it.op.length > 25 ? ' longas' : ''}" aria-label="Opções">${it.op.map(o => `<li>${esc(o)}</li>`).join('')}</ul>` : '';
+    return `<li class="item${it.d ? ' has-d' : ''}">${tag}<div class="row">${corpo}${sr}${add}</div>${it.d ? `<p>${esc(it.d)}</p>` : ''}${ops}</li>`;
+  };
+  let ctx = '';
+  let grpCols = null;
+  const grupoHTML = g => {
+    ctx = g.titulo || ctxSec;
+    const duos = g.itens.filter(i => Array.isArray(i.p));
+    grpCols = duos.length >= 2 ? (duos[0].rot || ['Inteira', 'Média']) : null;
+    const curto = r => esc(/^\d/.test(r) ? r : r.split(' ')[0]);
+    const head = grpCols ? `<div class="cols-head" aria-hidden="true"><span>${curto(grpCols[0])}</span><span>${curto(grpCols[1])}</span></div>` : '';
+    const html = `<div class="grp${grpCols ? ' cols' : ''}">${g.titulo ? `<h3 class="grp-title">${esc(g.titulo)}</h3>` : ''}${g.nota ? `<p class="grp-note">${esc(g.nota)}</p>` : ''}${head}<ul class="items">${g.itens.map(itemHTML).join('')}</ul></div>`;
+    grpCols = null;
+    return html;
+  };
+  let ctxSec = '';
+  const num = i => String(i + 1).padStart(2, '0');
+  const secaoHTML = (s, i) => (ctxSec = s.nome, '') + `<section class="sec" id="${s.id}"><header class="sec-head"><h2>${esc(s.nome)}</h2>${s.sub ? `<p>${esc(s.sub)}</p>` : ''}</header>${s.nota ? `<p class="sec-note">${esc(s.nota)}</p>` : ''}${s.grupos.map(grupoHTML).join('')}</section>`;
 
-  let modo = null;
+  let modo = null, MENU = CARDAPIO, ITENS = [], PEDIDO = [];
+  try { PEDIDO = JSON.parse(localStorage.getItem('aab-pedido')) || []; } catch (e) {}
   function render(novo, t) {
     modo = novo;
-    const c = CARDAPIO[modo], tenda = modo === 'tenda';
+    const c = MENU[modo], tenda = modo === 'tenda';
+    ITENS = [];
     document.getElementById('secoes').innerHTML = c.secoes.map(secaoHTML).join('');
-    document.getElementById('navIn').innerHTML = c.secoes.map(s => navBtn(s.id, s.nome, s.icone)).join('') + navBtn('agenda', 'Agenda', 'agenda');
-
-    const k = c.destaque;
-    document.getElementById('tkLabel').textContent = k.label;
-    document.getElementById('tkTitle').textContent = k.titulo;
-    document.getElementById('tkText').textContent = k.texto;
-    document.getElementById('tkStub').textContent = k.stub;
-    document.getElementById('tkPrice').textContent = brl(k.preco);
+    document.getElementById('agendaNum').textContent = '';
+    const lista = c.secoes;
+    const ind = document.getElementById('indiceNav');
+    document.getElementById('indice').innerHTML = lista.map((x, i) =>
+      `<li style="--i:${i}"><a class="idx" href="#${x.id}" data-idx="${x.id}"><span class="num">${num(i)}</span><span class="nome">${esc(x.nome)}</span><span class="info"></span><span class="seta" aria-hidden="true">→</span></a></li>`).join('');
+    ind.classList.remove('entra'); void ind.offsetWidth; if (!calm) ind.classList.add('entra');
 
     document.getElementById('modePill').hidden = !tenda;
     document.title = tenda ? 'Cardápio Especial Tenda · AAB' : 'Cardápio AAB';
     updateModeNote(t);
-    observeSecs();
+    montarProximos(c);
+    infoIndice(t);
+    rota();
+    atualizarPedido();
   }
+
+  // ---- O que dá para pedir agora (almoço só no horário; pizza não sai no almoço)
+  function infoIndice(t) {
+    const c = MENU[modo], lunch = ALMOCO[t.dia];
+    const noAlmoco = lunch && t.mins >= hm(lunch[0]) && t.mins < hm(lunch[1]);
+    document.querySelectorAll('.idx').forEach(a => {
+      const id = a.dataset.idx, sec = c.secoes.find(x => x.id === id);
+      let info = sec && sec.sub ? sec.sub : '', fora = false;
+      if (id === 'almoco') {
+        if (noAlmoco) info = `Servindo agora, até ${fmt(lunch[1])}`;
+        else { info = 'Quarta a domingo, a partir das 11h'; fora = true; }
+      }
+      if (id === 'pizzas' && noAlmoco) { info = 'Depois do horário de almoço'; fora = true; }
+      a.querySelector('.info').textContent = info;
+      a.classList.toggle('fora', fora);
+    });
+  }
+
+  // ---- Meu pedido: o cliente monta a lista e mostra no balcão
+  const esForm = document.getElementById('esForm'), esOk = document.getElementById('esOk');
+  let escolhendo = null;
+  function salvarPedido() {
+    try { localStorage.setItem('aab-pedido', JSON.stringify(PEDIDO)); } catch (e) {}
+    atualizarPedido();
+  }
+  const gruposDe = it => it.esc || (it.op && it.op.length ? [{ t: 'Escolha uma opção', max: 1, op: it.op }] : []);
+  function adicionar({ it, ctx }, tam, op) {
+    const duo = Array.isArray(it.p), rot = it.rot || ['Inteira', 'Média'];
+    let t = duo ? rot[tam] : '', n = it.n;
+    const p = duo ? it.p[tam] : it.p;
+    if (t && !/ml|L$|Inteira|Média|Copo|Jarra/.test(t)) { n = `${t} ${it.n.replace(/^Simples$/, 'simples')}`; t = ''; } // Tapioca/Crepioca
+    const k = [ctx, n, t, op].join('|');
+    const ja = PEDIDO.find(x => x.k === k);
+    if (ja) ja.q++; else PEDIDO.push({ k, ctx, n, t, o: op || '', p, q: 1 });
+    salvarPedido();
+    avisar('✓ Adicionado');
+  }
+  function abrirEscolha(ent) {
+    const { it } = ent, duo = Array.isArray(it.p);
+    const grupos = gruposDe(it);
+    if (!duo && !grupos.length) return adicionar(ent, 0, '');
+    escolhendo = ent;
+    const rot = it.rot || ['Inteira', 'Média'];
+    document.getElementById('esTitulo').textContent = it.n;
+    document.getElementById('esCampos').innerHTML =
+      (duo ? `<p class="sub">${it.rot && !/ml|L$/.test(it.rot[0]) ? 'Escolha' : 'Tamanho'}</p><div class="escolhas">${rot.map((r, i) => `<label><input type="radio" name="tam" value="${i}"${i ? '' : ' checked'}><span>${esc(r)} · ${brl(it.p[i])}</span></label>`).join('')}</div>` : '') +
+      grupos.map((g, k) => `<fieldset class="grupo-esc" data-max="${g.max}"><legend class="sub">${esc(g.t)}${g.max > 1 ? ` <span class="conta">0 de ${g.max}</span>` : ''}</legend><div class="escolhas">${
+        g.op.map(o => `<label><input type="${g.max > 1 ? 'checkbox' : 'radio'}" name="e${k}" value="${esc(o)}"${g.max > 1 ? '' : ' required'}><span>${esc(o)}</span></label>`).join('')}</div></fieldset>`).join('');
+    validarEscolha();
+    document.getElementById('escolha').showModal();
+  }
+  // Escolhas múltiplas: exige o número certo e trava as demais quando completa
+  function validarEscolha() {
+    let ok = esForm.checkValidity();
+    esForm.querySelectorAll('.grupo-esc').forEach(fs => {
+      const max = +fs.dataset.max;
+      if (max < 2) return;
+      const marcadas = fs.querySelectorAll('input:checked').length;
+      fs.querySelector('.conta').textContent = `${marcadas} de ${max}`;
+      fs.querySelectorAll('input:not(:checked)').forEach(i => i.disabled = marcadas >= max);
+      fs.classList.toggle('completo', marcadas === max);
+      if (marcadas !== max) ok = false;
+    });
+    esOk.disabled = !ok;
+    esOk.textContent = ok ? 'Adicionar ao pedido' : 'Escolha para adicionar';
+  }
+  esForm.addEventListener('change', validarEscolha);
+  esForm.addEventListener('submit', e => {
+    if (!e.submitter || e.submitter.value !== 'ok' || !escolhendo) return;
+    const f = new FormData(esForm), grupos = gruposDe(escolhendo.it);
+    const partes = grupos.map((g, k) => {
+      const v = f.getAll('e' + k).join(', ');
+      return grupos.length > 1 && v ? `${g.t.replace(/^Escolha (o |a |\d+ )?/, '').replace(/^./, c => c.toUpperCase())}: ${v}` : v;
+    }).filter(Boolean);
+    adicionar(escolhendo, +(f.get('tam') || 0), partes.join(' · '));
+    escolhendo = null;
+  });
+
+  // Confirmação dentro da própria barra do pedido
+  let avisoT, avisando = false;
+  function avisar(txt) {
+    const bar = document.getElementById('pedBar');
+    avisando = true;
+    document.getElementById('pedResumo').textContent = txt;
+    bar.classList.add('ok');
+    clearTimeout(avisoT);
+    avisoT = setTimeout(() => { avisando = false; bar.classList.remove('ok'); atualizarPedido(); }, 1800);
+  }
+  function atualizarPedido() {
+    const qtd = PEDIDO.reduce((a, x) => a + x.q, 0), total = PEDIDO.reduce((a, x) => a + x.q * x.p, 0);
+    const bar = document.getElementById('pedBar');
+    bar.hidden = !qtd;
+    document.body.classList.toggle('com-pedido', !!qtd);
+    if (!avisando) document.getElementById('pedResumo').textContent = `${qtd} ${qtd === 1 ? 'item' : 'itens'} · ${brl(total)}`;
+    document.querySelectorAll('.add').forEach(b => {
+      const { it, ctx } = ITENS[b.dataset.add];
+      const n = PEDIDO.filter(x => x.ctx === ctx && (x.n === it.n || x.n.endsWith(' ' + it.n) || x.n.endsWith(' simples') && it.n === 'Simples')).reduce((a, x) => a + x.q, 0);
+      b.textContent = n || '+';
+      b.classList.toggle('tem', !!n);
+    });
+    document.getElementById('pedLista').innerHTML = PEDIDO.map((x, i) => `<li><div>
+        <div class="nome">${esc(x.n)}</div>
+        <div class="det">${esc([x.o, x.t, x.ctx].filter(Boolean).join(' · '))}</div>
+        <div class="val">${brl(x.p * x.q)}</div></div>
+      <div class="qtd"><button type="button" data-menos="${i}" aria-label="Tirar um">−</button><b>${x.q}</b><button type="button" data-mais="${i}" aria-label="Pôr mais um">+</button></div></li>`).join('');
+    document.getElementById('pedTotal').textContent = brl(total);
+  }
+  const dlgPedido = document.getElementById('pedido');
+  document.getElementById('pedBar').addEventListener('click', () => dlgPedido.showModal());
+  document.getElementById('pedFechar').addEventListener('click', () => dlgPedido.close());
+  document.getElementById('pedLimpar').addEventListener('click', () => {
+    if (!confirm('Limpar o pedido?')) return;
+    PEDIDO = []; salvarPedido(); dlgPedido.close();
+  });
+  dlgPedido.addEventListener('click', e => {
+    const m = e.target.closest('[data-menos],[data-mais]');
+    if (!m) return;
+    const i = +(m.dataset.menos ?? m.dataset.mais);
+    PEDIDO[i].q += m.dataset.mais != null ? 1 : -1;
+    if (PEDIDO[i].q <= 0) PEDIDO.splice(i, 1);
+    salvarPedido();
+    if (!PEDIDO.length) dlgPedido.close();
+  });
+
+  // ---- Uma categoria por vez. Endereço #porcoes etc.: o "voltar" do celular volta ao índice.
+  const celular = matchMedia('(max-width: 899px)');
+  let aba = null, veioDoIndice = false;
+  function montarProximos(c) {
+    const ordem = [...c.secoes.map(s => [s.id, s.nome]), ['agenda', 'Agenda']];
+    document.querySelectorAll('.next').forEach(b => b.remove());
+    ordem.forEach(([id], i) => {
+      const prox = ordem[i + 1];
+      if (!prox) return;
+      document.getElementById(id).insertAdjacentHTML('beforeend',
+        `<a class="next" href="#${prox[0]}">Próximo: ${esc(prox[1])} <span>→</span></a>`);
+    });
+  }
+  function mostrar(id) {
+    aba = id;
+    document.querySelectorAll('.sec').forEach(s => s.classList.toggle('ativa', s.id === id));
+    document.querySelectorAll('.idx').forEach(a => a.classList.toggle('on', a.dataset.idx === id));
+    const sec = document.getElementById(id);
+    document.getElementById('onde').textContent = sec ? sec.querySelector('h2').textContent : '';
+  }
+  function rota(animar) {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const sec = id && document.getElementById(id);
+    const valida = !!(sec && sec.classList.contains('sec'));
+    document.documentElement.classList.toggle('em-categoria', valida);
+    const alvo = valida ? id : (celular.matches ? null : (document.getElementById(aba) ? aba : MENU[modo].secoes[0].id));
+    if (alvo) mostrar(alvo);
+    if (animar && valida && !calm) {
+      const pg = document.getElementById('pagina');
+      pg.classList.remove('entra'); void pg.offsetWidth; pg.classList.add('entra');
+    }
+    if (valida) scrollTo(0, 0);
+    else if (animar) scrollTo(0, topoIndice);
+  }
+  let topoIndice = 0;
+  addEventListener('hashchange', () => rota(true));
+  addEventListener('load', () => { if (document.documentElement.classList.contains('em-categoria')) scrollTo(0, 0); });
+  document.addEventListener('click', e => {
+    const idx = e.target.closest('.idx, .next');
+    if (idx) { if (celular.matches && !location.hash.slice(1)) topoIndice = scrollY; veioDoIndice = true; }
+  }, true);
+  document.getElementById('voltar').addEventListener('click', e => {
+    e.preventDefault();
+    if (veioDoIndice && history.length > 1) history.back();
+    else { history.replaceState(null, '', location.pathname + location.search); rota(true); }
+  });
+  celular.addEventListener('change', () => rota());
   function updateModeNote(t) {
     const note = document.getElementById('modeNote');
     let html = '';
@@ -1106,53 +1347,24 @@
   try { if (localStorage.getItem('aab-big') === '1') setBig(true); } catch (e) {}
   fontBtn.addEventListener('click', () => setBig(!document.documentElement.classList.contains('big')));
 
-  // ---- Botões de categoria: rolam até a seção (são botões, não links,
-  //      para nunca sair da página — nem dentro de pré-visualizações)
+  // ---- Toques: + do pedido e descrição do item
   document.addEventListener('click', e => {
-    const btn = e.target.closest('[data-go]');
-    if (!btn) return;
-    const target = document.getElementById(btn.dataset.go);
-    if (target) target.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+    const add = e.target.closest('[data-add]');
+    if (add) { abrirEscolha(ITENS[add.dataset.add]); return; }
   });
 
-  // ---- Categoria ativa no menu (e centraliza o botão na barra)
-  const spy = new IntersectionObserver(es => es.forEach(e => {
-    if (!e.isIntersecting) return;
-    document.querySelectorAll('nav [data-go]').forEach(b => {
-      const on = b.dataset.go === e.target.id;
-      b.classList.toggle('on', on);
-      if (on) {
-        const bar = b.parentElement;
-        bar.scrollTo({ left: b.offsetLeft - bar.clientWidth / 2 + b.offsetWidth / 2, behavior: 'smooth' });
-      }
-    });
-  }), { rootMargin: '-35% 0px -60% 0px' });
-  function observeSecs() {
-    spy.disconnect();
-    document.querySelectorAll('.sec').forEach(s => spy.observe(s));
-  }
 
   // ---- Relógio: confere horário e cardápio a cada minuto (troca sozinho às 18h de sexta)
   function tick() {
     const t = agora();
     updateHours(t);
     const m = modoAgora(t);
-    if (m !== modo) render(m, t); else updateModeNote(t);
+    if (m !== modo) render(m, t); else { updateModeNote(t); infoIndice(t); }
   }
   tick();
   setInterval(tick, 60000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 
-  // ---- Combo inclina com o mouse
-  const ticket = document.getElementById('ticket');
-  if (matchMedia('(hover: hover)').matches && !calm) {
-    ticket.addEventListener('pointermove', e => {
-      const r = ticket.getBoundingClientRect();
-      ticket.style.setProperty('--ry', ((e.clientX - r.left) / r.width - .5) * 12 + 'deg');
-      ticket.style.setProperty('--rx', -((e.clientY - r.top) / r.height - .5) * 12 + 'deg');
-    });
-    ticket.addEventListener('pointerleave', () => { ticket.style.setProperty('--rx', '0deg'); ticket.style.setProperty('--ry', '0deg'); });
-  }
 
   // ---- Agenda automática
   function renderAgenda(list) {
@@ -1160,7 +1372,7 @@
     const next = list.filter(ev => ev.data >= todayISO).sort((a, b) => a.data.localeCompare(b.data));
     const box = document.getElementById('agendaList');
     if (!next.length) {
-      box.outerHTML = '<p class="empty" id="agendaList">Nenhum evento marcado no momento. Acompanhe as novidades no Instagram <a href="https://www.instagram.com/aabbotucatu/" target="_blank" rel="noopener">@aabbotucatu</a>.</p>';
+      box.innerHTML = '<p class="empty">Nenhum evento marcado no momento. Acompanhe as novidades no Instagram <a href="https://www.instagram.com/aabbotucatu/" target="_blank" rel="noopener">@aabbotucatu</a>.</p>';
       return;
     }
     box.innerHTML = next.map(ev => {
@@ -1181,12 +1393,86 @@
     }
     return rows;
   }
+
+  // ---- Planilha Google: cardápio e agenda editados pelo clube
+  const chave = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const numero = s => {
+    const v = parseFloat(String(s || '').replace(/[^\d,.-]/g, '').replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.'));
+    return Number.isFinite(v) ? v : null;
+  };
+  const dataISO = s => {
+    s = String(s || '').trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    return m ? `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}` : '';
+  };
+  // Linhas da planilha -> mesmo formato de CARDAPIO. Ícones, subtítulos e notas vêm do cardápio embutido.
+  function cardapioDaPlanilha(csv) {
+    const [cab, ...linhas] = parseCSV(csv);
+    if (!cab) return null;
+    const col = Object.fromEntries(cab.map((h, i) => [chave(h), i]));
+    if (!['cardapio', 'secao', 'item'].every(k => k in col)) return null;
+    const get = (r, k) => (k in col ? (r[col[k]] || '').trim() : '');
+    const novo = {};
+    for (const m of ['completo', 'tenda']) {
+      const base = CARDAPIO[m], secoes = [];
+      for (const r of linhas) {
+        if (chave(get(r, 'cardapio')) !== m || !get(r, 'item') || /^n(ao)?$/.test(chave(get(r, 'mostrar')))) continue;
+        const nome = get(r, 'secao'), titulo = get(r, 'grupo');
+        let sec = secoes.find(x => x.nome === nome);
+        if (!sec) {
+          const b = base.secoes.find(x => chave(x.nome) === chave(nome));
+          const id = b ? b.id : 'sec-' + (chave(nome) || secoes.length);
+          sec = { id, nome, icone: b ? b.icone : 'porcoes', sub: b && b.sub, nota: b && b.nota, grupos: [], _b: b };
+          secoes.push(sec);
+        }
+        let g = sec.grupos.find(x => (x.titulo || '') === titulo);
+        if (!g) {
+          const bg = sec._b && sec._b.grupos.find(x => chave(x.titulo || '') === chave(titulo));
+          g = { titulo: titulo || undefined, nota: bg && bg.nota, itens: [] };
+          sec.grupos.push(g);
+        }
+        const p1 = numero(get(r, 'preco')), p2 = numero(get(r, 'preco2'));
+        const rot = get(r, 'rotulosdosprecos').split('/').map(x => x.trim()).filter(Boolean);
+        // escolhas do pedido (recheios, acompanhamentos) vêm do cardápio embutido, pelo nome do item
+        const igual = sec._b && sec._b.grupos.flatMap(x => x.itens).find(x => chave(x.n) === chave(get(r, 'item')));
+        g.itens.push({
+          esc: igual && igual.esc,
+          n: get(r, 'item'), d: get(r, 'descricao') || undefined, tag: get(r, 'selo') || undefined,
+          p: p1 != null && p2 != null ? [p1, p2] : p1, rot: rot.length === 2 ? rot : undefined,
+          op: get(r, 'opcoes') ? get(r, 'opcoes').split(';').map(x => x.trim()).filter(Boolean) : undefined,
+        });
+      }
+      secoes.forEach(x => delete x._b);
+      novo[m] = { destaque: base.destaque, secoes: secoes.length ? secoes : base.secoes };
+    }
+    return novo;
+  }
+  function usarCardapio(csv) {
+    const novo = csv && cardapioDaPlanilha(csv);
+    if (!novo) return false;
+    MENU = novo;
+    render(modo, agora());
+    return true;
+  }
+  function usarAgenda(csv) {
+    const [, ...rows] = parseCSV(csv || '');
+    const lista = rows.map(r => ({ data: dataISO(r[0]), hora: (r[1] || '').trim(), titulo: (r[2] || '').trim() })).filter(e => e.data && e.titulo);
+    renderAgenda(lista);
+  }
+  // Abre com a última versão que funcionou neste aparelho e busca a mais nova.
+  const guardado = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
   renderAgenda(AGENDA);
+  if (CARDAPIO_PLANILHA) {
+    usarCardapio(guardado('aab-cardapio'));
+    fetch(CARDAPIO_PLANILHA, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject())
+      .then(t => { if (usarCardapio(t)) guardar('aab-cardapio', t); }).catch(() => {});
+  }
   if (AGENDA_PLANILHA) {
-    fetch(AGENDA_PLANILHA).then(r => r.text()).then(t => {
-      const [, ...rows] = parseCSV(t);
-      renderAgenda(rows.filter(r => r[0]).map(r => ({ data: r[0], hora: r[1], titulo: r[2] })));
-    }).catch(() => {});
+    const g = guardado('aab-agenda'); if (g) usarAgenda(g);
+    fetch(AGENDA_PLANILHA, { cache: 'no-store' }).then(r => r.ok ? r.text() : Promise.reject())
+      .then(t => { usarAgenda(t); guardar('aab-agenda', t); }).catch(() => {});
   }
 
   // ---- Easter egg: 3 toques na estrela abrem o jogo
@@ -1201,7 +1487,7 @@
     }
   });
 
-  // ---- Pênaltis da Veterana
+  // ---- Pênaltis da AAB
   (() => {
     const ball = document.getElementById('ball'), keeper = document.getElementById('keeper');
     const msg = document.getElementById('gameMsg'), result = document.getElementById('result');
@@ -1229,7 +1515,7 @@
         ball.style.transform = ''; keeper.style.transform = '';
         busy = false;
         if (kicks < 5) { buttons.forEach(b => b.disabled = false); return; }
-        result.textContent = goals === 5 ? '5 de 5! Craque da Veterana! ★'
+        result.textContent = goals === 5 ? '5 de 5! Craque da AAB! ★'
           : goals >= 3 ? `${goals} gols. Jogou bonito!`
           : `${goals} ${goals === 1 ? 'gol' : 'gols'}. O goleiro da AAB tá impossível hoje!`;
         again.hidden = false;
@@ -1248,174 +1534,5 @@
   })();
 </script>
 
-<!-- ============ Escudo 3D (Three.js) ============ -->
-<script type="module">
-  import * as THREE from 'three';
-  import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-
-  const box = document.getElementById('crest');
-  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  try {
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2.5));
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
-    box.prepend(renderer.domElement);
-
-    const scene = new THREE.Scene();
-    scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
-
-    const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
-    const key = new THREE.DirectionalLight(0xffffff, 2.4); key.position.set(2.5, 3, 6); scene.add(key);
-    const fill = new THREE.DirectionalLight(0xffffff, 0.8); fill.position.set(-4, 1, 4); scene.add(fill);
-    const back = new THREE.DirectionalLight(0xffffff, 2.0); back.position.set(0, 4, -5); scene.add(back);
-
-    // Contorno do escudo, como o da AAB: topo arqueado, laterais retas, ponta embaixo
-    function shield(t, s) {
-      t.moveTo(-1 * s, 1.1 * s);
-      t.quadraticCurveTo(0, 1.4 * s, 1 * s, 1.1 * s);
-      t.lineTo(1 * s, 0.1 * s);
-      t.quadraticCurveTo(1 * s, -0.95 * s, 0, -1.5 * s);
-      t.quadraticCurveTo(-1 * s, -0.95 * s, -1 * s, 0.1 * s);
-      t.closePath();
-      return t;
-    }
-    function star(R, r, cy) {
-      const sh = new THREE.Shape();
-      for (let i = 0; i < 10; i++) {
-        const a = Math.PI / 2 + i * Math.PI / 5, rad = i % 2 ? r : R;
-        const x = Math.cos(a) * rad, y = Math.sin(a) * rad + cy;
-        i ? sh.lineTo(x, y) : sh.moveTo(x, y);
-      }
-      sh.closePath();
-      return sh;
-    }
-
-    const white  = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.05, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.05 });
-    const enamel = new THREE.MeshPhysicalMaterial({ color: 0x080808, metalness: 0.1, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.04 });
-
-    const crest = new THREE.Group();
-
-    // Aro branco (escudo com furo)
-    const rimShape = shield(new THREE.Shape(), 1);
-    rimShape.holes.push(shield(new THREE.Path(), 0.86));
-    crest.add(new THREE.Mesh(new THREE.ExtrudeGeometry(rimShape, {
-      depth: 0.32, bevelEnabled: true, bevelThickness: 0.08, bevelSize: 0.05, bevelSegments: 10, curveSegments: 96
-    }), white));
-
-    // Campo preto rebaixado
-    const field = new THREE.Mesh(new THREE.ExtrudeGeometry(shield(new THREE.Shape(), 0.87), {
-      depth: 0.24, bevelEnabled: false, curveSegments: 96
-    }), enamel);
-    field.position.z = 0.02;
-    crest.add(field);
-
-    // Estrela branca em alto-relevo
-    const starMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(star(0.7, 0.28, 0), {
-      depth: 0.12, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.04, bevelSegments: 8
-    }), white);
-    starMesh.position.set(0, 0.03, 0.26);
-    crest.add(starMesh);
-
-    // Sigla "AAB" em arco, logo acima do escudo.
-    // Letras com serifa quadrada desenhadas à mão (altura 1) — não depende de baixar fonte.
-    const poly = (t, pts, s) => { pts.forEach(([x, y], i) => i ? t.lineTo(x * s, y * s) : t.moveTo(x * s, y * s)); t.closePath(); return t; };
-    const glyphA = s => {
-      const sh = poly(new THREE.Shape(), [[0, 0], [.36, 0], [.36, .09], [.28, .09], [.315, .2], [.645, .2], [.68, .09], [.6, .09],
-        [.6, 0], [.96, 0], [.96, .09], [.89, .09], [.6, 1], [.36, 1], [.07, .09], [0, .09]], s);
-      sh.holes.push(poly(new THREE.Path(), [[.366, .36], [.594, .36], [.48, .72]], s));
-      return sh;
-    };
-    const glyphB = s => {
-      const sh = new THREE.Shape();
-      sh.moveTo(0, 0); sh.lineTo(.55 * s, 0);
-      sh.quadraticCurveTo(.86 * s, 0, .86 * s, .27 * s);
-      sh.quadraticCurveTo(.86 * s, .49 * s, .66 * s, .53 * s);
-      sh.quadraticCurveTo(.81 * s, .58 * s, .81 * s, .76 * s);
-      sh.quadraticCurveTo(.81 * s, 1 * s, .52 * s, 1 * s);
-      sh.lineTo(0, 1 * s); sh.lineTo(0, .91 * s); sh.lineTo(.08 * s, .91 * s);
-      sh.lineTo(.08 * s, .09 * s); sh.lineTo(0, .09 * s); sh.closePath();
-      const up = new THREE.Path();
-      up.moveTo(.30 * s, .58 * s); up.lineTo(.47 * s, .58 * s);
-      up.quadraticCurveTo(.59 * s, .58 * s, .59 * s, .735 * s);
-      up.quadraticCurveTo(.59 * s, .89 * s, .47 * s, .89 * s);
-      up.lineTo(.30 * s, .89 * s); up.closePath();
-      const low = new THREE.Path();
-      low.moveTo(.30 * s, .11 * s); low.lineTo(.51 * s, .11 * s);
-      low.quadraticCurveTo(.64 * s, .11 * s, .64 * s, .28 * s);
-      low.quadraticCurveTo(.64 * s, .45 * s, .51 * s, .45 * s);
-      low.lineTo(.30 * s, .45 * s); low.closePath();
-      sh.holes.push(up, low);
-      return sh;
-    };
-
-    const letters = new THREE.Group();
-    const R = 2.1, y0 = 1.74, step = 0.41, cap = 0.52;
-    [glyphA, glyphA, glyphB].forEach((make, i) => {
-      const g = new THREE.ExtrudeGeometry(make(cap), {
-        depth: 0.2, curveSegments: 24,
-        bevelEnabled: true, bevelThickness: 0.035, bevelSize: 0.022, bevelSegments: 6
-      });
-      g.center();
-      const m = new THREE.Mesh(g, white);
-      const phi = (i - 1) * step;
-      m.position.set(R * Math.sin(phi), y0 - R * (1 - Math.cos(phi)), 0.12);
-      m.rotation.z = -phi;
-      letters.add(m);
-    });
-    crest.add(letters);
-
-    crest.position.set(0, -0.2, -0.2);
-    const pivot = new THREE.Group();
-    pivot.add(crest);
-    scene.add(pivot);
-
-    // Enquadra o escudo grande em qualquer tela
-    function fit() {
-      const w = box.clientWidth, h = box.clientHeight;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      const k = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-      camera.position.z = Math.max(4.0 / k, 3.1 / (k * camera.aspect));
-      camera.updateProjectionMatrix();
-    }
-    new ResizeObserver(fit).observe(box);
-    fit();
-
-    // Só desenha quando a capa está visível (economiza bateria)
-    let visible = true;
-    new IntersectionObserver(([e]) => visible = e.isIntersecting).observe(box);
-
-    // Interação: segue o ponteiro e pode ser arrastado
-    let tx = 0, ty = 0, spin = 0, dragging = false, lastX = 0, velocity = 0;
-    addEventListener('pointermove', e => {
-      tx = (e.clientX / innerWidth - 0.5) * 0.6;
-      ty = (e.clientY / innerHeight - 0.5) * 0.35;
-      if (dragging) { velocity = (e.clientX - lastX) * 0.012; spin += velocity; lastX = e.clientX; }
-    });
-    box.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; box.setPointerCapture(e.pointerId); });
-    addEventListener('pointerup', () => { dragging = false; });
-
-    const clock = new THREE.Clock();
-    let intro = calm ? 1 : 0;
-    renderer.setAnimationLoop(() => {
-      const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
-      if (!visible) return;
-      if (intro < 1) intro = Math.min(1, intro + dt / 1.4);
-      const ease = 1 - Math.pow(1 - intro, 4);
-      if (!dragging) { spin += velocity; velocity *= 0.94; spin *= 0.965; }
-      const idle = calm ? 0 : Math.sin(t * 0.6) * 0.16;
-      pivot.rotation.y += ((tx + idle + spin) + (1 - ease) * -Math.PI - pivot.rotation.y) * 0.08;
-      pivot.rotation.x += (ty - pivot.rotation.x) * 0.08;
-      pivot.position.y = calm ? 0 : Math.sin(t * 1.1) * 0.05;
-      pivot.scale.setScalar(0.75 + 0.25 * ease);
-      renderer.render(scene, camera);
-    });
-    box.classList.add('ready');
-  } catch (err) {
-    console.warn('3D indisponível, usando escudo plano:', err);
-  }
-</script>
 </body>
 </html>
